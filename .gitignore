@@ -1,0 +1,48 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.sqlite3
+
+# Environnement virtuel
+venv/
+env/
+.env
+.venv/
+
+# Variables d'environnement — NE JAMAIS COMMITTER !
+backend/.env
+
+# Logs
+*.log
+logs/
+
+# Médias uploadées
+backend/media/
+backend/staticfiles/
+
+# Node / React
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+.coverage
+htmlcov/
