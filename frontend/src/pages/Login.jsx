@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
+import { useAuth } from "../context/AuthContext";
 
 const FEATURES = [
     { icon: "🏔️", title: "Guide complet", desc: "Toutes les étapes pour t'installer au Québec" },
@@ -15,6 +16,7 @@ export default function Login() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { refreshUser } = useAuth();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -22,7 +24,8 @@ export default function Login() {
         setLoading(true);
         try {
             await login(email, password);
-            navigate("/dashboard");
+            await refreshUser(); // charge le profil avant d'afficher Welcome
+            navigate("/welcome");
         } catch (err) {
             setError(err.response?.data?.detail || "Identifiants invalides.");
         } finally {

@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Onboarding from "./pages/Onboarding";
+import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import Checklist from "./pages/Checklist";
 import University from "./pages/University";
@@ -53,6 +54,7 @@ export default function App() {
 
                 {/* Protected */}
                 <Route path="/onboarding" element={<Protected><Onboarding /></Protected>} />
+                <Route path="/welcome" element={<Protected><Welcome /></Protected>} />
                 <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
                 <Route path="/checklist" element={<Protected><Checklist /></Protected>} />
                 <Route path="/university/:id" element={<Protected><University /></Protected>} />
