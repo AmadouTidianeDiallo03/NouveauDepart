@@ -1,4 +1,5 @@
 import AssistantChat from "../components/AssistantChat";
+import BackButton from "../components/BackButton";
 
 const tips = [
     { icon: "💬", text: "Pose ta question en français ou en anglais" },
@@ -20,6 +21,7 @@ export default function Assistant() {
                 <div style={{ position: "absolute", top: -40, right: -40, width: 220, height: 220, borderRadius: "50%", background: "rgba(99,102,241,0.2)" }} />
                 <div style={{ position: "absolute", bottom: -30, left: "30%", width: 140, height: 140, borderRadius: "50%", background: "rgba(139,92,246,0.15)" }} />
                 <div className="container container-sm">
+                    <BackButton />
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
                         <div style={{
                             width: 64, height: 64, borderRadius: "18px",

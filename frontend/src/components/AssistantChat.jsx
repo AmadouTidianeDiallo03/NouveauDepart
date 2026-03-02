@@ -27,7 +27,7 @@ export default function AssistantChat() {
         setLoading(true);
 
         try {
-            const res = await api.post("/assistant/ask", { question });
+            const res = await api.post("/assistant/ask/", { question });
             setMessages((prev) => [...prev, { role: "bot", content: res.data.answer }]);
         } catch (err) {
             const detail = err.response?.data?.detail || "Une erreur est survenue. Réessayez.";

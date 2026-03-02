@@ -1,3 +1,4 @@
+from django.db.models import Prefetch, Q
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -8,11 +9,25 @@ from .models import Step, Task, UserTask
 from .serializers import StepSerializer, StepListSerializer, TaskSerializer
 
 
+def get_user_university(user):
+    try:
+        return user.profile.university
+    except AttributeError:
+        return None
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def steps_list(request):
     """GET /api/guides/steps/ – list all steps with progress counts."""
-    steps = Step.objects.prefetch_related("tasks").all()
+    university = get_user_university(request.user)
+    # Filter tasks: global (NULL) OR specific to user's university
+    task_filter = Q(university__isnull=True) | Q(university=university)
+    
+    steps = Step.objects.prefetch_related(
+        Prefetch("tasks", queryset=Task.objects.filter(task_filter))
+    ).all()
+    
     serializer = StepListSerializer(steps, many=True, context={"request": request})
     return Response(serializer.data)
 
@@ -21,10 +36,16 @@ def steps_list(request):
 @permission_classes([IsAuthenticated])
 def step_tasks(request, step_id):
     """GET /api/guides/steps/:id/tasks/ – tasks for a specific step."""
+    university = get_user_university(request.user)
+    task_filter = Q(university__isnull=True) | Q(university=university)
+    
     try:
-        step = Step.objects.prefetch_related("tasks").get(pk=step_id)
+        step = Step.objects.prefetch_related(
+            Prefetch("tasks", queryset=Task.objects.filter(task_filter))
+        ).get(pk=step_id)
     except Step.DoesNotExist:
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        
     serializer = StepSerializer(step, context={"request": request})
     return Response(serializer.data)
 
@@ -50,15 +71,24 @@ def toggle_task(request, task_id):
 @permission_classes([IsAuthenticated])
 def progress(request):
     """GET /api/guides/progress/ – overall completion stats."""
-    total = Task.objects.count()
-    done = UserTask.objects.filter(user=request.user, done=True).count()
+    university = get_user_university(request.user)
+    task_filter = Q(university__isnull=True) | Q(university=university)
+    
+    visible_tasks = Task.objects.filter(task_filter)
+    total = visible_tasks.count()
+    done = UserTask.objects.filter(user=request.user, task__in=visible_tasks, done=True).count()
     percentage = round((done / total) * 100) if total else 0
 
-    steps = Step.objects.prefetch_related("tasks").all()
+    steps = Step.objects.prefetch_related(
+        Prefetch("tasks", queryset=visible_tasks)
+    ).all()
+    
     by_category = []
     for step in steps:
-        total_step = step.tasks.count()
-        done_step = step.tasks.filter(user_tasks__user=request.user, user_tasks__done=True).count()
+        tasks_in_step = step.tasks.all() # Corrected to use the prefetched/filtered set
+        total_step = tasks_in_step.count()
+        done_step = UserTask.objects.filter(user=request.user, task__in=tasks_in_step, done=True).count()
+        
         by_category.append({
             "step_id": step.id,
             "title": step.title,

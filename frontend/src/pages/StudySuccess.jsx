@@ -1,3 +1,5 @@
+import BackButton from "../components/BackButton";
+
 const sections = [
     {
         icon: "📊", title: "Système de crédits", gradient: "linear-gradient(135deg, #2563eb, #6366f1)",
@@ -79,6 +81,7 @@ export default function StudySuccess() {
                 <div style={{ position: "absolute", top: -50, right: -50, width: 250, height: 250, borderRadius: "50%", background: "rgba(99,102,241,0.2)" }} />
                 <div style={{ position: "absolute", bottom: -30, left: "20%", width: 150, height: 150, borderRadius: "50%", background: "rgba(59,130,246,0.2)" }} />
                 <div className="container">
+                    <BackButton />
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
                         <div style={{
                             width: 64, height: 64, borderRadius: "18px",

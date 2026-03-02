@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { updateMe } from "../services/auth";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import BackButton from "../components/BackButton";
 
 export default function Onboarding() {
     const { user, refreshUser } = useAuth();
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
@@ -64,30 +67,39 @@ export default function Onboarding() {
         setLoading(true);
         setError("");
         try {
+            // Unify logic: update everything in one go or handle sequencing correctly
+            const profileData = {
+                role: form.role,
+                university_id: form.university_id || null,
+                city: form.city,
+                language: form.language,
+                bio: form.bio,
+                onboarding_done: true,
+            };
+
             if (avatarFile) {
                 const fd = new FormData();
                 fd.append("avatar", avatarFile);
                 fd.append("first_name", form.first_name);
                 fd.append("last_name", form.last_name);
-                await api.patch("/auth/me", fd, { headers: { "Content-Type": "multipart/form-data" } });
+                // Also includes profile fields for the backend to handle if desired, 
+                // but our backend me_view handles multipart partially.
+                // Let's stick to the current backend logic but ensure it's clean.
+                await api.patch("/auth/me/", fd, { headers: { "Content-Type": "multipart/form-data" } });
             }
+
+            // Always update the rest of the profile to ensure everything is synced
             await updateMe({
                 first_name: form.first_name,
                 last_name: form.last_name,
-                profile: {
-                    role: form.role,
-                    university_id: form.university_id || null,
-                    city: form.city,
-                    language: form.language,
-                    bio: form.bio,
-                    onboarding_done: true,
-                },
+                profile: profileData,
             });
+
             await refreshUser();
             setSuccess(true);
             setTimeout(() => navigate("/welcome"), 1200);
         } catch (err) {
-            setError("Erreur lors de la sauvegarde. Réessaye.");
+            setError(t("error_saving") || "Erreur lors de la sauvegarde.");
         } finally {
             setLoading(false);
         }
@@ -135,6 +147,7 @@ export default function Onboarding() {
     return (
         <div style={{ background: "linear-gradient(160deg,#f0f4ff,#f8fafc)", minHeight: "100vh", paddingBottom: "3rem" }}>
             <div style={{ maxWidth: 680, margin: "0 auto", padding: "2rem 1.25rem" }}>
+                <BackButton />
 
                 {/* ── Header ── */}
                 <div style={{ textAlign: "center", marginBottom: "2rem" }}>
@@ -144,10 +157,10 @@ export default function Onboarding() {
                         color: "#fff", fontSize: "0.78rem", fontWeight: 700,
                         marginBottom: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase",
                     }}>
-                        {isMentor ? "Profil Mentor 🌟" : "Profil Étudiant 🎓"}
+                        {isMentor ? t("mentor") + " 🌟" : t("student") + " 🎓"}
                     </div>
                     <h1 style={{ fontSize: "2rem", fontWeight: 800, color: "#0f172a", marginBottom: "0.4rem", letterSpacing: "-0.03em" }}>
-                        Complète ton profil
+                        {t("complete_profile")}
                     </h1>
                     <p style={{ color: "#64748b", fontSize: "0.95rem" }}>
                         {isMentor
@@ -220,24 +233,24 @@ export default function Onboarding() {
                             borderRadius: "12px", padding: "0.85rem 1rem",
                             color: "#16a34a", fontSize: "0.9rem", marginBottom: "1.25rem",
                             display: "flex", alignItems: "center", gap: "0.5rem",
-                        }}>✅ Profil mis à jour ! Redirection…</div>
+                        }}>✅ {t("save_success")}</div>
                     )}
 
                     {/* ── Informations personnelles ── */}
                     <div style={card}>
                         <h3 style={{ marginBottom: "1.25rem", fontSize: "0.78rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                            Informations personnelles
+                            {t("personal_info")}
                         </h3>
 
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
                             <div style={grp}>
-                                <label style={label}>Prénom</label>
+                                <label style={label}>{t("first_name")}</label>
                                 <input name="first_name" type="text" style={field}
                                     value={form.first_name} onChange={handleChange}
                                     placeholder="Amadou" onFocus={focusIn} onBlur={focusOut} />
                             </div>
                             <div style={grp}>
-                                <label style={label}>Nom de famille</label>
+                                <label style={label}>{t("last_name")}</label>
                                 <input name="last_name" type="text" style={field}
                                     value={form.last_name} onChange={handleChange}
                                     placeholder="Diallo" onFocus={focusIn} onBlur={focusOut} />
@@ -245,17 +258,17 @@ export default function Onboarding() {
                         </div>
 
                         <div style={grp}>
-                            <label style={label}>Je suis…</label>
+                            <label style={label}>{t("i_am")}</label>
                             <select name="role" style={field} value={form.role}
                                 onChange={handleChange} onFocus={focusIn} onBlur={focusOut}>
-                                <option value="newcomer">Nouvel arrivant (étudiant)</option>
-                                <option value="mentor">Mentor (étudiant expérimenté)</option>
+                                <option value="newcomer">{t("newcomer_student")}</option>
+                                <option value="mentor">{t("mentor_exp")}</option>
                             </select>
                         </div>
 
                         {isMentor && (
                             <div style={{ marginBottom: 0 }}>
-                                <label style={label}>Ma bio (visible par les étudiants)</label>
+                                <label style={label}>{t("bio")}</label>
                                 <textarea name="bio"
                                     style={{ ...field, resize: "vertical", minHeight: 100 }}
                                     value={form.bio} onChange={handleChange}
@@ -268,11 +281,11 @@ export default function Onboarding() {
                     {/* ── Université & Localisation ── */}
                     <div style={{ ...card, marginBottom: "1.5rem" }}>
                         <h3 style={{ marginBottom: "1.25rem", fontSize: "0.78rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                            Université &amp; Localisation
+                            {t("uni_loc")}
                         </h3>
 
                         <div style={grp}>
-                            <label style={label}>Mon université</label>
+                            <label style={label}>{t("my_university")}</label>
                             <select name="university_id" style={field} value={form.university_id}
                                 onChange={handleChange} required onFocus={focusIn} onBlur={focusOut}>
                                 <option value="">-- Choisir --</option>
@@ -283,7 +296,7 @@ export default function Onboarding() {
                         </div>
 
                         <div style={grp}>
-                            <label style={label}>Ville</label>
+                            <label style={label}>{t("city")}</label>
                             <input name="city" type="text" style={field}
                                 value={form.city} onChange={handleChange}
                                 placeholder="Lévis, Québec, Montréal…"
@@ -291,7 +304,7 @@ export default function Onboarding() {
                         </div>
 
                         <div style={{ marginBottom: 0 }}>
-                            <label style={label}>Langue préférée</label>
+                            <label style={label}>{t("preferred_lang")}</label>
                             <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem", flexWrap: "wrap" }}>
                                 {[["fr", "🇫🇷 Français"], ["en", "🇬🇧 English"]].map(([val, lbl]) => (
                                     <label key={val} style={{
@@ -330,7 +343,7 @@ export default function Onboarding() {
                         onMouseEnter={e => { if (!loading && form.university_id) e.currentTarget.style.transform = "translateY(-2px)"; }}
                         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
                     >
-                        {loading ? "💾 Sauvegarde en cours…" : "💾 Sauvegarder mon profil →"}
+                        {loading ? "💾 " + t("saving") : "💾 " + t("save_profile") + " →"}
                     </button>
 
                 </form>

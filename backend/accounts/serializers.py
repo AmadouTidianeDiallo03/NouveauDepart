@@ -31,7 +31,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ["role", "university", "university_id", "city", "language", "bio", "onboarding_done", "avatar_url"]
+        fields = ["role", "university", "university_id", "city", "language", "bio", "onboarding_done", "avatar", "avatar_url"]
+        read_only_fields = ["avatar_url"]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,7 +45,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "email", "first_name", "last_name", "password", "profile"]
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        qs = User.objects.filter(email__iexact=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
             raise serializers.ValidationError("Cette adresse courriel est déjà utilisée.")
         return value
 
@@ -56,19 +60,24 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(password)
         user.save()
-        Profile.objects.create(user=user, **profile_data)
+        
+        profile, _ = Profile.objects.get_or_create(user=user)
+        for attr, value in profile_data.items():
+            setattr(profile, attr, value)
+        profile.save()
         return user
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop("profile", None)
         for attr, value in validated_data.items():
-            if attr != "password":
+            if attr == "password":
+                instance.set_password(value)
+            else:
                 setattr(instance, attr, value)
-        if "password" in validated_data:
-            instance.set_password(validated_data["password"])
         instance.save()
+        
         if profile_data:
-            profile = instance.profile
+            profile, _ = Profile.objects.get_or_create(user=instance)
             for attr, value in profile_data.items():
                 setattr(profile, attr, value)
             profile.save()

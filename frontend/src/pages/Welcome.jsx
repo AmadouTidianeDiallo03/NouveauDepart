@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 
 const REASONS = [
     {
@@ -40,6 +41,7 @@ const GOALS = [
 
 export default function Welcome() {
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
 
@@ -55,13 +57,13 @@ export default function Welcome() {
     const uniName = user?.profile?.university?.name;
     const avatarSrc = user?.profile?.avatar_url;
     const avatarLetter = (firstName[0] || user?.email?.[0] || "?").toUpperCase();
-    const roleLabel = isMentor ? "Mentor 🌟" : "Étudiant·e 🎓";
+    const roleLabel = isMentor ? t("mentor") + " 🌟" : t("student") + " 🎓";
     const roleColor = isMentor
         ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
         : "linear-gradient(135deg, #2563eb, #0ea5e9)";
 
     const hour = new Date().getHours();
-    const greet = hour < 12 ? "Bonjour" : hour < 18 ? "Bon après-midi" : "Bonsoir";
+    const greet = hour < 12 ? t("morning") : hour < 18 ? t("afternoon") : t("evening");
 
     return (
         <div style={{ background: "#f8fafc", minHeight: "100vh" }}>
@@ -114,7 +116,7 @@ export default function Welcome() {
                                 fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1,
                                 marginBottom: "0.55rem",
                             }}>
-                                {fullName ? `${fullName} 🍁` : "Bienvenue !"}
+                                {fullName ? `${fullName} 🍁` : t("welcome")}
                             </div>
                             {/* Badge rôle */}
                             {!loading && (
@@ -165,11 +167,11 @@ export default function Welcome() {
                         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(99,102,241,0.55)"; }}
                         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(99,102,241,0.45)"; }}
                     >
-                        Accéder à mon tableau de bord →
+                        {t("go_to_dashboard")} →
                     </button>
 
                     <div style={{ marginTop: "1rem", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem" }}>
-                        ↓ Découvrir l'histoire du projet
+                        ↓ {t("discover_story")}
                     </div>
                 </div>
             </div>
@@ -184,10 +186,10 @@ export default function Welcome() {
                         color: "#fff", fontSize: "0.78rem", fontWeight: 700,
                         marginBottom: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase",
                     }}>
-                        Pourquoi ce projet ?
+                        {t("why_this_project")}
                     </div>
                     <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em", marginBottom: "0.65rem" }}>
-                        Ce qui m'a poussé à le créer
+                        {t("what_pushed_me")}
                     </h2>
                     <p style={{ color: "#64748b", fontSize: "1rem", maxWidth: 580, margin: "0 auto", lineHeight: 1.7 }}>
                         Ce projet est né d'un vécu personnel, d'une frustration réelle,
@@ -232,10 +234,10 @@ export default function Welcome() {
                         color: "#c7d2fe", fontSize: "0.78rem", fontWeight: 700,
                         marginBottom: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase",
                     }}>
-                        🎓 But du projet
+                        🎓 {t("project_goal")}
                     </div>
                     <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#fff", marginBottom: "0.65rem", letterSpacing: "-0.03em" }}>
-                        Ce que NouveauDépart vise à accomplir
+                        {t("aim_to_accomplish")}
                     </h2>
                     <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "1rem", marginBottom: "2.25rem" }}>
                         Une vision globale centrée sur l'humain, pas seulement sur l'information.
@@ -268,7 +270,7 @@ export default function Welcome() {
                 }}>
                     <div style={{ fontSize: "2.8rem", marginBottom: "0.85rem" }}>💡</div>
                     <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#0f172a", marginBottom: "0.85rem", letterSpacing: "-0.03em" }}>
-                        Vision globale
+                        {t("global_vision")}
                     </h2>
                     <p style={{ color: "#64748b", fontSize: "0.98rem", lineHeight: 1.85, marginBottom: "1.85rem" }}>
                         Ce projet ne vise pas uniquement à fournir de l'information.<br />
@@ -291,7 +293,7 @@ export default function Welcome() {
                         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 10px 32px rgba(99,102,241,0.5)"; }}
                         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(99,102,241,0.35)"; }}
                     >
-                        🚀 Commencer mon aventure québécoise
+                        🚀 {t("start_adventure")}
                     </button>
                 </div>
             </div>

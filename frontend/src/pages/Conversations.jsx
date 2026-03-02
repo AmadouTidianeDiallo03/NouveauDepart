@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import BackButton from "../components/BackButton";
 
 const GRADIENTS = [
     "linear-gradient(135deg, #6366f1, #8b5cf6)",
@@ -50,6 +51,7 @@ export default function Conversations() {
             }}>
                 <div style={{ position: "absolute", top: -40, right: -40, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
                 <div className="container container-sm">
+                    <BackButton />
                     <h1 style={{ color: "#fff", marginBottom: "0.4rem" }}>
                         {isMentor ? "Mes Mentorés 👥" : "Mes Messages 💬"}
                     </h1>

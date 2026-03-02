@@ -8,5 +8,4 @@ urlpatterns = [
     path("guides/", include("guides.urls")),
     path("chat/", include("chat.urls")),
     path("assistant/", include("assistant.urls")),
-    path("mentors/", mentors_list, name="mentors-list"),
 ]

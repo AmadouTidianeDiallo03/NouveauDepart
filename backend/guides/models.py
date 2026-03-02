@@ -7,7 +7,9 @@ class Step(models.Model):
         ("admin", "Administration"),
         ("university", "Université"),
         ("transport", "Transport"),
-        ("study", "Réussite académique"),
+        ("housing", "Logement & Installation"),
+        ("work", "Recherche d'Emploi"),
+        ("lifestyle", "Vie au Québec"),
     ]
 
     title = models.CharField(max_length=200)
@@ -29,8 +31,17 @@ class Task(models.Model):
     title_en = models.CharField(max_length=300, blank=True)
     description = models.TextField(blank=True)
     description_en = models.TextField(blank=True)
+    
+    how_to = models.TextField(blank=True, help_text="Comment obtenir/faire (FR)")
+    how_to_en = models.TextField(blank=True, help_text="How to obtain/do (EN)")
+    
+    tips = models.TextField(blank=True, help_text="Conseils et astuces (FR)")
+    tips_en = models.TextField(blank=True, help_text="Tips and tricks (EN)")
+    
+    locations = models.TextField(blank=True, help_text="Lieux et adresses (FR)")
+    locations_en = models.TextField(blank=True, help_text="Locations and addresses (EN)")
+    
     order = models.PositiveIntegerField(default=0)
-    # If set, this task only applies to a specific university
     university = models.ForeignKey(
         University, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks"
     )

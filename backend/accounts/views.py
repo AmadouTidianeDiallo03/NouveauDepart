@@ -41,13 +41,15 @@ def login_view(request):
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    email = serializer.validated_data["email"]
+    email_or_username = serializer.validated_data["email"]
     password = serializer.validated_data["password"]
 
-    # Look up by email
-    try:
-        user_obj = User.objects.get(email=email)
-    except User.DoesNotExist:
+    # Try to find user by email first, then by username
+    user_obj = User.objects.filter(email__iexact=email_or_username).first()
+    if not user_obj:
+        user_obj = User.objects.filter(username__iexact=email_or_username).first()
+
+    if not user_obj:
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
 
     user = authenticate(request, username=user_obj.username, password=password)
@@ -65,12 +67,6 @@ def me_view(request):
     user = request.user
     if request.method == "GET":
         return Response(UserSerializer(user, context={'request': request}).data)
-
-    # Handle avatar upload separately (multipart)
-    avatar = request.FILES.get("avatar")
-    if avatar:
-        user.profile.avatar = avatar
-        user.profile.save()
 
     serializer = UserSerializer(user, data=request.data, partial=True, context={'request': request})
     if serializer.is_valid():

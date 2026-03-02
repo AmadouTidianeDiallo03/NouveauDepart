@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
+import BackButton from "../components/BackButton";
 
 function MentorCard({ mentor }) {
     const avatarLetter = mentor.first_name?.[0]?.toUpperCase() || "M";
@@ -145,6 +146,7 @@ export default function Mentors() {
             }}>
                 <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(16,185,129,0.2)" }} />
                 <div className="container">
+                    <BackButton />
                     <h1 style={{ color: "#fff", marginBottom: "0.4rem" }}>Trouver un Mentor 🤝</h1>
                     <p style={{ color: "rgba(255,255,255,0.8)", margin: 0, fontSize: "0.95rem" }}>
                         Des étudiants expérimentés, prêts à t'accompagner dans ton intégration au Québec.

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BackButton from "../components/BackButton";
 
 const glossaryData = [
     { term: "AE (Auxiliaire d'enseignement)", emoji: "🎓", definition: "Étudiant·e de cycle supérieur qui aide à animer les travaux pratiques (labs) et à corriger les travaux." },
@@ -39,6 +40,7 @@ export default function Glossary() {
             }}>
                 <div style={{ position: "absolute", top: -50, right: -50, width: 260, height: 260, borderRadius: "50%", background: "rgba(167,139,250,0.25)" }} />
                 <div className="container container-sm">
+                    <BackButton />
                     <div style={{ color: "#c4b5fd", fontSize: "0.82rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
                         📖 Vocabulaire québécois
                     </div>

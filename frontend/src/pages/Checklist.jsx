@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import api from "../services/api";
 import StepList from "../components/StepList";
 import ProgressBar from "../components/ProgressBar";
+import BackButton from "../components/BackButton";
 
 const CATEGORY_COLORS = {
     admin: { bg: "linear-gradient(135deg, #f59e0b, #ef4444)", icon: "🏛️" },
     university: { bg: "linear-gradient(135deg, #2563eb, #6366f1)", icon: "🎓" },
     transport: { bg: "linear-gradient(135deg, #8b5cf6, #ec4899)", icon: "🚌" },
-    study: { bg: "linear-gradient(135deg, #10b981, #3b82f6)", icon: "📚" },
+    housing: { bg: "linear-gradient(135deg, #10b981, #059669)", icon: "🏠" },
+    work: { bg: "linear-gradient(135deg, #0f172a, #334155)", icon: "💼" },
+    lifestyle: { bg: "linear-gradient(135deg, #f97316, #fbbf24)", icon: "☀️" },
     default: { bg: "linear-gradient(135deg, #64748b, #475569)", icon: "📋" },
 };
 
@@ -48,6 +51,7 @@ export default function Checklist() {
             }}>
                 <div style={{ position: "absolute", top: -40, right: -40, width: 220, height: 220, borderRadius: "50%", background: "rgba(99,102,241,0.25)" }} />
                 <div className="container container-sm">
+                    <BackButton />
                     <div style={{ color: "#93c5fd", fontSize: "0.82rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
                         📋 Mon parcours d'intégration
                     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import BackButton from "../components/BackButton";
 
 const RESOURCE_ICONS = {
     registrariat: "🏛️", bibliotheque: "📚", crous: "🍽️", accueil: "🤝",
@@ -57,6 +58,7 @@ export default function University() {
                 <div style={{ position: "absolute", bottom: -40, left: "15%", width: 160, height: 160, borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
 
                 <div className="container container-sm">
+                    <BackButton />
                     <div style={{ display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap" }}>
                         <div style={{
                             width: 72, height: 72, borderRadius: "20px",

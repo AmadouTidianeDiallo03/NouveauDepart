@@ -37,7 +37,7 @@ SYSTEM_PROMPT = (
     "Sois clair, structuré, encourageant. Utilise des listes à puces quand c'est utile."
 )
 
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
 
 
 def detect_language(text: str) -> str:

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import ProgressBar from "../components/ProgressBar";
 
 /* ─── Mentor Action Card ─── */
@@ -40,6 +41,7 @@ function ActionCard({ to, icon, title, desc, gradient }) {
 
 export default function Dashboard() {
     const { user } = useAuth();
+    const { t } = useLanguage();
     const [progress, setProgress] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -311,17 +313,17 @@ export default function Dashboard() {
                 )}
 
                 {/* Quick Access */}
-                <h2 style={{ marginBottom: "1.25rem", fontSize: "1.2rem" }}>Accès rapide</h2>
+                <h2 style={{ marginBottom: "1.25rem", fontSize: "1.2rem" }}>{t("quick_access") || "Accès rapide"}</h2>
                 <div className="grid grid-3">
-                    <ActionCard to="/checklist" icon="✅" title="Ma Checklist" desc="Étapes et tâches à compléter" gradient="linear-gradient(135deg, #1d4ed8, #6366f1)" />
-                    <ActionCard to="/mentors" icon="🤝" title="Trouver un mentor" desc="Des étudiants expérimentés prêts à t'aider" gradient="linear-gradient(135deg, #059669, #0ea5e9)" />
-                    <ActionCard to="/study-success" icon="📚" title="Réussite académique" desc="Crédits, évaluations, méthodes" gradient="linear-gradient(135deg, #6366f1, #8b5cf6)" />
-                    <ActionCard to="/assistant" icon="🤖" title="Assistant IA" desc="Pose une question en FR ou EN" gradient="linear-gradient(135deg, #8b5cf6, #ec4899)" />
-                    <ActionCard to="/glossary" icon="📖" title="Glossaire" desc="Dictionnaire des termes québécois" gradient="linear-gradient(135deg, #7c3aed, #6366f1)" />
+                    <ActionCard to="/checklist" icon="✅" title={t("integration_checklist")} desc={t("track_steps")} gradient="linear-gradient(135deg, #1d4ed8, #6366f1)" />
+                    <ActionCard to="/mentors" icon="🤝" title={t("find_mentor")} desc={t("get_accompanied")} gradient="linear-gradient(135deg, #059669, #0ea5e9)" />
+                    <ActionCard to="/study-success" icon="📚" title={t("school_system")} desc={t("success_keys")} gradient="linear-gradient(135deg, #6366f1, #8b5cf6)" />
+                    <ActionCard to="/assistant" icon="🤖" title={t("ask_ia")} desc={t("instant_answers")} gradient="linear-gradient(135deg, #8b5cf6, #ec4899)" />
+                    <ActionCard to="/glossary" icon="📖" title={t("glossary")} desc={t("glossary_desc") || "Dictionnaire des termes québécois"} gradient="linear-gradient(135deg, #7c3aed, #6366f1)" />
                     {user?.profile?.university && (
-                        <ActionCard to={`/university/${user.profile.university.id}`} icon="🎓" title="Mon université" desc="Infos clés et ressources" gradient="linear-gradient(135deg, #0369a1, #0ea5e9)" />
+                        <ActionCard to={`/university/${user.profile.university.id}`} icon="🎓" title={t("university")} desc={t("uni_desc") || "Infos clés et ressources"} gradient="linear-gradient(135deg, #0369a1, #0ea5e9)" />
                     )}
-                    <ActionCard to="/conversations" icon="💬" title="Messages" desc="Tes conversations avec les mentors" gradient="linear-gradient(135deg, #0ea5e9, #2563eb)" />
+                    <ActionCard to="/conversations" icon="💬" title={t("messages")} desc={t("msg_desc") || "Tes conversations avec les mentors"} gradient="linear-gradient(135deg, #0ea5e9, #2563eb)" />
                 </div>
             </div>
         </div>

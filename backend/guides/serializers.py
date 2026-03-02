@@ -7,7 +7,11 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ["id", "title", "title_en", "description", "description_en", "order", "university", "done"]
+        fields = [
+            "id", "title", "title_en", "description", "description_en", 
+            "how_to", "how_to_en", "tips", "tips_en", "locations", "locations_en",
+            "order", "university", "done"
+        ]
 
     def get_done(self, obj):
         request = self.context.get("request")
@@ -25,8 +29,9 @@ class StepSerializer(serializers.ModelSerializer):
 
     def get_tasks(self, obj):
         request = self.context.get("request")
+        # In Django, prefetched results are in the internal '_prefetched_objects_cache'
+        # Calling .all() on the related manager uses this cache if it exists.
         return TaskSerializer(obj.tasks.all(), many=True, context={"request": request}).data
-
 
 class StepListSerializer(serializers.ModelSerializer):
     total_tasks = serializers.SerializerMethodField()
@@ -37,12 +42,14 @@ class StepListSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "title_en", "category", "order", "total_tasks", "done_tasks"]
 
     def get_total_tasks(self, obj):
-        return obj.tasks.count()
+        # obj.tasks.all() will return the prefetched (filtered) tasks
+        return len(obj.tasks.all())
 
     def get_done_tasks(self, obj):
         request = self.context.get("request")
         if request and request.user.is_authenticated:
-            return obj.tasks.filter(user_tasks__user=request.user, user_tasks__done=True).count()
+            # Count done tasks from the prefetched list to stay consistent with filtering
+            return sum(1 for t in obj.tasks.all() if t.user_tasks.filter(user=request.user, done=True).exists())
         return 0
 
 

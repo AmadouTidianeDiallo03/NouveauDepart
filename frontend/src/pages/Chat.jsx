@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import BackButton from "../components/BackButton";
 
 const GRADIENTS = [
     "linear-gradient(135deg, #6366f1, #8b5cf6)",
@@ -81,16 +82,7 @@ export default function Chat() {
             }}>
                 <div className="container container-sm">
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                        <Link to="/conversations" style={{
-                            color: "rgba(255,255,255,0.8)", fontSize: "1.2rem",
-                            textDecoration: "none", lineHeight: 1,
-                            padding: "0.4rem 0.5rem",
-                            borderRadius: "10px",
-                            transition: "background 0.2s",
-                        }}
-                            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
-                            onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                        >←</Link>
+                        <BackButton to="/conversations" label="" />
 
                         {/* Other user avatar */}
                         <div style={{
