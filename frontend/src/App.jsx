@@ -16,6 +16,7 @@ import Conversations from "./pages/Conversations";
 import Chat from "./pages/Chat";
 import Assistant from "./pages/Assistant";
 import Glossary from "./pages/Glossary";
+import MapExplorer from "./pages/MapExplorer";
 import NotFound from "./pages/NotFound";
 
 import { useAuth } from "./context/AuthContext";
@@ -64,6 +65,7 @@ export default function App() {
                 <Route path="/chat/:id" element={<Protected><Chat /></Protected>} />
                 <Route path="/assistant" element={<Protected><Assistant /></Protected>} />
                 <Route path="/glossary" element={<Protected><Glossary /></Protected>} />
+                <Route path="/carte" element={<Protected><MapExplorer /></Protected>} />
 
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />

@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path("conversations/", views.conversations_view, name="chat-conversations"),
     path("conversations/<int:conv_id>/messages/", views.messages_view, name="chat-messages"),
+    path("conversations/<int:conv_id>/resources/", views.shared_resources_view, name="chat-resources"),
 ]

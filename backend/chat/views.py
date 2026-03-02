@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Conversation, Message
-from .serializers import ConversationSerializer, MessageSerializer
+from .models import Conversation, Message, SharedResource
+from .serializers import ConversationSerializer, MessageSerializer, SharedResourceSerializer
 
 
 @api_view(["GET", "POST"])
@@ -68,3 +68,44 @@ def messages_view(request, conv_id):
 
     msg = Message.objects.create(conversation=conv, sender=request.user, content=content)
     return Response(MessageSerializer(msg).data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated])
+def shared_resources_view(request, conv_id):
+    """
+    GET  /api/chat/conversations/:id/resources/  – list shared resources
+    POST /api/chat/conversations/:id/resources/  – share a resource
+    """
+    try:
+        conv = Conversation.objects.get(pk=conv_id)
+    except Conversation.DoesNotExist:
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Security: only participants
+    if request.user not in [conv.user1, conv.user2]:
+        return Response({"detail": "Forbidden."}, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == "GET":
+        resources = conv.resources.all()
+        serializer = SharedResourceSerializer(resources, many=True)
+        return Response(serializer.data)
+
+    # POST
+    title = request.data.get("title", "").strip()
+    url = request.data.get("url", "").strip()
+    description = request.data.get("description", "").strip()
+    resource_type = request.data.get("resource_type", "link").strip()
+
+    if not title or not url:
+        return Response({"detail": "title and url required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    resource = SharedResource.objects.create(
+        conversation=conv,
+        sender=request.user,
+        title=title,
+        description=description,
+        url=url,
+        resource_type=resource_type
+    )
+    return Response(SharedResourceSerializer(resource).data, status=status.HTTP_201_CREATED)

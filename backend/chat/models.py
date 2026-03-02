@@ -33,3 +33,29 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.sender.email}: {self.content[:50]}"
+
+
+class SharedResource(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="resources")
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shared_resources")
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    url = models.URLField()
+    resource_type = models.CharField(
+        max_length=20,
+        choices=[
+            ("document", "Document"),
+            ("video", "Vidéo"),
+            ("link", "Lien"),
+            ("article", "Article"),
+            ("guide", "Guide"),
+        ],
+        default="link"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} - {self.resource_type}"

@@ -1,7 +1,13 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from accounts.models import Profile
+from accounts.models import Profile, MentorAvailability, MentorRequest
 from universities.models import University
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["role", "university", "city", "language", "bio", "avatar"]
 
 
 class MentorSerializer(serializers.ModelSerializer):
@@ -10,10 +16,11 @@ class MentorSerializer(serializers.ModelSerializer):
     language = serializers.SerializerMethodField()
     bio = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ["id", "full_name", "email", "university", "city", "language", "bio"]
+        fields = ["id", "full_name", "email", "university", "city", "language", "bio", "avatar_url"]
 
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}".strip() or obj.email
@@ -42,3 +49,32 @@ class MentorSerializer(serializers.ModelSerializer):
             return obj.profile.bio
         except Exception:
             return ""
+
+    def get_avatar_url(self, obj):
+        try:
+            if obj.profile.avatar:
+                return obj.profile.avatar.url
+        except Exception:
+            pass
+        return None
+
+
+class MentorAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MentorAvailability
+        fields = ["id", "day_of_week", "start_time", "end_time"]
+
+
+class MentorRequestSerializer(serializers.ModelSerializer):
+    mentor_info = serializers.SerializerMethodField()
+    mentee_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MentorRequest
+        fields = ["id", "mentee", "mentor", "mentor_info", "mentee_info", "message", "status", "created_at"]
+
+    def get_mentor_info(self, obj):
+        return MentorSerializer(obj.mentor).data
+
+    def get_mentee_info(self, obj):
+        return MentorSerializer(obj.mentee).data

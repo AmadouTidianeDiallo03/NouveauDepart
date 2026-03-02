@@ -7,7 +7,7 @@ from universities.models import University
 class UniversityBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = University
-        fields = ["id", "name", "city"]
+        fields = ["id", "name", "city", "latitude", "longitude"]
 
 
 class ProfileSerializer(serializers.ModelSerializer):

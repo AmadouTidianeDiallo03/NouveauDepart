@@ -1,0 +1,18 @@
+13|HEC Montréal|Montréal
+16|Institut national de la recherche scientifique (INRS)|Québec
+14|Polytechnique Montréal|Montréal
+15|Université Bishop's|Sherbrooke
+6|Université Concordia|Montréal
+2|Université Laval|Québec
+5|Université McGill|Montréal
+18|Université TÉLUQ|À distance
+3|Université de Montréal (UdeM)|Montréal
+7|Université de Sherbrooke|Sherbrooke
+11|Université du Québec en Abitibi-Témiscamingue (UQAT)|Rouyn-Noranda
+10|Université du Québec en Outaouais (UQO)|Gatineau
+9|Université du Québec à Chicoutimi (UQAC)|Saguenay
+4|Université du Québec à Montréal (UQAM)|Montréal
+1|Université du Québec à Rimouski (UQAR)|Rimouski
+8|Université du Québec à Trois-Rivières (UQTR)|Trois-Rivières
+12|École de technologie supérieure (ÉTS)|Montréal
+17|École nationale d'administration publique (ENAP)|Québec

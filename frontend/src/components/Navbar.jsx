@@ -34,6 +34,7 @@ export default function Navbar({ user }) {
         { to: "/mentors", label: t("mentors"), icon: "🤝", newcomerOnly: true, hideOnDashboard: true },
         { to: "/conversations", label: t("messages"), icon: "💬" },
         { to: "/assistant", label: t("ia"), icon: "🤖", hideOnDashboard: true },
+        { to: "/carte", label: t("map"), icon: "📍", hideOnDashboard: true },
         { to: "/glossary", label: t("glossary"), icon: "📖", hideOnDashboard: true },
         { to: "/onboarding", label: t("profile"), icon: "🪪", hideOnDashboard: true },
     ];

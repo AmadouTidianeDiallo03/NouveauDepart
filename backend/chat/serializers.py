@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Conversation, Message
+from .models import Conversation, Message, SharedResource
 
 
 class UserBriefSerializer(serializers.ModelSerializer):
@@ -30,6 +30,14 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ["id", "sender", "content", "created_at"]
+
+
+class SharedResourceSerializer(serializers.ModelSerializer):
+    sender = UserBriefSerializer(read_only=True)
+
+    class Meta:
+        model = SharedResource
+        fields = ["id", "sender", "title", "description", "url", "resource_type", "created_at"]
 
 
 class ConversationSerializer(serializers.ModelSerializer):
