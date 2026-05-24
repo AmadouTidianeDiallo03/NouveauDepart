@@ -10,7 +10,6 @@ from universities.models import University, PointOfInterest
 def populate_map_data():
     print("Populating Premium Map Data...")
 
-    # Data structure: [Name Snippet, City, Lat, Lon]
     uni_coords = [
         ["Rimouski", "Lévis", 46.786475, -71.162705],
         ["Laval", "Québec", 46.7816, -71.2721],
@@ -49,7 +48,6 @@ def populate_map_data():
         ]
     }
 
-    # Generic fallback
     generic_pois = [
         {"name": "Service Canada", "cat": "admin", "desc": "Administration fédérale (NAS)."},
         {"name": "Banque majoritaire", "cat": "bank", "desc": "Gestion financière."},
@@ -69,7 +67,6 @@ def populate_map_data():
             
             pois_data = city_pois.get(city_name, [])
             if not pois_data:
-                # Add generic ones offset from uni coords
                 for i, g in enumerate(generic_pois):
                     PointOfInterest.objects.create(
                         university=uni,

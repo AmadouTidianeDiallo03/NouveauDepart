@@ -11,7 +11,6 @@ from universities.models import University
 def ultimate_fusion():
     print("Starting Ultimate Checklist Fusion...")
 
-    # 1. Ensure Steps exist (merged categories)
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -28,12 +27,9 @@ def ultimate_fusion():
         step.order = s["order"]
         step.save()
 
-    # 2. Get specific university context (UQAR Lévis)
     uqar = University.objects.filter(name__icontains="UQAR").first()
 
-    # 3. THE MASTER LIST (All tasks ever mentionned + new)
     master_tasks = [
-        # --- ADMINISTRATION ---
         {
             "cat": "admin", "title": "Obtenir son NAS", "title_en": "Get your SIN",
             "desc": "Indispensable pour travailler et recevoir des bourses.",
@@ -67,7 +63,6 @@ def ultimate_fusion():
             "uni": None
         },
 
-        # --- UNIVERSITY ---
         {
             "cat": "university", "title": "Portail Étudiant (Touka)", "title_en": "Student Portal",
             "desc": "Accès aux cours et notes.",
@@ -101,7 +96,6 @@ def ultimate_fusion():
             "uni": None
         },
 
-        # --- TRANSPORT ---
         {
             "cat": "transport", "title": "Carte OPUS / ST Lévis", "title_en": "OPUS Card",
             "desc": "Transport en commun à tarif réduit.",
@@ -135,7 +129,6 @@ def ultimate_fusion():
             "uni": None
         },
 
-        # --- HOUSING ---
         {
             "cat": "housing", "title": "Hydro-Québec", "title_en": "Electricity",
             "desc": "Compteur à votre nom.",
@@ -177,7 +170,6 @@ def ultimate_fusion():
             "uni": None
         },
 
-        # --- LIFESTYLE ---
         {
             "cat": "lifestyle", "title": "L'Hiver Québécois", "title_en": "Quebec Winter",
             "desc": "Survivre au froid.",
@@ -219,7 +211,6 @@ def ultimate_fusion():
             "uni": None
         },
 
-        # --- WORK ---
         {
             "cat": "work", "title": "CV Style Québécois", "title_en": "Quebec CV",
             "desc": "Se faire recruter.",
@@ -246,7 +237,6 @@ def ultimate_fusion():
         },
     ]
 
-    # Create/Update all tasks
     for t_data in master_tasks:
         step = Step.objects.get(category=t_data["cat"])
         Task.objects.update_or_create(
@@ -262,7 +252,6 @@ def ultimate_fusion():
             }
         )
     
-    # 4. Profile cleanup (Ensure test user is on UQAR for visibility)
     from django.contrib.auth.models import User
     from accounts.models import Profile
     user = User.objects.filter(username__contains="amadoudiallo").first()

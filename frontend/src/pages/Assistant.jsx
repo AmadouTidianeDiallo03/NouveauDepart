@@ -10,7 +10,7 @@ const tips = [
 export default function Assistant() {
     return (
         <div className="page-content" style={{ background: "linear-gradient(180deg, #f0f4ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            {/* Hero */}
+            
             <div style={{
                 background: "linear-gradient(135deg, #0f172a, #1e1b4b, #312e81)",
                 padding: "2rem 0 3.5rem",
@@ -31,14 +31,14 @@ export default function Assistant() {
                             boxShadow: "0 4px 20px rgba(99,102,241,0.4)",
                         }}>🤖</div>
                         <div>
-                            <h1 style={{ color: "#fff", marginBottom: "0.25rem" }}>NouveauBot</h1>
+                            <h1 style={{ color: "#fff", marginBottom: "0.25rem" }}>NordikBot</h1>
                             <p style={{ color: "rgba(255,255,255,0.7)", margin: 0, fontSize: "0.9rem" }}>
-                                Ton assistant IA pour l'intégration au Québec
+                                Ton assistant IA avec sources pour l'intégration au Québec
                             </p>
                         </div>
                     </div>
 
-                    {/* Tips */}
+                    
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
                         {tips.map((tip) => (
                             <div key={tip.text} style={{

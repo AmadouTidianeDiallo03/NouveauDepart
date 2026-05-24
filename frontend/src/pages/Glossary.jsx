@@ -30,7 +30,7 @@ export default function Glossary() {
 
     return (
         <div className="page-content" style={{ background: "linear-gradient(180deg, #faf5ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            {/* Hero */}
+            
             <div style={{
                 background: "linear-gradient(135deg, #4c1d95, #7c3aed, #8b5cf6)",
                 padding: "2.5rem 0 5rem",
@@ -49,7 +49,7 @@ export default function Glossary() {
                         Comprendre le vocabulaire universitaire et administratif du Québec — aucune surprise !
                     </p>
 
-                    {/* Search bar inside hero */}
+                    
                     <div style={{ position: "relative" }}>
                         <span style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", fontSize: "1.1rem", pointerEvents: "none" }}>🔍</span>
                         <input
@@ -72,7 +72,7 @@ export default function Glossary() {
             </div>
 
             <div className="container container-sm" style={{ position: "relative", zIndex: 1 }}>
-                {/* Count badge */}
+                
                 <div style={{ marginBottom: "1.25rem", fontSize: "0.88rem", color: "#64748b", fontWeight: 600 }}>
                     {filtered.length === glossaryData.length
                         ? `${glossaryData.length} termes disponibles`

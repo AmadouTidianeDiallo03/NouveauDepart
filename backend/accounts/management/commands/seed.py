@@ -1,7 +1,4 @@
-"""
-Management command: python manage.py seed
-Creates sample data: universities, steps, tasks, mentor accounts.
-"""
+
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from universities.models import University
@@ -170,7 +167,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("🌱 Seeding database...")
 
-        # ── Universities ─────────────────────────────────────────────────
         universities = []
         for data in UNIVERSITIES:
             uni, created = University.objects.update_or_create(
@@ -181,7 +177,6 @@ class Command(BaseCommand):
             action = "created" if created else "updated"
             self.stdout.write(f"  ✓ University {action}: {uni.name}")
 
-        # ── Steps & Tasks ────────────────────────────────────────────────
         for step_data in STEPS:
             tasks_data = step_data.pop("tasks")
             step, created = Step.objects.update_or_create(
@@ -204,7 +199,6 @@ class Command(BaseCommand):
                 )
             self.stdout.write(f"      {len(tasks_data)} tasks seeded")
 
-        # ── Mentors ──────────────────────────────────────────────────────
         for mentor_data in MENTORS:
             uni_index = mentor_data.pop("university_index")
             uni = universities[uni_index]

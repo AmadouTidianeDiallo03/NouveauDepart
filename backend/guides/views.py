@@ -19,9 +19,8 @@ def get_user_university(user):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def steps_list(request):
-    """GET /api/guides/steps/ – list all steps with progress counts."""
+
     university = get_user_university(request.user)
-    # Filter tasks: global (NULL) OR specific to user's university
     task_filter = Q(university__isnull=True) | Q(university=university)
     
     steps = Step.objects.prefetch_related(
@@ -35,7 +34,7 @@ def steps_list(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def step_tasks(request, step_id):
-    """GET /api/guides/steps/:id/tasks/ – tasks for a specific step."""
+
     university = get_user_university(request.user)
     task_filter = Q(university__isnull=True) | Q(university=university)
     
@@ -53,7 +52,7 @@ def step_tasks(request, step_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def toggle_task(request, task_id):
-    """POST /api/guides/tasks/:id/toggle/ – toggle task done/undone."""
+
     try:
         task = Task.objects.get(pk=task_id)
     except Task.DoesNotExist:
@@ -70,7 +69,7 @@ def toggle_task(request, task_id):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def progress(request):
-    """GET /api/guides/progress/ – overall completion stats."""
+
     university = get_user_university(request.user)
     task_filter = Q(university__isnull=True) | Q(university=university)
     

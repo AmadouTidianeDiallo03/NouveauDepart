@@ -5,7 +5,6 @@ const LanguageContext = createContext();
 
 const translations = {
     fr: {
-        // Navbar
         dashboard: "Tableau de bord",
         checklist: "Checklist",
         mentors: "Mentors",
@@ -19,7 +18,6 @@ const translations = {
         student: "Étudiant",
         mentor: "Mentor",
 
-        // Welcome/Dashboard
         welcome_back: "Bon retour,",
         how_can_i_help: "Comment puis-je t'aider aujourd'hui ?",
         discover_quebec: "Découvre ton nouveau milieu de vie et simplifie tes démarches.",
@@ -33,7 +31,6 @@ const translations = {
         school_system: "Système scolaire",
         success_keys: "Les clés de la réussite ici",
 
-        // Onboarding
         complete_profile: "Complète ton profil",
         personal_info: "Informations personnelles",
         first_name: "Prénom",
@@ -50,7 +47,6 @@ const translations = {
         saving: "Sauvegarde en cours...",
         save_success: "Profil mis à jour !",
 
-        // Common
         back: "Retour",
         quick_access: "Accès rapide",
         glossary_desc: "Dictionnaire des termes québécois",
@@ -75,7 +71,6 @@ const translations = {
         welcome: "Bienvenue !",
     },
     en: {
-        // Navbar
         dashboard: "Dashboard",
         checklist: "Checklist",
         mentors: "Mentors",
@@ -89,7 +84,6 @@ const translations = {
         student: "Student",
         mentor: "Mentor",
 
-        // Welcome/Dashboard
         welcome_back: "Welcome back,",
         how_can_i_help: "How can I help you today?",
         discover_quebec: "Discover your new living environment and simplify your steps.",
@@ -103,7 +97,6 @@ const translations = {
         school_system: "School System",
         success_keys: "Keys to success here",
 
-        // Onboarding
         complete_profile: "Complete your profile",
         personal_info: "Personal Information",
         first_name: "First Name",
@@ -120,7 +113,6 @@ const translations = {
         saving: "Saving...",
         save_success: "Profile updated!",
 
-        // Common
         back: "Back",
         quick_access: "Quick Access",
         glossary_desc: "Dictionary of local terms",

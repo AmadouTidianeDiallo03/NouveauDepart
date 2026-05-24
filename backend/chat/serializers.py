@@ -1,15 +1,17 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from accounts.serializers import ProfileSerializer
 from .models import Conversation, Message, SharedResource
 
 
 class UserBriefSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
     university = serializers.SerializerMethodField()
+    profile = ProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "first_name", "last_name", "email", "role", "university"]
+        fields = ["id", "first_name", "last_name", "email", "role", "university", "profile"]
 
     def get_role(self, obj):
         try:
@@ -51,7 +53,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     def get_other_user(self, obj):
         request = self.context.get("request")
         other = obj.user2 if obj.user1 == request.user else obj.user1
-        return UserBriefSerializer(other).data
+        return UserBriefSerializer(other, context=self.context).data
 
     def get_last_message(self, obj):
         msg = obj.messages.last()

@@ -1,213 +1,337 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
-import BackButton from "../components/BackButton";
+import { useAuth } from "../context/AuthContext";
+import "../styles/mentors.css";
 
-function MentorCard({ mentor }) {
-    const avatarLetter = mentor.first_name?.[0]?.toUpperCase() || "M";
-    const gradients = [
-        "linear-gradient(135deg, #6366f1, #8b5cf6)",
-        "linear-gradient(135deg, #0ea5e9, #6366f1)",
-        "linear-gradient(135deg, #10b981, #0ea5e9)",
-        "linear-gradient(135deg, #f59e0b, #ef4444)",
-        "linear-gradient(135deg, #ec4899, #8b5cf6)",
-    ];
-    const gradient = gradients[(mentor.id || 0) % gradients.length];
-    const langLabel = mentor.profile?.language === "en" ? "🇬🇧 English" : "🇫🇷 Français";
+const HELP_TOPICS = [
+    "Logement",
+    "Transport",
+    "Vie universitaire",
+    "Démarches administratives",
+    "Budget",
+    "Emploi étudiant",
+    "Intégration culturelle",
+    "Études",
+    "Vie sociale",
+];
 
-    return (
-        <div style={{
-            background: "#fff",
-            borderRadius: "20px",
-            overflow: "hidden",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-            border: "1px solid #f1f5f9",
-            transition: "transform 0.2s, box-shadow 0.2s",
-            display: "flex",
-            flexDirection: "column",
-        }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(99,102,241,0.2)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)"; }}
-        >
-            {/* Card top banner */}
-            <div style={{ background: gradient, height: 80, position: "relative" }}>
-                {/* Avatar */}
-                <div style={{
-                    position: "absolute", bottom: -28, left: "1.25rem",
-                    width: 56, height: 56, borderRadius: "50%",
-                    background: mentor.profile?.avatar_url ? "transparent" : "rgba(255,255,255,0.2)",
-                    border: "3px solid #fff",
-                    overflow: "hidden",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1.4rem", fontWeight: 800, color: "#fff",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                }}>
-                    {mentor.profile?.avatar_url
-                        ? <img src={mentor.profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        : avatarLetter
-                    }
-                </div>
-            </div>
+const COUNTRY_OPTIONS = ["Côte d’Ivoire", "Sénégal", "Cameroun", "Maroc", "Tunisie", "France", "Haïti", "Algérie", "Canada", "Autre"];
 
-            <div style={{ padding: "2.5rem 1.25rem 1.25rem" }}>
-                {/* Name + badges */}
-                <div style={{ marginBottom: "0.75rem" }}>
-                    <div style={{ fontWeight: 800, fontSize: "1.05rem", color: "#0f172a" }}>
-                        {mentor.first_name} {mentor.last_name}
-                    </div>
-                    <div style={{ fontSize: "0.82rem", color: "#64748b" }}>
-                        {mentor.profile?.university?.name || "Université non indiquée"}
-                    </div>
-                </div>
-
-                <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.85rem" }}>
-                    <span style={{ background: "#ede9fe", color: "#7c3aed", borderRadius: "999px", padding: "0.2rem 0.65rem", fontSize: "0.75rem", fontWeight: 600 }}>
-                        ⭐ Mentor
-                    </span>
-                    <span style={{ background: "#f0fdf4", color: "#166534", borderRadius: "999px", padding: "0.2rem 0.65rem", fontSize: "0.75rem", fontWeight: 600 }}>
-                        {langLabel}
-                    </span>
-                    {mentor.profile?.city && (
-                        <span style={{ background: "#f0f9ff", color: "#0369a1", borderRadius: "999px", padding: "0.2rem 0.65rem", fontSize: "0.75rem", fontWeight: 600 }}>
-                            📍 {mentor.profile.city}
-                        </span>
-                    )}
-                </div>
-
-                {mentor.profile?.bio ? (
-                    <p style={{ fontSize: "0.88rem", color: "#64748b", lineHeight: 1.6, marginBottom: "1rem", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                        {mentor.profile.bio}
-                    </p>
-                ) : (
-                    <p style={{ fontSize: "0.88rem", color: "#94a3b8", fontStyle: "italic", marginBottom: "1rem" }}>
-                        Ce mentor n'a pas encore rempli sa bio.
-                    </p>
-                )}
-
-                <Link to={`/chat/${mentor.id}`} style={{
-                    display: "block",
-                    textAlign: "center",
-                    padding: "0.65rem",
-                    borderRadius: "12px",
-                    background: gradient,
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: "0.9rem",
-                    textDecoration: "none",
-                    transition: "opacity 0.2s",
-                }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-                    onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-                >
-                    💬 Contacter
-                </Link>
-            </div>
-        </div>
-    );
-}
+const EMPTY_FILTERS = {
+    search: "",
+    university_id: "",
+    city: "",
+    country_origin: "",
+    language: "",
+    program: "",
+    help_topic: "",
+    availability_status: "",
+};
 
 export default function Mentors() {
+    const { user } = useAuth();
     const [mentors, setMentors] = useState([]);
+    const [recommended, setRecommended] = useState([]);
     const [universities, setUniversities] = useState([]);
-    const [filters, setFilters] = useState({ university_id: "", city: "", language: "" });
+    const [filters, setFilters] = useState(EMPTY_FILTERS);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        api.get("/universities/").then((r) => setUniversities(r.data.results || r.data));
-        fetchMentors({});
+        api.get("/universities/").then((response) => setUniversities(response.data.results || response.data)).catch(() => setUniversities([]));
+        api.get("/auth/mentors/recommended/").then((response) => setRecommended(response.data.results || response.data)).catch(() => setRecommended([]));
     }, []);
 
-    async function fetchMentors(params) {
+    useEffect(() => {
+        const timer = setTimeout(() => fetchMentors(filters), 250);
+        return () => clearTimeout(timer);
+    }, [filters]);
+
+    async function fetchMentors(currentFilters) {
         setLoading(true);
+        setError("");
         try {
-            const res = await api.get("/mentors/", { params });
-            setMentors(res.data);
+            const params = Object.fromEntries(Object.entries(currentFilters).filter(([, value]) => value));
+            const response = await api.get("/auth/mentors/", { params });
+            setMentors(response.data.results || response.data);
+        } catch (err) {
+            console.error("Mentors loading error:", err);
+            setError("Impossible de charger les mentors pour le moment.");
         } finally {
             setLoading(false);
         }
     }
 
-    function handleFilter(e) {
-        const newFilters = { ...filters, [e.target.name]: e.target.value };
-        setFilters(newFilters);
-        const params = Object.fromEntries(Object.entries(newFilters).filter(([, v]) => v));
-        fetchMentors(params);
+    function setFilter(name, value) {
+        setFilters((current) => ({ ...current, [name]: value }));
+    }
+
+    function resetFilters() {
+        setFilters(EMPTY_FILTERS);
+    }
+
+    const recommendedIds = useMemo(() => new Set(recommended.map((mentor) => mentor.id)), [recommended]);
+    const resultLabel = filters.country_origin
+        ? `Mentors venant de : ${filters.country_origin}`
+        : `${mentors.length} mentor${mentors.length > 1 ? "s" : ""} disponible${mentors.length > 1 ? "s" : ""}`;
+
+    return (
+        <div className="mentors-page">
+            <section className="mentors-hero">
+                <div className="mentors-hero-content">
+                    <span>Accompagnement humain</span>
+                    <h1>Trouver un mentor</h1>
+                    <p>Connecte-toi avec un étudiant expérimenté qui peut t’accompagner dans ton intégration au Québec.</p>
+                    <p className="hero-note">Tu peux filtrer les mentors par université, langue, pays d’origine ou domaine d’aide.</p>
+                    <a href="#recommended" className="hero-button">Voir les mentors recommandés</a>
+                </div>
+                <div className="mentors-hero-visual" aria-hidden="true">
+                    <div />
+                    <span />
+                    <span />
+                </div>
+            </section>
+
+            <main className="mentors-container">
+                <MentorFilters
+                    filters={filters}
+                    universities={universities}
+                    onChange={setFilter}
+                    onReset={resetFilters}
+                />
+
+                {!!recommended.length && (
+                    <section className="mentors-section" id="recommended">
+                        <SectionHeader
+                            eyebrow="Sélection personnalisée"
+                            title="Mentors recommandés pour toi"
+                            description="Ces profils ressortent selon ton université, ta ville, ta langue ou ton parcours."
+                        />
+                        <div className="recommended-row">
+                            {recommended.slice(0, 3).map((mentor) => (
+                                <MentorCard key={mentor.id} mentor={mentor} recommended sameCountry={sameCountry(user, mentor)} compact />
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <section className="mentors-section">
+                    <div className="results-head">
+                        <div>
+                            <span>Résultats</span>
+                            <h2>{resultLabel}</h2>
+                        </div>
+                        <p>{Object.values(filters).some(Boolean) ? "Tes critères sont appliqués." : "Affichage de tous les mentors actifs."}</p>
+                    </div>
+
+                    {loading ? (
+                        <div className="mentors-loading"><div className="mentors-spinner" />Chargement des mentors...</div>
+                    ) : error ? (
+                        <div className="mentors-empty"><strong>{error}</strong></div>
+                    ) : mentors.length ? (
+                        <div className="mentors-grid">
+                            {mentors.map((mentor) => (
+                                <MentorCard
+                                    key={mentor.id}
+                                    mentor={mentor}
+                                    recommended={recommendedIds.has(mentor.id)}
+                                    sameCountry={sameCountry(user, mentor)}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <EmptyState onReset={resetFilters} />
+                    )}
+                </section>
+
+                <WhyMentorSection />
+            </main>
+        </div>
+    );
+}
+
+function MentorFilters({ filters, universities, onChange, onReset }) {
+    return (
+        <section className="mentor-filters">
+            <div className="mentor-search">
+                <Icon name="search" />
+                <input
+                    value={filters.search}
+                    onChange={(event) => onChange("search", event.target.value)}
+                    placeholder="Rechercher un mentor par nom, pays, programme ou domaine d’aide..."
+                />
+            </div>
+            <select value={filters.university_id} onChange={(event) => onChange("university_id", event.target.value)}>
+                <option value="">Université</option>
+                {universities.map((university) => <option key={university.id} value={university.id}>{university.name}</option>)}
+            </select>
+            <input value={filters.city} onChange={(event) => onChange("city", event.target.value)} placeholder="Campus ou ville" />
+            <select value={filters.country_origin} onChange={(event) => onChange("country_origin", event.target.value)}>
+                <option value="">Pays d’origine</option>
+                {COUNTRY_OPTIONS.map((country) => <option key={country} value={country}>{country}</option>)}
+            </select>
+            <select value={filters.language} onChange={(event) => onChange("language", event.target.value)}>
+                <option value="">Langue</option>
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+            </select>
+            <input value={filters.program} onChange={(event) => onChange("program", event.target.value)} placeholder="Programme d’études" />
+            <select value={filters.help_topic} onChange={(event) => onChange("help_topic", event.target.value)}>
+                <option value="">Domaine d’aide</option>
+                {HELP_TOPICS.map((topic) => <option key={topic} value={topic}>{topic}</option>)}
+            </select>
+            <select value={filters.availability_status} onChange={(event) => onChange("availability_status", event.target.value)}>
+                <option value="">Disponibilité</option>
+                <option value="Disponible">Disponible</option>
+                <option value="Disponibilités à confirmer">Disponibilités à confirmer</option>
+            </select>
+            <button type="button" onClick={onReset}>Réinitialiser les filtres</button>
+        </section>
+    );
+}
+
+function MentorCard({ mentor, recommended, sameCountry: hasSameCountry, compact = false }) {
+    const navigate = useNavigate();
+    const fullName = mentor.full_name || `${mentor.first_name || ""} ${mentor.last_name || ""}`.trim() || mentor.email;
+    const initials = fullName.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
+    const topics = mentor.help_topics?.length ? mentor.help_topics : splitList(mentor.specialties || "Vie universitaire,Démarches");
+    const languages = mentor.languages?.length ? mentor.languages : [mentor.language === "en" ? "English" : "Français"];
+
+    async function sendMessage() {
+        try {
+            const response = await api.post("/chat/conversations/", { mentor_id: mentor.id });
+            navigate(`/chat/${response.data.id}`);
+        } catch (err) {
+            console.error("Conversation creation error:", err);
+        }
     }
 
     return (
-        <div className="page-content" style={{ background: "linear-gradient(180deg, #f0fdf4 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            {/* Hero */}
-            <div style={{
-                background: "linear-gradient(135deg, #064e3b, #059669, #10b981)",
-                padding: "2.5rem 0 4.5rem",
-                marginBottom: "-2.5rem",
-                position: "relative",
-                overflow: "hidden",
-            }}>
-                <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(16,185,129,0.2)" }} />
-                <div className="container">
-                    <BackButton />
-                    <h1 style={{ color: "#fff", marginBottom: "0.4rem" }}>Trouver un Mentor 🤝</h1>
-                    <p style={{ color: "rgba(255,255,255,0.8)", margin: 0, fontSize: "0.95rem" }}>
-                        Des étudiants expérimentés, prêts à t'accompagner dans ton intégration au Québec.
-                    </p>
+        <article className={`mentor-profile-card ${compact ? "compact" : ""}`}>
+            <div className="mentor-card-top">
+                <div className="mentor-avatar">
+                    {mentor.avatar_url ? <img src={mentor.avatar_url} alt="" /> : initials}
+                </div>
+                <div>
+                    <div className="mentor-name-row">
+                        <h3>{fullName}</h3>
+                        {mentor.is_verified && <span className="verified-badge">Vérifié</span>}
+                    </div>
+                    <p>{mentor.university?.name || "Université non indiquée"} {mentor.campus ? `· ${mentor.campus}` : ""}</p>
                 </div>
             </div>
 
-            <div className="container" style={{ position: "relative", zIndex: 1 }}>
-                {/* Filters card */}
-                <div style={{
-                    background: "#fff",
-                    borderRadius: "20px",
-                    padding: "1.25rem 1.5rem",
-                    marginBottom: "2rem",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    display: "flex", flexWrap: "wrap", gap: "1rem", alignItems: "flex-end",
-                }}>
-                    <div style={{ flex: "1 1 200px" }}>
-                        <label className="form-label">🎓 Université</label>
-                        <select name="university_id" className="form-select" value={filters.university_id} onChange={handleFilter}>
-                            <option value="">Toutes les universités</option>
-                            {universities.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-                        </select>
-                    </div>
-                    <div style={{ flex: "1 1 160px" }}>
-                        <label className="form-label">📍 Ville</label>
-                        <input name="city" type="text" className="form-input" value={filters.city} onChange={handleFilter} placeholder="Lévis, Montréal…" />
-                    </div>
-                    <div style={{ flex: "1 1 130px" }}>
-                        <label className="form-label">🌐 Langue</label>
-                        <select name="language" className="form-select" value={filters.language} onChange={handleFilter}>
-                            <option value="">Toutes</option>
-                            <option value="fr">Français</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                </div>
-
-                {/* Results */}
-                {loading ? (
-                    <div className="spinner" />
-                ) : mentors.length === 0 ? (
-                    <div style={{
-                        background: "#fff", borderRadius: "20px", padding: "3rem",
-                        textAlign: "center", color: "#94a3b8", boxShadow: "0 4px 20px rgba(0,0,0,0.06)"
-                    }}>
-                        <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🔎</div>
-                        <div style={{ fontWeight: 700, color: "#0f172a", fontSize: "1.05rem" }}>Aucun mentor trouvé</div>
-                        <div style={{ fontSize: "0.88rem", marginTop: "0.3rem" }}>Essaie de modifier tes filtres</div>
-                    </div>
-                ) : (
-                    <>
-                        <div style={{ marginBottom: "1rem", color: "#64748b", fontSize: "0.88rem", fontWeight: 600 }}>
-                            {mentors.length} mentor{mentors.length > 1 ? "s" : ""} disponible{mentors.length > 1 ? "s" : ""}
-                        </div>
-                        <div className="grid grid-3">
-                            {mentors.map((m) => <MentorCard key={m.id} mentor={m} />)}
-                        </div>
-                    </>
-                )}
+            <div className="mentor-badges">
+                <span>Mentor</span>
+                {recommended && <span className="recommend">Recommandé pour toi</span>}
+                {hasSameCountry && <span className="country-match">Même pays d’origine</span>}
+                <span className="compat">{mentor.compatibility || "Peut aider"}</span>
             </div>
+
+            <div className="mentor-meta-grid">
+                <Meta icon="flag" label="Pays d’origine" value={mentor.country_origin || "Non indiqué"} />
+                <Meta icon="pin" label="Ville" value={mentor.city || "Québec"} />
+                <Meta icon="book" label="Programme" value={mentor.program || "Non précisé"} />
+                <Meta icon="globe" label="Langues" value={languages.join(", ")} />
+            </div>
+
+            <div className="topic-tags">
+                {topics.slice(0, compact ? 3 : 5).map((topic) => <span key={topic}>{topic}</span>)}
+            </div>
+
+            <p className="mentor-bio">{mentor.bio || mentor.profile?.bio || "Ce mentor peut t’aider à mieux comprendre ton arrivée et ta vie universitaire au Québec."}</p>
+
+            <div className="mentor-status">
+                <span className={mentor.availability_status?.toLowerCase().includes("disponible") ? "available" : ""} />
+                {mentor.availability_status || "Disponibilités à confirmer"}
+            </div>
+
+            <div className="mentor-actions">
+                <Link to={`/mentors/${mentor.id}`}>Voir le profil</Link>
+                <button type="button" onClick={sendMessage}>Envoyer un message</button>
+                <Link to={`/mentors/rendez-vous?mentor_id=${mentor.id}`} className="secondary">Prendre rendez-vous</Link>
+            </div>
+        </article>
+    );
+}
+
+function Meta({ icon, label, value }) {
+    return (
+        <div>
+            <span><Icon name={icon} /> {label}</span>
+            <strong>{value}</strong>
         </div>
+    );
+}
+
+function SectionHeader({ eyebrow, title, description }) {
+    return (
+        <div className="mentors-section-head">
+            <span>{eyebrow}</span>
+            <h2>{title}</h2>
+            <p>{description}</p>
+        </div>
+    );
+}
+
+function WhyMentorSection() {
+    const items = [
+        "Poser des questions sur l’université",
+        "Comprendre les premières démarches",
+        "Obtenir des conseils pratiques",
+        "Éviter l’isolement",
+        "Mieux s’intégrer à la vie étudiante",
+    ];
+    return (
+        <section className="why-mentor">
+            <SectionHeader
+                eyebrow="Pourquoi contacter un mentor ?"
+                title="Un accompagnement humain, concret et rassurant"
+                description="Un mentor ne remplace pas les services officiels, mais il peut t’aider à mieux comprendre les étapes et à te sentir moins seul."
+            />
+            <div>
+                {items.map((item) => (
+                    <div key={item}><Icon name="check" /> {item}</div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function EmptyState({ onReset }) {
+    return (
+        <div className="mentors-empty">
+            <Icon name="search" />
+            <strong>Aucun mentor ne correspond à tes critères pour le moment.</strong>
+            <p>Tu peux réinitialiser les filtres, élargir la recherche ou contacter un mentor général.</p>
+            <button type="button" onClick={onReset}>Réinitialiser les filtres</button>
+        </div>
+    );
+}
+
+function sameCountry(user, mentor) {
+    const userCountry = user?.profile?.country_origin;
+    return Boolean(userCountry && mentor.country_origin && userCountry.toLowerCase() === mentor.country_origin.toLowerCase());
+}
+
+function splitList(value) {
+    return value.split(",").map((item) => item.trim()).filter(Boolean);
+}
+
+function Icon({ name }) {
+    const paths = {
+        search: "M21 21l-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z",
+        flag: "M5 21V4h11l1 4-1 4H5",
+        pin: "M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Zm0-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
+        book: "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5Zm0 0V21",
+        globe: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0c2-2.3 3-5.3 3-9s-1-6.7-3-9m0 18c-2-2.3-3-5.3-3-9s1-6.7 3-9M3.6 9h16.8M3.6 15h16.8",
+        check: "M20 6 9 17l-5-5",
+    };
+
+    return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d={paths[name] || paths.check} />
+        </svg>
     );
 }

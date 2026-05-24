@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import L from 'leaflet';
 import api from '../services/api';
 
-// IMPORTANT: Import Leaflet CSS
 import 'leaflet/dist/leaflet.css';
 
 const MapExplorer = () => {
@@ -13,69 +12,85 @@ const MapExplorer = () => {
     const mapRef = useRef(null);
     const mapInstance = useRef(null);
 
-    // 1. Fetch Data
     useEffect(() => {
         const fetchMapData = async () => {
             try {
-                console.log("MapExplorer: Fetching user...");
-                const userResp = await api.get('/auth/me/');
-                const uniId = userResp.data.profile?.university?.id;
+                console.log("MapExplorer: Fetching fresh user data...");
+                // On ajoute un timestamp pour éviter le cache navigateur
+                const userResp = await api.get(`/auth/me/?t=${new Date().getTime()}`);
+                console.log("MapExplorer: User data received:", userResp.data);
+                
+                const uniId = userResp.data.profile?.university; // Dans le JSON, c'est souvent l'ID direct ou l'objet
 
                 if (!uniId) {
-                    setError("Université non configurée.");
+                    console.warn("MapExplorer: No university ID found in profile", userResp.data.profile);
+                    setError("Université non configurée dans votre profil.");
                     setLoading(false);
                     return;
                 }
 
-                console.log("MapExplorer: Fetching university...");
-                const uniResp = await api.get(`/universities/${uniId}/`);
+                const idToFetch = uniId && typeof uniId === 'object' ? uniId.id : uniId;
+
+                console.log(`MapExplorer: Fetching university details for ID ${idToFetch}...`);
+                const uniResp = await api.get(`/universities/${idToFetch}/`);
                 setUniversity(uniResp.data);
                 setLoading(false);
             } catch (err) {
                 console.error("MapExplorer: Data fetch failed", err);
-                setError("Erreur de chargement des données.");
+                setError("Erreur de chargement. Veuillez réessayer.");
                 setLoading(false);
             }
         };
         fetchMapData();
     }, []);
 
-    // 2. Initialize Manual Leaflet (More robust than react-leaflet for debugging)
     useEffect(() => {
         if (!loading && university && mapRef.current && !mapInstance.current) {
             try {
                 console.log("MapExplorer: Initializing Leaflet map...");
 
-                const lat = parseFloat(university.latitude) || 46.8139;
-                const lng = parseFloat(university.longitude) || -71.2080;
+                // Coordonnées de repli (Québec)
+                const defaultLat = 46.8139;
+                const defaultLng = -71.2080;
 
-                mapInstance.current = L.map(mapRef.current).setView([lat, lng], 13);
+                const lat = university.latitude ? parseFloat(university.latitude) : defaultLat;
+                const lng = university.longitude ? parseFloat(university.longitude) : defaultLng;
+
+                mapInstance.current = L.map(mapRef.current).setView([lat, lng], 14);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap'
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(mapInstance.current);
 
-                // Add University Marker
+                // Icône pour l'université
                 const uniIcon = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<div style="background-color: #2563eb; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">U</div>`,
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 15]
+                    className: 'custom-map-icon',
+                    html: `<div style="background-color: #2563eb; width: 34px; height: 34px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">U</div>`,
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 17]
                 });
 
                 L.marker([lat, lng], { icon: uniIcon })
                     .addTo(mapInstance.current)
-                    .bindPopup(`<b>${university.name}</b>`);
+                    .bindPopup(`<div style="padding: 5px"><strong>${university.name}</strong><br/>${university.city}</div>`);
 
-                // Add POIs
-                if (university.pois) {
+                // Icônes pour les Points d'Intérêt (POIs)
+                if (university.pois && university.pois.length > 0) {
                     university.pois.forEach(poi => {
                         const plat = parseFloat(poi.latitude);
                         const plng = parseFloat(poi.longitude);
+                        
                         if (!isNaN(plat) && !isNaN(plng)) {
-                            L.marker([plat, plng])
+                            const poiIcon = L.divIcon({
+                                className: 'poi-icon',
+                                html: `<div style="background-color: #16a34a; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; color: white; font-size: 10px;">📍</div>`,
+                                iconSize: [24, 24],
+                                iconAnchor: [12, 12]
+                            });
+
+                            L.marker([plat, plng], { icon: poiIcon })
                                 .addTo(mapInstance.current)
-                                .bindPopup(`<b>${poi.name}</b><br/>${poi.address}`);
+                                .bindPopup(`<b>${poi.name}</b><br/><small>${poi.category}</small><br/>${poi.address}`);
                         }
                     });
                 }
@@ -87,16 +102,15 @@ const MapExplorer = () => {
             }
         }
 
-        // Cleanup on unmount
         return () => {
             if (mapInstance.current) {
+                console.log("MapExplorer: Cleaning up map instance...");
                 mapInstance.current.remove();
                 mapInstance.current = null;
             }
         };
     }, [loading, university]);
 
-    // Render logic
     const renderContent = () => {
         if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Chargement...</div>;
         if (error) return <div style={{ padding: '40px', color: 'red', textAlign: 'center' }}><h3>{error}</h3><button onClick={() => window.location.reload()}>Réessayer</button></div>;
@@ -107,7 +121,7 @@ const MapExplorer = () => {
                     <h2 style={{ margin: 0 }}>📍 {university?.name}</h2>
                     <p style={{ margin: 0, color: '#666' }}>Lieux essentiels à {university?.city}</p>
                 </div>
-                {/* This is the actual map container */}
+                
                 <div
                     ref={mapRef}
                     style={{ flex: 1, width: '100%', height: '100%', backgroundColor: '#e5e7eb', minHeight: '500px' }}

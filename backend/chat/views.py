@@ -11,10 +11,7 @@ from .serializers import ConversationSerializer, MessageSerializer, SharedResour
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def conversations_view(request):
-    """
-    GET  /api/chat/conversations/   – list user's conversations
-    POST /api/chat/conversations/   – start or retrieve conversation with mentor_id
-    """
+
     if request.method == "GET":
         convs = Conversation.objects.filter(
             user1=request.user
@@ -23,7 +20,6 @@ def conversations_view(request):
         serializer = ConversationSerializer(convs, many=True, context={"request": request})
         return Response(serializer.data)
 
-    # POST – create/get
     mentor_id = request.data.get("mentor_id")
     if not mentor_id:
         return Response({"detail": "mentor_id required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -43,16 +39,12 @@ def conversations_view(request):
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def messages_view(request, conv_id):
-    """
-    GET  /api/chat/conversations/:id/messages/  – list messages
-    POST /api/chat/conversations/:id/messages/  – send a message
-    """
+
     try:
         conv = Conversation.objects.get(pk=conv_id)
     except Conversation.DoesNotExist:
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Security: only participants
     if request.user not in [conv.user1, conv.user2]:
         return Response({"detail": "Forbidden."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -61,7 +53,6 @@ def messages_view(request, conv_id):
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
 
-    # POST
     content = request.data.get("content", "").strip()
     if not content:
         return Response({"detail": "content required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -73,16 +64,12 @@ def messages_view(request, conv_id):
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def shared_resources_view(request, conv_id):
-    """
-    GET  /api/chat/conversations/:id/resources/  – list shared resources
-    POST /api/chat/conversations/:id/resources/  – share a resource
-    """
+
     try:
         conv = Conversation.objects.get(pk=conv_id)
     except Conversation.DoesNotExist:
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Security: only participants
     if request.user not in [conv.user1, conv.user2]:
         return Response({"detail": "Forbidden."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -91,7 +78,6 @@ def shared_resources_view(request, conv_id):
         serializer = SharedResourceSerializer(resources, many=True)
         return Response(serializer.data)
 
-    # POST
     title = request.data.get("title", "").strip()
     url = request.data.get("url", "").strip()
     description = request.data.get("description", "").strip()

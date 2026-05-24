@@ -1,0 +1,742 @@
+[
+  {
+    "question": "Comment obtenir une preuve d'inscription à l'UQAR ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Comment obtenir une preuve d'inscription à l'UQAR ? Utilisez la procédure de demande d'attestation ou de relevé de notes de l'UQAR. Si l'information manque ou si le cas est urgent, contactez le registrariat ou le guichet étudiant du campus. [1]\n- ## Comment obtenir une preuve d'inscription ? Consultez la procédure officielle de demande d'attestation ou de relevé de notes. Si le besoin est urgent, contactez le registrariat ou le guichet étudiant. [2]\n- ## Preuve d'inscription Pour obtenir une preuve ou une attestation d'inscription, l'étudiant doit utiliser la procédure indiquée par l'UQAR pour les demandes d'attestation ou de relevé de notes. Le formulaire officiel mentionne l'attestation d'inscription et le dépôt au guichet… [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Comment obtenir une preuve d'inscription à l'UQAR ?",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "### Comment obtenir une preuve d'inscription à l'UQAR ? Utilisez la procédure de demande d'attestation ou de relevé de notes de l'UQAR. Si l'information manque ou si le cas est urgent, contactez le registrariat ou le guichet étudiant du campus.",
+        "score": 0.939
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Comment obtenir une preuve d'inscription ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Comment obtenir une preuve d'inscription ? Consultez la procédure officielle de demande d'attestation ou de relevé de notes. Si le besoin est urgent, contactez le registrariat ou le guichet étudiant.",
+        "score": 0.86
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Preuve d'inscription",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Preuve d'inscription Pour obtenir une preuve ou une attestation d'inscription, l'étudiant doit utiliser la procédure indiquée par l'UQAR pour les demandes d'attestation ou de relevé de notes. Le formulaire officiel mentionne l'attestation d'inscription et le dépôt au guichet étudiant ou l'envoi par courriel selon les coordonnées indiquées.",
+        "score": 0.812
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Comment obtenir un relevé de notes ?",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "### Comment obtenir un relevé de notes ? Utilisez le formulaire officiel de demande d'attestation ou de relevé de notes, puis suivez les consignes de dépôt ou d'envoi.",
+        "score": 0.667
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Comment réserver une salle de travail ?",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "### Comment réserver une salle de travail ? Consultez le service de réservation de la bibliothèque de l'UQAR.",
+        "score": 0.628
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Comment payer les frais de scolarité ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Comment payer les frais de scolarité ? Consultez la page \"Frais de scolarité\". Pour le paiement Internet, l'UQAR indique d'utiliser l'Université du Québec à Rimouski comme fournisseur et le code permanent précédé de R.",
+        "score": 0.626
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Où trouver le calendrier universitaire ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Où trouver le calendrier universitaire ? Sur la page officielle \"Calendrier universitaire\" de l'UQAR. [1]\n- ## Où trouver le calendrier universitaire ? Sur la page officielle \"Calendrier universitaire\" de l'UQAR. [2]\n- # UQAR - Calendrier universitaire [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Calendrier universitaire",
+        "path": "/kb/uqar/calendrier_universitaire.md",
+        "section": "Où trouver le calendrier universitaire ?",
+        "type": "calendrier",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+        "excerpt": "### Où trouver le calendrier universitaire ? Sur la page officielle \"Calendrier universitaire\" de l'UQAR.",
+        "score": 1.109
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Où trouver le calendrier universitaire ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Où trouver le calendrier universitaire ? Sur la page officielle \"Calendrier universitaire\" de l'UQAR.",
+        "score": 1.04
+      },
+      {
+        "title": "UQAR - Calendrier universitaire",
+        "path": "/kb/uqar/calendrier_universitaire.md",
+        "section": "UQAR - Calendrier universitaire",
+        "type": "calendrier",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+        "excerpt": "# UQAR - Calendrier universitaire",
+        "score": 0.841
+      },
+      {
+        "title": "UQAR - Calendrier universitaire",
+        "path": "/kb/uqar/calendrier_universitaire.md",
+        "section": "Source officielle",
+        "type": "calendrier",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+        "excerpt": "## Source officielle UQAR - Calendrier universitaire : https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+        "score": 0.813
+      },
+      {
+        "title": "UQAR - Calendrier universitaire",
+        "path": "/kb/uqar/calendrier_universitaire.md",
+        "section": "Description",
+        "type": "calendrier",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+        "excerpt": "## Description Le calendrier universitaire de l'UQAR contient les dates importantes par trimestre : ouverture de l'inscription, début des cours, modification d'inscription, abandon sans mention, date limite de paiement et périodes de lecture.",
+        "score": 0.723
+      },
+      {
+        "title": "UQAR - Calendrier universitaire",
+        "path": "/kb/uqar/calendrier_universitaire.md",
+        "section": "Questions fréquentes",
+        "type": "calendrier",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+        "excerpt": "## Questions fréquentes",
+        "score": 0.692
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Comment payer mes frais de scolarité ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Comment payer mes frais de scolarité ? Consultez la page officielle des frais de scolarité. Pour un paiement par Internet, utilisez l'UQAR comme fournisseur et le code permanent précédé de R comme référence. [1]\n- ## Comment payer les frais de scolarité ? Consultez la page \"Frais de scolarité\". Pour le paiement Internet, l'UQAR indique d'utiliser l'Université du Québec à Rimouski comme fournisseur et le code permanent précédé de R. [2]\n- # UQAR - Frais de scolarité [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Frais de scolarité",
+        "path": "/kb/uqar/frais_scolarite.md",
+        "section": "Comment payer mes frais de scolarité ?",
+        "type": "frais_scolarite",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+        "excerpt": "### Comment payer mes frais de scolarité ? Consultez la page officielle des frais de scolarité. Pour un paiement par Internet, utilisez l'UQAR comme fournisseur et le code permanent précédé de R comme référence.",
+        "score": 1.023
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Comment payer les frais de scolarité ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Comment payer les frais de scolarité ? Consultez la page \"Frais de scolarité\". Pour le paiement Internet, l'UQAR indique d'utiliser l'Université du Québec à Rimouski comme fournisseur et le code permanent précédé de R.",
+        "score": 0.987
+      },
+      {
+        "title": "UQAR - Frais de scolarité",
+        "path": "/kb/uqar/frais_scolarite.md",
+        "section": "UQAR - Frais de scolarité",
+        "type": "frais_scolarite",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+        "excerpt": "# UQAR - Frais de scolarité",
+        "score": 0.725
+      },
+      {
+        "title": "UQAR - Frais de scolarité",
+        "path": "/kb/uqar/frais_scolarite.md",
+        "section": "Source officielle",
+        "type": "frais_scolarite",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+        "excerpt": "## Source officielle UQAR - Frais de scolarité : https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+        "score": 0.707
+      },
+      {
+        "title": "UQAR - Frais de scolarité",
+        "path": "/kb/uqar/frais_scolarite.md",
+        "section": "Description",
+        "type": "frais_scolarite",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+        "excerpt": "## Description La page officielle des frais de scolarité de l'UQAR explique les frais par statut, les modes de paiement, les dates limites, les pénalités et certains remboursements.",
+        "score": 0.697
+      },
+      {
+        "title": "UQAR - Frais de scolarité",
+        "path": "/kb/uqar/frais_scolarite.md",
+        "section": "Paiement en ligne",
+        "type": "frais_scolarite",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+        "excerpt": "## Paiement en ligne Pour payer par Internet, l'UQAR indique de sélectionner l'Université du Québec à Rimouski dans la liste des fournisseurs et d'utiliser le code permanent de l'UQAR comme numéro de référence, précédé de la lettre R.",
+        "score": 0.666
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Qui contacter pour une question sur mon dossier étudiant ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ## Dossier étudiant Pour une question précise sur le dossier étudiant, il faut contacter le registrariat, le guichet étudiant ou le campus concerné. NordikBot ne doit pas inventer de délai ou de frais si la base ne les contient pas. [1]\n- # UQAR - Registrariat et dossier étudiant [2]\n- ## Questions fréquentes [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Dossier étudiant",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Dossier étudiant Pour une question précise sur le dossier étudiant, il faut contacter le registrariat, le guichet étudiant ou le campus concerné. NordikBot ne doit pas inventer de délai ou de frais si la base ne les contient pas.",
+        "score": 0.974
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "UQAR - Registrariat et dossier étudiant",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "# UQAR - Registrariat et dossier étudiant",
+        "score": 0.72
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Questions fréquentes",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Questions fréquentes",
+        "score": 0.704
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Description",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Description Le registrariat traite les demandes administratives liées au dossier étudiant, comme les attestations, les preuves d'inscription et les relevés de notes.",
+        "score": 0.68
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Comment obtenir une preuve d'inscription à l'UQAR ?",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "### Comment obtenir une preuve d'inscription à l'UQAR ? Utilisez la procédure de demande d'attestation ou de relevé de notes de l'UQAR. Si l'information manque ou si le cas est urgent, contactez le registrariat ou le guichet étudiant du campus.",
+        "score": 0.586
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Relevé de notes",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Relevé de notes Le même formulaire officiel permet de demander un relevé de notes. L'étudiant doit préciser le type de document demandé, le nombre de copies et son statut.",
+        "score": 0.572
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Quels services existent pour les étudiants internationaux ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Quels services existent pour les étudiants internationaux ? La base indique au minimum un accompagnement d'accueil international par campus, ainsi que des services liés à l'inscription, au logement, à l'assurance et à l'arrivée. [1]\n- ## Étudiants internationaux Pour les étudiants internationaux, l'UQAR indique des contacts d'accueil par campus. Ces personnes peuvent aider à planifier l'arrivée, transmettre des documents et faciliter l'inscription à l'arrivée. [2]\n- # UQAR - Services aux étudiants [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Services aux étudiants",
+        "path": "/kb/uqar/services_etudiants.md",
+        "section": "Quels services existent pour les étudiants internationaux ?",
+        "type": "services",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "### Quels services existent pour les étudiants internationaux ? La base indique au minimum un accompagnement d'accueil international par campus, ainsi que des services liés à l'inscription, au logement, à l'assurance et à l'arrivée.",
+        "score": 1.069
+      },
+      {
+        "title": "UQAR - Services aux étudiants",
+        "path": "/kb/uqar/services_etudiants.md",
+        "section": "Étudiants internationaux",
+        "type": "services",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Étudiants internationaux Pour les étudiants internationaux, l'UQAR indique des contacts d'accueil par campus. Ces personnes peuvent aider à planifier l'arrivée, transmettre des documents et faciliter l'inscription à l'arrivée.",
+        "score": 0.827
+      },
+      {
+        "title": "UQAR - Services aux étudiants",
+        "path": "/kb/uqar/services_etudiants.md",
+        "section": "UQAR - Services aux étudiants",
+        "type": "services",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "# UQAR - Services aux étudiants",
+        "score": 0.73
+      },
+      {
+        "title": "UQAR - Services aux étudiants",
+        "path": "/kb/uqar/services_etudiants.md",
+        "section": "Description",
+        "type": "services",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Description Les services aux étudiants accompagnent la communauté étudiante pour l'intégration, la réussite, la vie universitaire et certaines démarches pratiques.",
+        "score": 0.684
+      },
+      {
+        "title": "UQAR - Admission",
+        "path": "/kb/uqar/admission.md",
+        "section": "Étudiants internationaux",
+        "type": "admission",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/",
+        "excerpt": "## Étudiants internationaux Les étudiants internationaux doivent consulter la page d'admission réservée aux étudiantes et étudiants internationaux. Cette page présente les programmes accessibles, les équivalences de diplômes, le coût des études, les autorisations de séjour et la préparation de l'arrivée.",
+        "score": 0.673
+      },
+      {
+        "title": "UQAR - Étudiants internationaux",
+        "path": "/kb/uqar/etudiants_internationaux.md",
+        "section": "UQAR - Étudiants internationaux",
+        "type": "etudiants_internationaux",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+        "excerpt": "# UQAR - Étudiants internationaux",
+        "score": 0.663
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Où se trouve le campus de Lévis ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Où se trouve le campus de Lévis ? Au 1595, boulevard Alphonse-Desjardins, Lévis (Québec) G6V 0A6. [1]\n- ## Campus de Lévis L'UQAR indique que l'aéroport international Jean-Lesage de Québec est une option pratique pour Lévis. Le campus se trouve à environ 26 km de l'aéroport. Depuis Montréal, des trajets en autobus peuvent mener à Sainte-Foy ou au terminus de Lévis. [2]\n- # UQAR - Campus de Lévis [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Campus de Lévis",
+        "path": "/kb/uqar/campus_levis.md",
+        "section": "Où se trouve le campus de Lévis ?",
+        "type": "campus",
+        "university": "UQAR",
+        "campus": "Lévis",
+        "source_url": "https://mobilite.uqar.ca/",
+        "excerpt": "### Où se trouve le campus de Lévis ? Au 1595, boulevard Alphonse-Desjardins, Lévis (Québec) G6V 0A6.",
+        "score": 1.164
+      },
+      {
+        "title": "UQAR - Transport vers les campus",
+        "path": "/kb/uqar/transport.md",
+        "section": "Campus de Lévis",
+        "type": "transport",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+        "excerpt": "## Campus de Lévis L'UQAR indique que l'aéroport international Jean-Lesage de Québec est une option pratique pour Lévis. Le campus se trouve à environ 26 km de l'aéroport. Depuis Montréal, des trajets en autobus peuvent mener à Sainte-Foy ou au terminus de Lévis.",
+        "score": 0.968
+      },
+      {
+        "title": "UQAR - Campus de Lévis",
+        "path": "/kb/uqar/campus_levis.md",
+        "section": "UQAR - Campus de Lévis",
+        "type": "campus",
+        "university": "UQAR",
+        "campus": "Lévis",
+        "source_url": "https://mobilite.uqar.ca/",
+        "excerpt": "# UQAR - Campus de Lévis",
+        "score": 0.959
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Où se trouve le campus de Lévis ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Où se trouve le campus de Lévis ? 1595, boulevard Alphonse-Desjardins, Lévis (Québec) G6V 0A6.",
+        "score": 0.954
+      },
+      {
+        "title": "UQAR - Campus de Lévis",
+        "path": "/kb/uqar/campus_levis.md",
+        "section": "Description",
+        "type": "campus",
+        "university": "UQAR",
+        "campus": "Lévis",
+        "source_url": "https://mobilite.uqar.ca/",
+        "excerpt": "## Description Le campus de Lévis est l'un des deux grands campus de l'UQAR. Il accueille notamment des étudiants internationaux et offre des services de proximité.",
+        "score": 0.92
+      },
+      {
+        "title": "UQAR - Campus de Lévis",
+        "path": "/kb/uqar/campus_levis.md",
+        "section": "Adresse",
+        "type": "campus",
+        "university": "UQAR",
+        "campus": "Lévis",
+        "source_url": "https://mobilite.uqar.ca/",
+        "excerpt": "## Adresse Campus de Lévis : 1595, boulevard Alphonse-Desjardins, Lévis (Québec) G6V 0A6, Canada.",
+        "score": 0.916
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Comment trouver un logement près de l'UQAR ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Comment trouver un logement près de l'UQAR ? Commencez par vérifier les ressources officielles de l'UQAR, les résidences si elles s'appliquent, puis les options hors campus. L'UQAR ne peut pas signer le bail à votre place. [1]\n- ## Hébergement temporaire Il peut être utile d'identifier un hébergement temporaire près du campus de Rimouski ou de Lévis avant l'emménagement permanent. [2]\n- ### Comment réserver une salle de travail ? Consultez le service de réservation de la bibliothèque de l'UQAR. [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Logement",
+        "path": "/kb/uqar/logement.md",
+        "section": "Comment trouver un logement près de l'UQAR ?",
+        "type": "logement",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+        "excerpt": "### Comment trouver un logement près de l'UQAR ? Commencez par vérifier les ressources officielles de l'UQAR, les résidences si elles s'appliquent, puis les options hors campus. L'UQAR ne peut pas signer le bail à votre place.",
+        "score": 1.018
+      },
+      {
+        "title": "UQAR - Logement",
+        "path": "/kb/uqar/logement.md",
+        "section": "Hébergement temporaire",
+        "type": "logement",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+        "excerpt": "## Hébergement temporaire Il peut être utile d'identifier un hébergement temporaire près du campus de Rimouski ou de Lévis avant l'emménagement permanent.",
+        "score": 0.596
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Comment réserver une salle de travail ?",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "### Comment réserver une salle de travail ? Consultez le service de réservation de la bibliothèque de l'UQAR.",
+        "score": 0.586
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Où trouver le calendrier universitaire ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Où trouver le calendrier universitaire ? Sur la page officielle \"Calendrier universitaire\" de l'UQAR.",
+        "score": 0.574
+      },
+      {
+        "title": "UQAR - Logement",
+        "path": "/kb/uqar/logement.md",
+        "section": "Limite importante",
+        "type": "logement",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+        "excerpt": "## Limite importante L'UQAR ne peut pas signer un bail ou prendre des arrangements de logement au nom d'une étudiante ou d'un étudiant.",
+        "score": 0.567
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Comment payer les frais de scolarité ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Comment payer les frais de scolarité ? Consultez la page \"Frais de scolarité\". Pour le paiement Internet, l'UQAR indique d'utiliser l'Université du Québec à Rimouski comme fournisseur et le code permanent précédé de R.",
+        "score": 0.547
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Comment renouveler mon CAQ ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Comment renouveler mon CAQ ? Vérifiez la procédure officielle du gouvernement du Québec. Préparez vos documents universitaires, financiers et d'identité selon les consignes officielles. Si vous êtes à l'UQAR, contactez aussi le service d'accueil international de votre campus… [1]\n- ### Comment réserver une salle de travail ? Consultez le service de réservation de la bibliothèque de l'UQAR. [2]\n- # UQAR - Bibliothèque [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "Québec - CAQ et permis d'études",
+        "path": "/kb/general/caq_permis_etudes.md",
+        "section": "Comment renouveler mon CAQ ?",
+        "type": "immigration",
+        "university": "",
+        "campus": "",
+        "source_url": "https://www.quebec.ca/education/etudier-quebec",
+        "excerpt": "### Comment renouveler mon CAQ ? Vérifiez la procédure officielle du gouvernement du Québec. Préparez vos documents universitaires, financiers et d'identité selon les consignes officielles. Si vous êtes à l'UQAR, contactez aussi le service d'accueil international de votre campus pour l'orientation.",
+        "score": 0.686
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Comment réserver une salle de travail ?",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "### Comment réserver une salle de travail ? Consultez le service de réservation de la bibliothèque de l'UQAR.",
+        "score": 0.586
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "UQAR - Bibliothèque",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "# UQAR - Bibliothèque",
+        "score": 0.48
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Quels sont les services de bibliothèque ?",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "### Quels sont les services de bibliothèque ? La bibliothèque donne accès à des ressources documentaires, des espaces de travail, des équipements et des services pour soutenir les études.",
+        "score": 0.48
+      },
+      {
+        "title": "UQAR - Étudiants internationaux",
+        "path": "/kb/uqar/etudiants_internationaux.md",
+        "section": "Qui contacter après l'obtention du CAQ et de la lettre d'introduction ?",
+        "type": "etudiants_internationaux",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+        "excerpt": "### Qui contacter après l'obtention du CAQ et de la lettre d'introduction ? Contactez la personne responsable de l'accueil des étudiants internationaux de votre campus : accueil-ee@uqar.ca pour Rimouski ou ee-levis@uqar.ca pour Lévis.",
+        "score": 0.446
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Salles et équipements",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "## Salles et équipements La bibliothèque permet la réservation de salles de travail et d'équipements selon les règles en vigueur. Les salles sont réservées aux membres de la communauté UQAR, avec priorité aux étudiants pendant les trimestres.",
+        "score": 0.435
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Comment obtenir un relevé de notes ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Comment obtenir un relevé de notes ? Utilisez le formulaire officiel de demande d'attestation ou de relevé de notes, puis suivez les consignes de dépôt ou d'envoi. [1]\n- ## Comment obtenir une preuve d'inscription ? Consultez la procédure officielle de demande d'attestation ou de relevé de notes. Si le besoin est urgent, contactez le registrariat ou le guichet étudiant. [2]\n- ### Comment obtenir une preuve d'inscription à l'UQAR ? Utilisez la procédure de demande d'attestation ou de relevé de notes de l'UQAR. Si l'information manque ou si le cas est urgent, contactez le registrariat ou le guichet étudiant du campus. [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Comment obtenir un relevé de notes ?",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "### Comment obtenir un relevé de notes ? Utilisez le formulaire officiel de demande d'attestation ou de relevé de notes, puis suivez les consignes de dépôt ou d'envoi.",
+        "score": 0.999
+      },
+      {
+        "title": "UQAR - FAQ NordikBot",
+        "path": "/kb/uqar/faq.md",
+        "section": "Comment obtenir une preuve d'inscription ?",
+        "type": "faq",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "## Comment obtenir une preuve d'inscription ? Consultez la procédure officielle de demande d'attestation ou de relevé de notes. Si le besoin est urgent, contactez le registrariat ou le guichet étudiant.",
+        "score": 0.872
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Comment obtenir une preuve d'inscription à l'UQAR ?",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "### Comment obtenir une preuve d'inscription à l'UQAR ? Utilisez la procédure de demande d'attestation ou de relevé de notes de l'UQAR. Si l'information manque ou si le cas est urgent, contactez le registrariat ou le guichet étudiant du campus.",
+        "score": 0.802
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Relevé de notes",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Relevé de notes Le même formulaire officiel permet de demander un relevé de notes. L'étudiant doit préciser le type de document demandé, le nombre de copies et son statut.",
+        "score": 0.699
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Preuve d'inscription",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Preuve d'inscription Pour obtenir une preuve ou une attestation d'inscription, l'étudiant doit utiliser la procédure indiquée par l'UQAR pour les demandes d'attestation ou de relevé de notes. Le formulaire officiel mentionne l'attestation d'inscription et le dépôt au guichet étudiant ou l'envoi par courriel selon les coordonnées indiquées.",
+        "score": 0.636
+      },
+      {
+        "title": "UQAR - Registrariat et dossier étudiant",
+        "path": "/kb/uqar/registrariat.md",
+        "section": "Source officielle",
+        "type": "registrariat",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "excerpt": "## Source officielle Formulaire UQAR - Demande d'attestation ou de relevé de notes : https://www.uqar.ca/app/uploads/2024/05/demande_dattestation_ou_releve_de_notes.pdf",
+        "score": 0.608
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  },
+  {
+    "question": "Quels sont les services de bibliothèque ?",
+    "answer": "Voici la réponse d'après la base de connaissances NouveauDépart :\n- ### Quels sont les services de bibliothèque ? La bibliothèque donne accès à des ressources documentaires, des espaces de travail, des équipements et des services pour soutenir les études. [1]\n- ## Description La bibliothèque de l'UQAR offre des services documentaires à la communauté universitaire. Des services sont mentionnés pour les campus de Lévis et de Rimouski, ainsi que hors campus. [2]\n- ### Quels services existent pour les étudiants internationaux ? La base indique au minimum un accompagnement d'accueil international par campus, ainsi que des services liés à l'inscription, au logement, à l'assurance et à l'arrivée. [3]\n\nPour les démarches officielles ou sensibles aux dates, vérifiez auprès de la source officielle.",
+    "sources": [
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Quels sont les services de bibliothèque ?",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "### Quels sont les services de bibliothèque ? La bibliothèque donne accès à des ressources documentaires, des espaces de travail, des équipements et des services pour soutenir les études.",
+        "score": 1.04
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Description",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "## Description La bibliothèque de l'UQAR offre des services documentaires à la communauté universitaire. Des services sont mentionnés pour les campus de Lévis et de Rimouski, ainsi que hors campus.",
+        "score": 0.752
+      },
+      {
+        "title": "UQAR - Services aux étudiants",
+        "path": "/kb/uqar/services_etudiants.md",
+        "section": "Quels services existent pour les étudiants internationaux ?",
+        "type": "services",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://www.uqar.ca/",
+        "excerpt": "### Quels services existent pour les étudiants internationaux ? La base indique au minimum un accompagnement d'accueil international par campus, ainsi que des services liés à l'inscription, au logement, à l'assurance et à l'arrivée.",
+        "score": 0.638
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Salles et équipements",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "## Salles et équipements La bibliothèque permet la réservation de salles de travail et d'équipements selon les règles en vigueur. Les salles sont réservées aux membres de la communauté UQAR, avec priorité aux étudiants pendant les trimestres.",
+        "score": 0.546
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "Comment réserver une salle de travail ?",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "### Comment réserver une salle de travail ? Consultez le service de réservation de la bibliothèque de l'UQAR.",
+        "score": 0.526
+      },
+      {
+        "title": "UQAR - Bibliothèque",
+        "path": "/kb/uqar/bibliotheque.md",
+        "section": "UQAR - Bibliothèque",
+        "type": "bibliotheque",
+        "university": "UQAR",
+        "campus": "",
+        "source_url": "https://biblio.uqar.ca/informations-generales/a-propos",
+        "excerpt": "# UQAR - Bibliothèque",
+        "score": 0.515
+      }
+    ],
+    "confidence": "élevé",
+    "complete": true
+  }
+]

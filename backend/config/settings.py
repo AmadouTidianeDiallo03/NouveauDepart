@@ -9,7 +9,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me-in-production")
 DEBUG = os.getenv("DEBUG", "True") == "True"
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,0.0.0.0,testserver",
+).split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -18,18 +21,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Third-party
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
     "drf_yasg",
     "django_filters",
-    # Local apps
     "accounts",
     "universities",
     "guides",
     "chat",
     "assistant",
+    "studentlife",
 ]
 
 MIDDLEWARE = [
@@ -63,9 +65,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# ── Database ────────────────────────────────────────────────────────────────
-# SQLite by default (zero-config for development).
-# To use PostgreSQL, install psycopg2 and set DATABASE_URL in .env
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -73,7 +72,6 @@ DATABASES = {
     }
 }
 
-# ── Auth ────────────────────────────────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -81,20 +79,17 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ── Internationalization ─────────────────────────────────────────────────────
 LANGUAGE_CODE = "fr-ca"
 TIME_ZONE = "America/Toronto"
 USE_I18N = True
 USE_TZ = True
 
-# ── Static files ─────────────────────────────────────────────────────────────
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ── Django REST Framework ────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -110,21 +105,18 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
 }
 
-# ── JWT ──────────────────────────────────────────────────────────────────────
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=8),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-# ── CORS ─────────────────────────────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-# ── Swagger / drf-yasg ────────────────────────────────────────────────────────
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
         "Bearer": {
@@ -136,5 +128,5 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
-# ── Google Gemini ─────────────────────────────────────────────────────────────
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")

@@ -8,10 +8,8 @@ django.setup()
 from guides.models import Step, Task
 
 def expand_transport_guides():
-    # Ensure Transport Step exists
     transport_step = Step.objects.get(category="transport")
     
-    # Define expanded transport tasks
     transport_tasks = [
         {
             "title": "Obtenir sa carte de transport (Opus ou STLevis)",

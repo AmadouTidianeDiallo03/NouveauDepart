@@ -21,7 +21,7 @@ def get_tokens_for_user(user):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_view(request):
-    """POST /api/auth/register – create a new user account."""
+
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -36,7 +36,7 @@ def register_view(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
-    """POST /api/auth/login – authenticate and return JWT tokens."""
+
     serializer = LoginSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -44,7 +44,6 @@ def login_view(request):
     email_or_username = serializer.validated_data["email"]
     password = serializer.validated_data["password"]
 
-    # Try to find user by email first, then by username
     user_obj = User.objects.filter(email__iexact=email_or_username).first()
     if not user_obj:
         user_obj = User.objects.filter(username__iexact=email_or_username).first()
@@ -63,7 +62,7 @@ def login_view(request):
 @api_view(["GET", "PATCH"])
 @permission_classes([IsAuthenticated])
 def me_view(request):
-    """GET /api/auth/me – return current user. PATCH – update profile."""
+
     user = request.user
     if request.method == "GET":
         return Response(UserSerializer(user, context={'request': request}).data)

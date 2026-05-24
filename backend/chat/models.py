@@ -16,8 +16,7 @@ class Conversation(models.Model):
 
     @classmethod
     def get_or_create_between(cls, user_a, user_b):
-        """Return (conversation, created) for a pair, regardless of order."""
-        # Normalize order so user1.id < user2.id
+
         u1, u2 = (user_a, user_b) if user_a.id < user_b.id else (user_b, user_a)
         return cls.objects.get_or_create(user1=u1, user2=u2)
 

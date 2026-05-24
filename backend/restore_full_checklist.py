@@ -9,12 +9,10 @@ from guides.models import Step, Task
 from universities.models import University
 
 def restore_full_quebec_checklist():
-    # 0. Clean slate
     Task.objects.all().delete()
     Step.objects.all().delete()
     print("Cleaned existing data.")
 
-    # 1. Ensure basic Steps exist
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -27,12 +25,9 @@ def restore_full_quebec_checklist():
         Step.objects.create(category=s["id"], title=s["title"], title_en=s["title_en"], order=s["order"])
     print("Steps created.")
 
-    # 2. Get specific universities
     uqar = University.objects.filter(name__icontains="UQAR").first()
 
-    # 3. Comprehensive Task List
     all_tasks = [
-        # --- ADMINISTRATION ---
         {
             "cat": "admin", "title": "Obtenir son NAS", "title_en": "Get your SIN",
             "desc": "Indispensable pour travailler et recevoir des bourses.",
@@ -58,7 +53,6 @@ def restore_full_quebec_checklist():
             "uni": None
         },
 
-        # --- UNIVERSITY ---
         {
             "cat": "university", "title": "Activer son portail étudiant", "title_en": "Activate Student Portal",
             "desc": "Accès central à vos cours et services.",
@@ -76,7 +70,6 @@ def restore_full_quebec_checklist():
             "uni": None
         },
 
-        # --- TRANSPORT ---
         {
             "cat": "transport", "title": "Transport à Lévis (ST Lévis)", "title_en": "Transport in Lévis",
             "desc": "Se déplacer sur la Rive-Sud (UQAR Lévis).",
@@ -102,7 +95,6 @@ def restore_full_quebec_checklist():
             "uni": None
         },
 
-        # --- HOUSING ---
         {
             "cat": "housing", "title": "Électricité (Hydro-Québec)", "title_en": "Electricity (Hydro)",
             "desc": "Transfert de service à votre nom.",
@@ -120,7 +112,6 @@ def restore_full_quebec_checklist():
             "uni": None
         },
 
-        # --- WORK ---
         {
             "cat": "work", "title": "Adapter son CV au style québécois", "title_en": "Quebec Style CV",
             "desc": "Un format différent pour maximiser vos chances.",

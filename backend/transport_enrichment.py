@@ -11,7 +11,6 @@ from universities.models import University
 def final_transport_enrichment():
     print("Enriching Transport & Local Navigation...")
 
-    # 1. Ensure Steps exist
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -30,7 +29,6 @@ def final_transport_enrichment():
 
     uqar = University.objects.filter(name__icontains="UQAR").first()
 
-    # 2. ADDITIONAL TRANSPORT & LOCAL NAV TASKS
     new_tasks = [
         {
             "cat": "transport", "title": "Naviguer avec GPS (Google Maps / Waze)", "title_en": "GPS & Navigation Apps",

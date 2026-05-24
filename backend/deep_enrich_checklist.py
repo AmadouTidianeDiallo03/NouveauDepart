@@ -9,12 +9,10 @@ from guides.models import Step, Task
 from universities.models import University
 
 def deep_enrich_checklist():
-    # 0. Clean slate
     Task.objects.all().delete()
     Step.objects.all().delete()
     print("Cleaned existing data.")
 
-    # 1. Ensure Steps exist
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -27,12 +25,9 @@ def deep_enrich_checklist():
         Step.objects.create(category=s["id"], title=s["title"], title_en=s["title_en"], order=s["order"])
     print("Steps created.")
 
-    # 2. Get specific universities
     uqar = University.objects.filter(name__icontains="UQAR").first()
 
-    # 3. Massive Task List (Primordial Tasks)
     all_tasks = [
-        # --- ADMINISTRATION ---
         {
             "cat": "admin", "title": "Obtenir son NAS", "title_en": "Get your SIN",
             "desc": "Indispensable pour travailler et recevoir des revenus.",
@@ -58,7 +53,6 @@ def deep_enrich_checklist():
             "uni": None
         },
 
-        # --- UNIVERSITY ---
         {
             "cat": "university", "title": "Activer son portail (UQAR Touka/Portail)", "title_en": "Activate Student Portal",
             "desc": "Votre centre de commande académique.",
@@ -84,7 +78,6 @@ def deep_enrich_checklist():
             "uni": uqar
         },
 
-        # --- TRANSPORT ---
         {
             "cat": "transport", "title": "Carte OPUS / ST Lévis", "title_en": "Transport Card",
             "desc": "Le sésame pour voyager moins cher.",
@@ -110,7 +103,6 @@ def deep_enrich_checklist():
             "uni": None
         },
 
-        # --- HOUSING ---
         {
             "cat": "housing", "title": "Forfait Mobile (Fidji, Lucky...)", "title_en": "Mobile Plan",
             "desc": "Rester connecté sans payer une fortune.",
@@ -136,7 +128,6 @@ def deep_enrich_checklist():
             "uni": None
         },
 
-        # --- SETUP & ESSENTIALS ---
         {
             "cat": "housing", "title": "S'habiller pour l'hiver (MEC, Simons)", "title_en": "Winter Clothing",
             "desc": "Survivre au froid québécois (-30°C).",
@@ -154,7 +145,6 @@ def deep_enrich_checklist():
             "uni": None
         },
 
-        # --- HEALTH ---
         {
             "cat": "admin", "title": "Connaitre le 811 (Info-Santé)", "title_en": "Healthcare 811",
             "desc": "Appeler une infirmière gratuitement.",
@@ -164,7 +154,6 @@ def deep_enrich_checklist():
             "uni": None
         },
 
-        # --- WORK ---
         {
             "cat": "work", "title": "Adapter son CV", "title_en": "Adapt local CV",
             "desc": "Format Québec / Canada.",

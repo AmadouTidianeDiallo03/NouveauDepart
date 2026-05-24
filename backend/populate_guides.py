@@ -8,7 +8,6 @@ django.setup()
 from guides.models import Task
 
 def populate_sample_guides():
-    # NAS Task
     nas_task = Task.objects.filter(title__icontains="NAS").first()
     if nas_task:
         nas_task.how_to = "1. Trouvez le centre Service Canada le plus proche.\n2. Apportez votre passeport et votre permis d'études.\n3. Demandez votre NAS au comptoir."
@@ -17,7 +16,6 @@ def populate_sample_guides():
         nas_task.save()
         print(f"Updated: {nas_task.title}")
 
-    # Bank Task
     bank_task = Task.objects.filter(title__icontains="bancaire").first()
     if bank_task:
         bank_task.how_to = "Choisissez une banque (Desjardins, RBC, etc.) et prenez rendez-vous.\nIndiquez que vous êtes étudiant étranger pour avoir un compte gratuit."
@@ -26,7 +24,6 @@ def populate_sample_guides():
         bank_task.save()
         print(f"Updated: {bank_task.title}")
 
-    # Insurance Task
     ins_task = Task.objects.filter(title__icontains="maladie").first()
     if ins_task:
         ins_task.how_to = "Inscrivez-vous en ligne sur le site de la RAMQ avec votre CAQ et permis d'études."

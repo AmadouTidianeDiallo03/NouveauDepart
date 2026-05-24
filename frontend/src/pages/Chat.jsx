@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
@@ -75,7 +75,7 @@ export default function Chat() {
     async function fetchMentorDetail() {
         if (!conv?.other_user?.id) return;
         try {
-            const res = await api.get(`/api/mentors/${conv.other_user.id}/`);
+            const res = await api.get(`/auth/mentors/${conv.other_user.id}/`);
             setMentorData(res.data);
         } catch (err) {
             console.error("Error fetching mentor details:", err);
@@ -84,7 +84,7 @@ export default function Chat() {
 
     async function handleMentorRequest(message) {
         try {
-            await api.post("/api/mentor-requests/", {
+            await api.post("/auth/mentor-requests/", {
                 mentor_id: conv.other_user.id,
                 message,
             });
@@ -135,7 +135,7 @@ export default function Chat() {
 
     return (
         <div className="page-content" style={{ background: "#f8fafc", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-            {/* Header bar */}
+            
             <div style={{
                 background: heroBg,
                 padding: "1rem 0",
@@ -147,7 +147,7 @@ export default function Chat() {
                         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1 }}>
                             <BackButton to="/conversations" label="" />
 
-                            {/* Other user avatar */}
+                            
                             <div style={{
                                 width: 42, height: 42, borderRadius: "50%",
                                 background: otherAvatar ? "transparent" : gradient,
@@ -172,7 +172,7 @@ export default function Chat() {
                             </div>
                         </div>
 
-                        {/* Action buttons */}
+                        
                         <div style={{ display: "flex", gap: "0.5rem" }}>
                             <button
                                 onClick={isMentor ? handleShowMenteeProfile : handleViewMenteeProfile}
@@ -196,10 +196,10 @@ export default function Chat() {
                 </div>
             </div>
 
-            {/* Messages area */}
+            
             <div style={{ flex: 1, overflowY: "auto" }}>
                 <div className="container container-sm" style={{ padding: "1.5rem 1.25rem" }}>
-                    {/* Shared Resources */}
+                    
                     {!isMentor && (
                         <SharedResources
                             resources={resources}
@@ -208,7 +208,7 @@ export default function Chat() {
                         />
                     )}
 
-                    {/* Messages */}
+                    
                     {messages.length === 0 ? (
                         <div style={{ textAlign: "center", color: "#94a3b8", padding: "3rem 0" }}>
                             <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>👋</div>
@@ -271,7 +271,7 @@ export default function Chat() {
                 </div>
             </div>
 
-            {/* Input bar */}
+            
             <div style={{
                 background: "#fff",
                 borderTop: "1px solid #e2e8f0",
@@ -314,7 +314,7 @@ export default function Chat() {
                                 boxShadow: input.trim() ? "0 4px 12px rgba(99,102,241,0.4)" : "none",
                             }}
                         >
-                            {/* Send arrow */}
+                            
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
                             </svg>
@@ -323,7 +323,7 @@ export default function Chat() {
                 </div>
             </div>
 
-            {/* Modals */}
+            
             <MenteeProfile
                 user={otherUser}
                 isOpen={showMenteeProfile}
@@ -337,7 +337,7 @@ export default function Chat() {
                 onRequest={handleMentorRequest}
             />
 
-            {/* Add Resource Modal */}
+            
             {showAddResource && (
                 <>
                     <div

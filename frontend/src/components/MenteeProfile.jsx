@@ -12,10 +12,12 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
         "linear-gradient(135deg, #f59e0b, #ef4444)",
     ];
     const gradient = gradients[(user.id || 0) % gradients.length];
+    const profileUniversity = user.profile?.university;
+    const university = user.profile?.university_info || (profileUniversity && typeof profileUniversity === "object" ? profileUniversity : null);
 
     return (
         <>
-            {/* Overlay */}
+            
             <div
                 onClick={onClose}
                 style={{
@@ -29,7 +31,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                 }}
             />
 
-            {/* Modal */}
+            
             <div
                 style={{
                     position: "fixed",
@@ -46,7 +48,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                     boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
                 }}
             >
-                {/* Header Banner */}
+                
                 <div
                     style={{
                         background: gradient,
@@ -54,7 +56,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                         position: "relative",
                     }}
                 >
-                    {/* Close button */}
+                    
                     <button
                         onClick={onClose}
                         style={{
@@ -77,7 +79,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                         ✕
                     </button>
 
-                    {/* Avatar */}
+                    
                     <div
                         style={{
                             position: "absolute",
@@ -106,36 +108,36 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                     </div>
                 </div>
 
-                {/* Content */}
+                
                 <div style={{ padding: "3.5rem 2rem 2rem" }}>
-                    {/* Name */}
+                    
                     <h2 style={{ margin: 0, marginBottom: "0.5rem", color: "#0f172a", fontSize: "1.5rem" }}>
                         {user.first_name} {user.last_name}
                     </h2>
 
-                    {/* Email */}
+                    
                     <p style={{ margin: 0, marginBottom: "1.5rem", color: "#64748b", fontSize: "0.9rem" }}>
                         📧 {user.email}
                     </p>
 
-                    {/* Université */}
-                    {user.profile?.university && (
+                    
+                    {university && (
                         <div style={{ marginBottom: "1.5rem" }}>
                             <p style={{ margin: "0 0 0.5rem 0", color: "#475569", fontSize: "0.85rem", fontWeight: 600, textTransform: "uppercase" }}>
                                 Université
                             </p>
                             <p style={{ margin: 0, color: "#0f172a", fontSize: "1rem" }}>
-                                {user.profile.university.name}
+                                {university.name}
                             </p>
-                            {user.profile.university.city && (
+                            {university.city && (
                                 <p style={{ margin: "0.25rem 0 0 0", color: "#64748b", fontSize: "0.9rem" }}>
-                                    📍 {user.profile.university.city}
+                                    📍 {university.city}
                                 </p>
                             )}
                         </div>
                     )}
 
-                    {/* Ville */}
+                    
                     {user.profile?.city && (
                         <div style={{ marginBottom: "1.5rem" }}>
                             <p style={{ margin: "0 0 0.5rem 0", color: "#475569", fontSize: "0.85rem", fontWeight: 600, textTransform: "uppercase" }}>
@@ -147,7 +149,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                         </div>
                     )}
 
-                    {/* Langue */}
+                    
                     {user.profile?.language && (
                         <div style={{ marginBottom: "1.5rem" }}>
                             <p style={{ margin: "0 0 0.5rem 0", color: "#475569", fontSize: "0.85rem", fontWeight: 600, textTransform: "uppercase" }}>
@@ -159,7 +161,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                         </div>
                     )}
 
-                    {/* Bio */}
+                    
                     {user.profile?.bio && (
                         <div style={{ marginBottom: "1.5rem" }}>
                             <p style={{ margin: "0 0 0.5rem 0", color: "#475569", fontSize: "0.85rem", fontWeight: 600, textTransform: "uppercase" }}>
@@ -171,7 +173,7 @@ export default function MenteeProfile({ user, isOpen, onClose }) {
                         </div>
                     )}
 
-                    {/* Note read-only */}
+                    
                     <div
                         style={{
                             background: "#f0fdf4",

@@ -41,7 +41,7 @@ export default function Conversations() {
 
     return (
         <div className="page-content" style={{ background: "linear-gradient(180deg, #f0f4ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            {/* Hero */}
+            
             <div style={{
                 background: heroBg,
                 padding: "2.5rem 0 4rem",
@@ -112,7 +112,7 @@ export default function Conversations() {
                                         onMouseEnter={e => { e.currentTarget.style.transform = "translateX(4px)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(99,102,241,0.15)"; e.currentTarget.style.borderColor = "#c7d2fe"; }}
                                         onMouseLeave={e => { e.currentTarget.style.transform = "translateX(0)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)"; e.currentTarget.style.borderColor = "#f1f5f9"; }}
                                     >
-                                        {/* Avatar */}
+                                        
                                         <div style={{
                                             width: 48, height: 48, borderRadius: "50%",
                                             background: avatarSrc ? "transparent" : gradient,
@@ -126,7 +126,7 @@ export default function Conversations() {
                                             }
                                         </div>
 
-                                        {/* Info */}
+                                        
                                         <div style={{ flex: 1, minWidth: 0 }}>
                                             <div style={{ fontWeight: 700, color: "#0f172a", fontSize: "0.95rem" }}>
                                                 {conv.other_user?.first_name} {conv.other_user?.last_name}
@@ -143,7 +143,7 @@ export default function Conversations() {
                                             )}
                                         </div>
 
-                                        {/* Date + arrow */}
+                                        
                                         <div style={{ flexShrink: 0, textAlign: "right" }}>
                                             <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: "0.25rem" }}>
                                                 {formatDate(conv.created_at)}

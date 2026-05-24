@@ -9,12 +9,10 @@ from guides.models import Step, Task
 from universities.models import University
 
 def final_enrichment():
-    # 0. Clean slate
     Task.objects.all().delete()
     Step.objects.all().delete()
     print("Cleaned existing data.")
 
-    # 1. Ensure Steps exist
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -28,12 +26,9 @@ def final_enrichment():
         Step.objects.create(category=s["id"], title=s["title"], title_en=s["title_en"], order=s["order"])
     print("Steps created.")
 
-    # 2. Get specific universities
     uqar = University.objects.filter(name__icontains="UQAR").first()
 
-    # 3. Massive Task List (Total 20+ items)
     all_tasks = [
-        # --- ADMINISTRATION ---
         {
             "cat": "admin", "title": "Obtenir son NAS", "title_en": "Get your SIN",
             "desc": "Indispensable pour travailler.",
@@ -51,7 +46,6 @@ def final_enrichment():
             "uni": None
         },
 
-        # --- HOUSING ---
         {
             "cat": "housing", "title": "Sites de recherche de logement", "title_en": "Housing Search Sites",
             "desc": "Trouver son futur chez-soi.",
@@ -77,7 +71,6 @@ def final_enrichment():
             "uni": None
         },
 
-        # --- LIFESTYLE (WEATHER & SHOPPING) ---
         {
             "cat": "lifestyle", "title": "L'Hiver Québécois (-30°C)", "title_en": "Quebec Winter",
             "desc": "Apprivoiser le froid et la neige.",
@@ -111,7 +104,6 @@ def final_enrichment():
             "uni": None
         },
 
-        # --- TRANSPORT ---
         {
             "cat": "transport", "title": "Carte OPUS / ST Lévis", "title_en": "Opus Card",
             "desc": "Transport en commun illimité.",
@@ -129,7 +121,6 @@ def final_enrichment():
             "uni": None
         },
 
-        # --- WORK ---
         {
             "cat": "work", "title": "CV Style Québécois", "title_en": "Quebec CV Style",
             "desc": "Maximiser vos chances de job.",
@@ -153,7 +144,6 @@ def final_enrichment():
             university=t_data["uni"]
         )
     
-    # 4. Final verification & User Profile sync
     from django.contrib.auth.models import User
     from accounts.models import Profile
     user = User.objects.filter(username__contains="amadoudiallo").first()

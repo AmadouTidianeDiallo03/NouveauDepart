@@ -70,7 +70,7 @@ function renderMd(text) {
 export default function StudySuccess() {
     return (
         <div className="page-content" style={{ background: "linear-gradient(180deg, #f0f4ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            {/* Hero */}
+            
             <div style={{
                 background: "linear-gradient(135deg, #1e3a5f, #1d4ed8, #4338ca)",
                 padding: "2.5rem 0 4.5rem",
@@ -100,7 +100,7 @@ export default function StudySuccess() {
             </div>
 
             <div className="container" style={{ position: "relative", zIndex: 1 }}>
-                {/* Quick nav chips */}
+                
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "2rem" }}>
                     {sections.map((sec) => (
                         <a key={sec.title} href={`#section-${sec.title}`} style={{
@@ -130,7 +130,7 @@ export default function StudySuccess() {
                             onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.12)"; }}
                             onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.07)"; }}
                         >
-                            {/* Card header with gradient */}
+                            
                             <div style={{
                                 background: sec.gradient,
                                 padding: "1rem 1.5rem",
@@ -141,7 +141,7 @@ export default function StudySuccess() {
                                 <div style={{ fontSize: "1.6rem" }}>{sec.icon}</div>
                                 <h3 style={{ color: "#fff", margin: 0, fontSize: "1rem", fontWeight: 700 }}>{sec.title}</h3>
                             </div>
-                            {/* Card body */}
+                            
                             <div style={{ padding: "1.25rem 1.5rem" }}>
                                 <ul style={{ paddingLeft: "1.25rem", display: "flex", flexDirection: "column", gap: "0.6rem", margin: 0 }}>
                                     {sec.content.map((item, i) => (

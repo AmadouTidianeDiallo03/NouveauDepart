@@ -7,7 +7,6 @@ export default function TaskItem({ task, onToggle }) {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    // Get localized fields
     const title = lang === "en" ? (task.title_en || task.title) : task.title;
     const description = lang === "en" ? (task.description_en || task.description) : task.description;
     const howTo = lang === "en" ? (task.how_to_en || task.how_to) : task.how_to;
@@ -39,7 +38,7 @@ export default function TaskItem({ task, onToggle }) {
             overflow: "hidden",
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         }}>
-            {/* Header / Main Card */}
+            
             <div
                 onClick={() => hasDetails && setExpanded(!expanded)}
                 style={{
@@ -58,7 +57,7 @@ export default function TaskItem({ task, onToggle }) {
                     if (!task.done) e.currentTarget.style.background = "#fff";
                 }}
             >
-                {/* Custom Checkbox */}
+                
                 <div
                     onClick={handleToggle}
                     style={{
@@ -79,7 +78,7 @@ export default function TaskItem({ task, onToggle }) {
                     )}
                 </div>
 
-                {/* Text Content */}
+                
                 <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
                         fontWeight: 700, fontSize: "0.95rem",
@@ -105,7 +104,7 @@ export default function TaskItem({ task, onToggle }) {
                     )}
                 </div>
 
-                {/* Expand Indicator */}
+                
                 {hasDetails && (
                     <div style={{
                         width: 28, height: 28, borderRadius: "50%",
@@ -122,7 +121,7 @@ export default function TaskItem({ task, onToggle }) {
                 )}
             </div>
 
-            {/* Expanded Details Section */}
+            
             {expanded && (
                 <div style={{
                     padding: "0 1.25rem 1.25rem",
@@ -140,7 +139,7 @@ export default function TaskItem({ task, onToggle }) {
                     )}
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                        {/* How To */}
+                        
                         {howTo && (
                             <section>
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
@@ -157,7 +156,7 @@ export default function TaskItem({ task, onToggle }) {
                             </section>
                         )}
 
-                        {/* Tips */}
+                        
                         {tips && (
                             <section>
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
@@ -174,7 +173,7 @@ export default function TaskItem({ task, onToggle }) {
                             </section>
                         )}
 
-                        {/* Locations */}
+                        
                         {locations && (
                             <section>
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>

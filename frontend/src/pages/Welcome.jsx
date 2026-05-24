@@ -54,7 +54,8 @@ export default function Welcome() {
     const lastName = user?.last_name || "";
     const fullName = [firstName, lastName].filter(Boolean).join(" ");
     const isMentor = user?.profile?.role === "mentor";
-    const uniName = user?.profile?.university?.name;
+    const profileUniversity = user?.profile?.university;
+    const uniName = user?.profile?.university_info?.name || (profileUniversity && typeof profileUniversity === "object" ? profileUniversity.name : "");
     const avatarSrc = user?.profile?.avatar_url;
     const avatarLetter = (firstName[0] || user?.email?.[0] || "?").toUpperCase();
     const roleLabel = isMentor ? t("mentor") + " 🌟" : t("student") + " 🎓";
@@ -68,7 +69,7 @@ export default function Welcome() {
     return (
         <div style={{ background: "#f8fafc", minHeight: "100vh" }}>
 
-            {/* ═══ HERO ═══ */}
+            
             <div style={{
                 background: "linear-gradient(160deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #4338ca 100%)",
                 padding: "4rem 2rem 5rem",
@@ -76,21 +77,21 @@ export default function Welcome() {
                 position: "relative",
                 overflow: "hidden",
             }}>
-                {/* Blobs décoratifs */}
+                
                 <div style={{ position: "absolute", top: -120, left: -120, width: 400, height: 400, borderRadius: "50%", background: "rgba(99,102,241,0.15)", pointerEvents: "none" }} />
                 <div style={{ position: "absolute", bottom: -80, right: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(139,92,246,0.12)", pointerEvents: "none" }} />
 
-                {/* Contenu animé */}
+                
                 <div style={{
                     position: "relative", zIndex: 1,
                     opacity: visible ? 1 : 0,
                     transform: visible ? "translateY(0)" : "translateY(28px)",
                     transition: "opacity 0.8s ease, transform 0.8s ease",
                 }}>
-                    {/* Avatar + Salut */}
+                    
                     <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: "0.85rem", marginBottom: "2rem" }}>
 
-                        {/* Avatar circulaire */}
+                        
                         <div style={{
                             width: 88, height: 88, borderRadius: "50%",
                             background: avatarSrc ? "transparent" : roleColor,
@@ -105,7 +106,7 @@ export default function Welcome() {
                                 : avatarLetter}
                         </div>
 
-                        {/* Texte de salutation */}
+                        
                         <div>
                             <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginBottom: "0.25rem", letterSpacing: "0.04em" }}>
                                 {greet} 👋
@@ -118,7 +119,7 @@ export default function Welcome() {
                             }}>
                                 {fullName ? `${fullName} 🍁` : t("welcome")}
                             </div>
-                            {/* Badge rôle */}
+                            
                             {!loading && (
                                 <div style={{
                                     display: "inline-block", background: roleColor,
@@ -137,7 +138,7 @@ export default function Welcome() {
                         </div>
                     </div>
 
-                    {/* Titre projet */}
+                    
                     <h1 style={{
                         fontSize: "clamp(1.8rem,4vw,3rem)", fontWeight: 900, color: "#fff",
                         letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: "1rem",
@@ -153,7 +154,7 @@ export default function Welcome() {
                         mais inspiré d'une expérience réelle. »
                     </p>
 
-                    {/* CTA principal */}
+                    
                     <button
                         onClick={() => navigate("/dashboard")}
                         style={{
@@ -176,7 +177,7 @@ export default function Welcome() {
                 </div>
             </div>
 
-            {/* ═══ POURQUOI CE PROJET ═══ */}
+            
             <div style={{ maxWidth: 860, margin: "0 auto", padding: "4rem 2rem 2rem" }}>
                 <div style={{ textAlign: "center", marginBottom: "3rem" }}>
                     <div style={{
@@ -225,7 +226,7 @@ export default function Welcome() {
                 </div>
             </div>
 
-            {/* ═══ OBJECTIFS ═══ */}
+            
             <div style={{ background: "linear-gradient(160deg,#1e1b4b,#312e81,#4338ca)", padding: "4rem 2rem", marginTop: "2rem" }}>
                 <div style={{ maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
                     <div style={{
@@ -262,7 +263,7 @@ export default function Welcome() {
                 </div>
             </div>
 
-            {/* ═══ VISION + CTA ═══ */}
+            
             <div style={{ maxWidth: 680, margin: "0 auto", padding: "4rem 2rem", textAlign: "center" }}>
                 <div style={{
                     background: "#fff", borderRadius: "24px", padding: "2.75rem 2.25rem",

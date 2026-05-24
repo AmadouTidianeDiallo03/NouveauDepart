@@ -9,7 +9,6 @@ from guides.models import Step, Task
 from universities.models import University
 
 def overhaul_universal_quebec():
-    # 1. Ensure basic Steps exist
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -25,13 +24,9 @@ def overhaul_universal_quebec():
         step.order = s["order"]
         step.save()
 
-    # 2. Get University objects for specific tasks
     uqar = University.objects.filter(name__icontains="UQAR").first()
-    # You could add more universities here if needed
 
-    # 3. Populate Tasks
     tasks_to_create = [
-        # GLOBAL QUEBEC TASKS (university=None)
         {
             "step_id": "admin", "title": "Obtenir son NAS", "title_en": "Get your SIN",
             "desc": "Le Numéro d'Assurance Sociale est indispensable pour travailler au Québec.",
@@ -57,7 +52,6 @@ def overhaul_universal_quebec():
             "uni": None
         },
         
-        # UNIVERSITY SPECIFIC TASKS (Transport examples)
         {
             "step_id": "transport", "title": "Transport à Lévis (ST Lévis)", "title_en": "Transport in Lévis",
             "desc": "Spécifique pour les étudiants de l'UQAR Campus Lévis.",
@@ -75,7 +69,6 @@ def overhaul_universal_quebec():
             "uni": uqar
         },
         
-        # WORK (Global Quebec)
         {
             "step_id": "work", "title": "CV au format Québécois", "title_en": "Quebec Style CV",
             "desc": "Le format de CV ici est très spécifique.",
@@ -88,7 +81,6 @@ def overhaul_universal_quebec():
 
     for t_data in tasks_to_create:
         step = Step.objects.get(category=t_data["step_id"])
-        # Update or create based on title AND university to avoid duplicates/collisions
         task, _ = Task.objects.update_or_create(
             step=step, 
             title=t_data["title"],
@@ -101,7 +93,6 @@ def overhaul_universal_quebec():
                 "university": t_data["uni"]
             }
         )
-    # 4. Force update test user for demonstration
     from django.contrib.auth.models import User
     user = User.objects.filter(username__contains="amadoudiallo").first()
     if user:

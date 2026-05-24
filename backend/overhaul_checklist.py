@@ -8,10 +8,8 @@ django.setup()
 from guides.models import Step, Task
 
 def overhaul_checklist():
-    # 1. Clean up old categories
     Step.objects.filter(category="study").update(category="housing", title="Logement & Installation", title_en="Housing & Setup")
     
-    # 2. Ensure basic Steps exist
     steps_data = [
         {"id": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
         {"id": "university", "title": "Vie Universitaire", "title_en": "University Life", "order": 2},
@@ -27,9 +25,7 @@ def overhaul_checklist():
         step.order = s["order"]
         step.save()
 
-    # 3. Populate Tasks with WOW guides
     tasks = [
-        # ADMIN
         {
             "step_id": "admin", "title": "Obtenir son NAS", "title_en": "Get your SIN",
             "desc": "Le Numéro d'Assurance Sociale est indispensable pour travailler.",
@@ -44,7 +40,6 @@ def overhaul_checklist():
             "tips": "Demandez une carte de crédit 'sans dépôt' pour commencer à bâtir votre historique de crédit canadien.",
             "loc": "Desjardins (Avenue Guillaume-Couture) ou RBC (Centre-ville)."
         },
-        # HOUSING
         {
             "step_id": "housing", "title": "Ouvrir un compte Hydro-Québec", "title_en": "Setup Hydro-Quebec",
             "desc": "Pour avoir de l'électricité et du chauffage dans votre logement.",
@@ -59,7 +54,6 @@ def overhaul_checklist():
             "tips": "Évitez de ramasser des meubles en tissu dans la rue à cause des punaises de lit.",
             "loc": "Marketplace, Kijiji, Village des Valeurs."
         },
-        # WORK (The new section)
         {
             "step_id": "work", "title": "Adapter son CV au style québécois", "title_en": "Adapt local CV",
             "desc": "Le format ici est différent de l'Europe ou de l'Afrique.",

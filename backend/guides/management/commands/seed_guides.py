@@ -5,7 +5,6 @@ class Command(BaseCommand):
     help = "Seed the database with newcomer checklist items"
 
     def handle(self, *args, **kwargs):
-        # 1. Create Steps (Categories)
         steps_data = [
             {"id": 1, "category": "admin", "title": "Démarches administratives", "title_en": "Administrative Steps", "order": 1},
             {"id": 2, "category": "university", "title": "Vie universitaire", "title_en": "University Life", "order": 2},
@@ -24,9 +23,7 @@ class Command(BaseCommand):
                 }
             )
 
-        # 2. Create Tasks
         tasks_data = [
-            # Admin
             {
                 "step_id": 1, "order": 1,
                 "title": "Obtenir son Numéro d'assurance sociale (NAS)",
@@ -62,7 +59,6 @@ class Command(BaseCommand):
                 "description": "Opérateurs abordables : Public Mobile, Koodo, Fido, Lucky.",
                 "description_en": "Affordable operators: Public Mobile, Koodo, Fido, Lucky."
             },
-            # University
             {
                 "step_id": 2, "order": 1,
                 "title": "Obtenir son matricule et code permanent",
@@ -77,7 +73,6 @@ class Command(BaseCommand):
                 "description": "Via le portail étudiant plusieurs semaines avant la session.",
                 "description_en": "Through the student portal several weeks before the session."
             },
-            # Transport
             {
                 "step_id": 3, "order": 1,
                 "title": "Obtenir sa carte de transport (Opus)",

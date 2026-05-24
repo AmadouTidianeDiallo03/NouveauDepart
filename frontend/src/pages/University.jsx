@@ -24,9 +24,24 @@ export default function University() {
     const [uni, setUni] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const profileUniversity = user?.profile?.university;
+    const profileUniversityInfo = user?.profile?.university_info;
+    const universityId = id || profileUniversityInfo?.id || (profileUniversity && typeof profileUniversity === "object" ? profileUniversity.id : profileUniversity);
+
     useEffect(() => {
-        api.get(`/universities/${id}/`).then((res) => setUni(res.data)).finally(() => setLoading(false));
-    }, [id]);
+        setLoading(true);
+        setUni(null);
+
+        if (!universityId) {
+            setLoading(false);
+            return;
+        }
+
+        api.get(`/universities/${universityId}/`)
+            .then((res) => setUni(res.data))
+            .catch(() => setUni(null))
+            .finally(() => setLoading(false));
+    }, [universityId]);
 
     if (loading) return <div className="page-content"><div className="spinner" /></div>;
     if (!uni) return (
@@ -46,7 +61,7 @@ export default function University() {
 
     return (
         <div className="page-content" style={{ background: "linear-gradient(180deg, #f0f4ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            {/* Hero */}
+            
             <div style={{
                 background: heroBg,
                 padding: "2.5rem 0 4.5rem",
@@ -87,7 +102,7 @@ export default function University() {
             </div>
 
             <div className="container container-sm" style={{ position: "relative", zIndex: 1 }}>
-                {/* Website card */}
+                
                 <div style={{
                     background: "#fff", borderRadius: "20px", padding: "1.5rem",
                     marginBottom: "1.25rem",
@@ -123,7 +138,7 @@ export default function University() {
                     )}
                 </div>
 
-                {/* Resources */}
+                
                 {Object.keys(resources).length > 0 && (
                     <>
                         <h3 style={{ marginBottom: "1rem", fontSize: "1.05rem", fontWeight: 700 }}>
@@ -171,7 +186,7 @@ export default function University() {
                     </>
                 )}
 
-                {/* Back */}
+                
                 <Link to="/dashboard" style={{
                     display: "inline-flex", alignItems: "center", gap: "0.4rem",
                     color: "#64748b", fontSize: "0.88rem", textDecoration: "none", fontWeight: 600,

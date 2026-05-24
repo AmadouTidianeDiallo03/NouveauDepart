@@ -35,9 +35,12 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
 
     if (!isOpen || !mentor) return null;
 
+    const profileUniversity = mentor?.profile?.university;
+    const universityName = mentor?.university?.name || mentor?.profile?.university_info?.name || (profileUniversity && typeof profileUniversity === "object" ? profileUniversity.name : "");
+
     return (
         <>
-            {/* Overlay */}
+            
             <div
                 onClick={onClose}
                 style={{
@@ -51,7 +54,7 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
                 }}
             />
 
-            {/* Modal */}
+            
             <div
                 style={{
                     position: "fixed",
@@ -78,7 +81,7 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
                     </div>
                 ) : (
                     <>
-                        {/* Header */}
+                        
                         <div
                             style={{
                                 background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
@@ -95,7 +98,7 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
                                     Demander {mentor?.first_name}
                                 </h2>
                                 <p style={{ margin: 0, fontSize: "0.9rem", opacity: 0.9 }}>
-                                    {mentor?.profile?.university?.name || "Université non indiquée"}
+                                    {universityName || "Université non indiquée"}
                                 </p>
                             </div>
                             <button
@@ -112,9 +115,9 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
                             </button>
                         </div>
 
-                        {/* Content */}
+                        
                         <div style={{ padding: "2rem" }}>
-                            {/* Availabilities */}
+                            
                             {mentor.availabilities && mentor.availabilities.length > 0 && (
                                 <div style={{ marginBottom: "2rem" }}>
                                     <h4 style={{ color: "#0f172a", marginBottom: "1rem" }}>
@@ -147,7 +150,7 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
                                 </div>
                             )}
 
-                            {/* Message */}
+                            
                             <div style={{ marginBottom: "1.5rem" }}>
                                 <label style={{ display: "block", marginBottom: "0.5rem", color: "#0f172a", fontWeight: 600 }}>
                                     Votre message
@@ -170,7 +173,7 @@ export default function MentorAvailabilityModal({ mentor, isOpen, onClose, onReq
                                 />
                             </div>
 
-                            {/* Buttons */}
+                            
                             <div style={{ display: "flex", gap: "1rem" }}>
                                 <button
                                     onClick={onClose}

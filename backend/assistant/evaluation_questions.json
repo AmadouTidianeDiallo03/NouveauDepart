@@ -1,0 +1,54 @@
+[
+  {
+    "message": "Comment obtenir une preuve d'inscription à l'UQAR ?",
+    "university": "UQAR",
+    "campus": "Lévis",
+    "language": "fr"
+  },
+  {
+    "message": "Où trouver le calendrier universitaire ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Comment payer mes frais de scolarité ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Qui contacter pour une question sur mon dossier étudiant ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Quels services existent pour les étudiants internationaux ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Où se trouve le campus de Lévis ?",
+    "university": "UQAR",
+    "campus": "Lévis",
+    "language": "fr"
+  },
+  {
+    "message": "Comment trouver un logement près de l'UQAR ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Comment renouveler mon CAQ ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Comment obtenir un relevé de notes ?",
+    "university": "UQAR",
+    "language": "fr"
+  },
+  {
+    "message": "Quels sont les services de bibliothèque ?",
+    "university": "UQAR",
+    "language": "fr"
+  }
+]

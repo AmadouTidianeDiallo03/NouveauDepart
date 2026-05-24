@@ -50,7 +50,7 @@ export default function StepList({ steps }) {
                         border: `1.5px solid ${isOpen ? theme.border : "#f1f5f9"}`,
                         transition: "box-shadow 0.3s, border-color 0.3s",
                     }}>
-                        {/* Step header */}
+                        
                         <div
                             onClick={() => toggle(step.id)}
                             role="button"
@@ -66,7 +66,7 @@ export default function StepList({ steps }) {
                                 userSelect: "none",
                             }}
                         >
-                            {/* Step number / check */}
+                            
                             <div style={{
                                 width: 44, height: 44, borderRadius: "14px", flexShrink: 0,
                                 background: isComplete ? "linear-gradient(135deg, #22c55e, #16a34a)" : theme.bg,
@@ -88,7 +88,7 @@ export default function StepList({ steps }) {
                                 <div style={{ fontWeight: 700, fontSize: "0.97rem", color: "#0f172a", marginBottom: "0.3rem" }}>
                                     {step.title}
                                 </div>
-                                {/* Inline mini progress */}
+                                
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
                                     <div style={{
                                         flex: 1, height: 5, borderRadius: "999px", background: "#e2e8f0", overflow: "hidden",
@@ -110,7 +110,7 @@ export default function StepList({ steps }) {
                                 </div>
                             </div>
 
-                            {/* Chevron */}
+                            
                             <div style={{
                                 width: 28, height: 28, borderRadius: "8px",
                                 background: isOpen ? theme.light : "#f8fafc",
@@ -125,7 +125,7 @@ export default function StepList({ steps }) {
                             </div>
                         </div>
 
-                        {/* Expanded tasks */}
+                        
                         {isOpen && step.tasks && (
                             <div style={{
                                 borderTop: `1px solid ${theme.border}`,
