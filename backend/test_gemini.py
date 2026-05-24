@@ -1,18 +1,26 @@
+import os
 
 import requests
-import json
+from dotenv import load_dotenv
 
-key = 'AIzaSyCXeZkrmPkb1LeyuJUMdrEjM6HsWAoFQ_c'
-models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro', 'gemini-1.0-pro']
-versions = ['v1', 'v1beta']
+load_dotenv()
 
-for v in versions:
-    for m in models:
-        url = f"https://generativelanguage.googleapis.com/{v}/models/{m}:generateContent"
+key = os.getenv("GEMINI_API_KEY", "")
+models = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+versions = ["v1", "v1beta"]
+
+if not key:
+    raise SystemExit("GEMINI_API_KEY is missing in .env")
+
+for version in versions:
+    for model in models:
+        url = f"https://generativelanguage.googleapis.com/{version}/models/{model}:generateContent"
         payload = {"contents": [{"parts": [{"text": "hi"}]}]}
         try:
-            resp = requests.post(url, params={"key": key}, json=payload, timeout=5)
+            resp = requests.post(url, headers={"x-goog-api-key": key}, json=payload, timeout=8)
             if resp.status_code == 200:
-                print(f"SUCCESS: {v} {m}")
-        except:
-            pass
+                print(f"SUCCESS: {version} {model}")
+            else:
+                print(f"FAILED: {version} {model} ({resp.status_code})")
+        except requests.RequestException as exc:
+            print(f"ERROR: {version} {model} ({exc})")

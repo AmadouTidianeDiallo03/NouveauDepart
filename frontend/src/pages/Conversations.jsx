@@ -1,162 +1,184 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import BackButton from "../components/BackButton";
+import "../styles/messages.css";
 
-const GRADIENTS = [
-    "linear-gradient(135deg, #6366f1, #8b5cf6)",
-    "linear-gradient(135deg, #0ea5e9, #6366f1)",
-    "linear-gradient(135deg, #10b981, #0ea5e9)",
-    "linear-gradient(135deg, #f59e0b, #ef4444)",
-    "linear-gradient(135deg, #ec4899, #8b5cf6)",
-];
+const TABS = ["Toutes", "Non lues", "Mentors"];
+
+function getName(user) {
+    const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(" ").trim();
+    return fullName || user?.email || "Conversation";
+}
+
+function formatDate(dt) {
+    if (!dt) return "";
+    const d = new Date(dt);
+    const now = new Date();
+    const diffDays = Math.floor((now - d) / 86400000);
+    if (diffDays === 0) return "Aujourd'hui";
+    if (diffDays === 1) return "Hier";
+    return d.toLocaleDateString("fr-CA", { day: "2-digit", month: "short" });
+}
 
 export default function Conversations() {
     const { user } = useAuth();
     const [convs, setConvs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [query, setQuery] = useState("");
+    const [tab, setTab] = useState("Toutes");
+    const [selectedId, setSelectedId] = useState(null);
 
     useEffect(() => {
         api.get("/chat/conversations/")
-            .then((r) => setConvs(r.data.results || r.data))
+            .then((r) => {
+                const data = r.data.results || r.data || [];
+                setConvs(data);
+                setSelectedId(data[0]?.id || null);
+            })
             .finally(() => setLoading(false));
     }, []);
 
-    function formatDate(dt) {
-        const d = new Date(dt);
-        const now = new Date();
-        const diffDays = Math.floor((now - d) / 86400000);
-        if (diffDays === 0) return "Aujourd'hui";
-        if (diffDays === 1) return "Hier";
-        return d.toLocaleDateString("fr-CA", { day: "2-digit", month: "short" });
+    const isMentor = user?.profile?.role === "mentor";
+    const filtered = useMemo(() => {
+        const normalized = query.trim().toLowerCase();
+        return convs.filter((conv) => {
+            const name = getName(conv.other_user).toLowerCase();
+            const last = conv.last_message?.content?.toLowerCase() || "";
+            const matchesSearch = !normalized || name.includes(normalized) || last.includes(normalized);
+            const unread = conv.unread_count || conv.has_unread;
+            const matchesTab = tab === "Toutes" || (tab === "Non lues" ? unread : true);
+            return matchesSearch && matchesTab;
+        });
+    }, [convs, query, tab]);
+    const selected = filtered.find((conv) => conv.id === selectedId) || filtered[0] || null;
+
+    if (loading) {
+        return <div className="messages-page"><div className="messages-loading"><div className="spinner" />Chargement des messages...</div></div>;
     }
 
-    if (loading) return <div className="page-content"><div className="spinner" /></div>;
-
-    const isMentor = user?.profile?.role === "mentor";
-    const heroBg = isMentor
-        ? "linear-gradient(135deg, #1e1b4b, #312e81, #4338ca)"
-        : "linear-gradient(135deg, #0c4a6e, #0369a1, #0ea5e9)";
-
     return (
-        <div className="page-content" style={{ background: "linear-gradient(180deg, #f0f4ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            
-            <div style={{
-                background: heroBg,
-                padding: "2.5rem 0 4rem",
-                marginBottom: "-2.5rem",
-                position: "relative",
-                overflow: "hidden",
-            }}>
-                <div style={{ position: "absolute", top: -40, right: -40, width: 220, height: 220, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
-                <div className="container container-sm">
-                    <BackButton />
-                    <h1 style={{ color: "#fff", marginBottom: "0.4rem" }}>
-                        {isMentor ? "Mes Mentorés 👥" : "Mes Messages 💬"}
-                    </h1>
-                    <p style={{ color: "rgba(255,255,255,0.75)", margin: 0, fontSize: "0.95rem" }}>
-                        {isMentor
-                            ? "Tes conversations avec les étudiants que tu accompagnes."
-                            : "Tes échanges avec tes mentors. Ils sont là pour toi !"}
-                    </p>
+        <main className="messages-page">
+            <section className="messages-hero">
+                <div>
+                    <span>Messagerie</span>
+                    <h1>{isMentor ? "Mes mentorés" : "Mes Messages"}</h1>
+                    <p>Retrouve ici tes échanges avec les mentors et les personnes qui t'accompagnent.</p>
                 </div>
-            </div>
+                <div className="messages-stats">
+                    <strong>{convs.length}</strong>
+                    <span>conversation{convs.length > 1 ? "s" : ""}</span>
+                </div>
+            </section>
 
-            <div className="container container-sm" style={{ position: "relative", zIndex: 1 }}>
-                {convs.length === 0 ? (
-                    <div style={{
-                        background: "#fff", borderRadius: "20px", padding: "3rem",
-                        textAlign: "center", boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    }}>
-                        <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>{isMentor ? "👥" : "💬"}</div>
-                        <div style={{ fontWeight: 700, fontSize: "1.1rem", color: "#0f172a", marginBottom: "0.5rem" }}>
-                            {isMentor ? "Aucune demande pour l'instant" : "Aucune conversation"}
+            {convs.length === 0 ? (
+                <EmptyInbox isMentor={isMentor} />
+            ) : (
+                <section className="messages-shell">
+                    <aside className="conversation-panel">
+                        <div className="conversation-tools">
+                            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher une conversation..." />
+                            <Link to={isMentor ? "/dashboard" : "/mentors"}>{isMentor ? "Voir les demandes" : "Nouveau message"}</Link>
                         </div>
-                        <p style={{ color: "#64748b", fontSize: "0.9rem", maxWidth: 300, margin: "0 auto 1.25rem" }}>
-                            {isMentor
-                                ? "Sois patient, les étudiants pourront bientôt te contacter !"
-                                : "Trouve un mentor et envoie-lui un message pour commencer."
-                            }
-                        </p>
-                        {!isMentor && (
-                            <Link to="/mentors" style={{
-                                display: "inline-block",
-                                padding: "0.65rem 1.5rem",
-                                background: "linear-gradient(135deg, #0ea5e9, #6366f1)",
-                                color: "#fff", fontWeight: 700, borderRadius: "12px", textDecoration: "none",
-                            }}>
-                                🤝 Trouver un mentor
-                            </Link>
-                        )}
+                        <div className="conversation-tabs">
+                            {TABS.map((item) => (
+                                <button key={item} className={tab === item ? "active" : ""} type="button" onClick={() => setTab(item)}>{item}</button>
+                            ))}
+                        </div>
+                        <div className="conversation-list">
+                            {filtered.length ? filtered.map((conv) => (
+                                <button
+                                    key={conv.id}
+                                    type="button"
+                                    className={`conversation-item ${selected?.id === conv.id ? "active" : ""}`}
+                                    onClick={() => setSelectedId(conv.id)}
+                                >
+                                    <Avatar user={conv.other_user} />
+                                    <div>
+                                        <strong>{getName(conv.other_user)}</strong>
+                                        <span>{conv.other_user?.profile?.role === "mentor" ? "Mentor" : "Étudiant"}</span>
+                                        <p>{conv.last_message?.content || "Aucun message encore"}</p>
+                                    </div>
+                                    <time>{formatDate(conv.last_message?.created_at || conv.created_at)}</time>
+                                    {(conv.unread_count || conv.has_unread) && <em />}
+                                </button>
+                            )) : (
+                                <div className="conversation-empty">Aucune conversation ne correspond à ta recherche.</div>
+                            )}
+                        </div>
+                    </aside>
+                    <ConversationPreview conversation={selected} />
+                </section>
+            )}
+        </main>
+    );
+}
+
+function ConversationPreview({ conversation }) {
+    if (!conversation) {
+        return (
+            <section className="message-preview empty">
+                <div className="message-illustration">💬</div>
+                <h2>Aucune conversation sélectionnée</h2>
+                <p>Choisis une conversation existante ou contacte un mentor pour commencer.</p>
+                <Link to="/mentors">Trouver un mentor</Link>
+            </section>
+        );
+    }
+
+    const other = conversation.other_user;
+    const name = getName(other);
+    return (
+        <section className="message-preview">
+            <header className="message-preview-header">
+                <Avatar user={other} large />
+                <div>
+                    <h2>{name}</h2>
+                    <p>{other?.profile?.role === "mentor" ? "Mentor disponible pour t'accompagner" : "Conversation étudiante"}</p>
+                </div>
+                <Link to={`/chat/${conversation.id}`}>Ouvrir</Link>
+            </header>
+            <div className="message-preview-body">
+                <div className="chat-day">Aperçu</div>
+                {conversation.last_message ? (
+                    <div className={`preview-bubble ${conversation.last_message.sender === other?.id ? "" : "mine"}`}>
+                        <p>{conversation.last_message.content}</p>
+                        <span>{formatDate(conversation.last_message.created_at)}</span>
                     </div>
                 ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                        {convs.map((conv, idx) => {
-                            const initial = (conv.other_user?.first_name?.[0] || "M").toUpperCase();
-                            const avatarSrc = conv.other_user?.profile?.avatar_url;
-                            const gradient = GRADIENTS[idx % GRADIENTS.length];
-                            return (
-                                <Link key={conv.id} to={`/chat/${conv.id}`} style={{ textDecoration: "none" }}>
-                                    <div style={{
-                                        background: "#fff",
-                                        borderRadius: "16px",
-                                        padding: "1rem 1.25rem",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "1rem",
-                                        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                                        border: "1px solid #f1f5f9",
-                                        transition: "transform 0.15s, box-shadow 0.15s, border-color 0.15s",
-                                    }}
-                                        onMouseEnter={e => { e.currentTarget.style.transform = "translateX(4px)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(99,102,241,0.15)"; e.currentTarget.style.borderColor = "#c7d2fe"; }}
-                                        onMouseLeave={e => { e.currentTarget.style.transform = "translateX(0)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)"; e.currentTarget.style.borderColor = "#f1f5f9"; }}
-                                    >
-                                        
-                                        <div style={{
-                                            width: 48, height: 48, borderRadius: "50%",
-                                            background: avatarSrc ? "transparent" : gradient,
-                                            display: "flex", alignItems: "center", justifyContent: "center",
-                                            fontWeight: 800, color: "#fff", fontSize: "1.1rem", flexShrink: 0,
-                                            overflow: "hidden",
-                                        }}>
-                                            {avatarSrc
-                                                ? <img src={avatarSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                : initial
-                                            }
-                                        </div>
-
-                                        
-                                        <div style={{ flex: 1, minWidth: 0 }}>
-                                            <div style={{ fontWeight: 700, color: "#0f172a", fontSize: "0.95rem" }}>
-                                                {conv.other_user?.first_name} {conv.other_user?.last_name}
-                                            </div>
-                                            {conv.last_message ? (
-                                                <div style={{
-                                                    fontSize: "0.85rem", color: "#64748b",
-                                                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                                                }}>
-                                                    {conv.last_message.content}
-                                                </div>
-                                            ) : (
-                                                <div style={{ fontSize: "0.85rem", color: "#94a3b8", fontStyle: "italic" }}>Aucun message encore</div>
-                                            )}
-                                        </div>
-
-                                        
-                                        <div style={{ flexShrink: 0, textAlign: "right" }}>
-                                            <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: "0.25rem" }}>
-                                                {formatDate(conv.created_at)}
-                                            </div>
-                                            <div style={{ color: "#c7d2fe", fontSize: "1rem" }}>›</div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            );
-                        })}
-                    </div>
+                    <div className="conversation-empty">Aucun message pour le moment. Ouvre la conversation pour commencer l'échange.</div>
                 )}
             </div>
-        </div>
+            <footer className="message-preview-footer">
+                <Link to={`/chat/${conversation.id}`}>Répondre</Link>
+                <Link to={`/mentors/rendez-vous?mentor_id=${other?.id || ""}`}>Prendre rendez-vous</Link>
+                <Link to="/mentors">Voir les mentors</Link>
+            </footer>
+        </section>
     );
+}
+
+function EmptyInbox({ isMentor }) {
+    return (
+        <section className="messages-empty-state">
+            <div className="message-illustration">💬</div>
+            <h2>{isMentor ? "Aucune conversation pour le moment" : "Aucune conversation pour le moment"}</h2>
+            <p>
+                {isMentor
+                    ? "Les échanges avec les étudiants apparaîtront ici dès qu'une conversation commencera."
+                    : "Échange avec un mentor pour poser tes questions et obtenir de l'aide dans ton intégration."}
+            </p>
+            <div>
+                {!isMentor && <Link to="/mentors">Trouver un mentor</Link>}
+                <Link to="/mentors/rendez-vous">Voir mes rendez-vous</Link>
+            </div>
+        </section>
+    );
+}
+
+function Avatar({ user, large = false }) {
+    const name = getName(user);
+    const src = user?.profile?.avatar_url || user?.avatar_url;
+    const initial = (name[0] || "N").toUpperCase();
+    return <span className={`message-avatar ${large ? "large" : ""}`}>{src ? <img src={src} alt="" /> : initial}</span>;
 }

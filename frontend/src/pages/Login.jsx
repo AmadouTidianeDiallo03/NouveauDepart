@@ -7,7 +7,7 @@ import "../styles/auth.css";
 const FEATURES = [
     { icon: "guide", title: "Guide complet", desc: "Un parcours clair pour ton installation au Quebec." },
     { icon: "mentor", title: "Mentors dedies", desc: "Des etudiants experimentes pour t'accompagner." },
-    { icon: "ai", title: "Assistant IA", desc: "NordikBot repond a tes questions avec des sources." },
+    { icon: "ai", title: "Assistant IA", desc: "NordikBot repond naturellement a tes questions." },
 ];
 
 function AuthIcon({ name }) {

@@ -1,304 +1,349 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useLanguage } from "../context/LanguageContext";
+import "../styles/welcome.css";
 
-const REASONS = [
+const STORY_CARDS = [
     {
-        icon: "🌍", number: "01",
-        title: "Une expérience personnelle",
-        color: "linear-gradient(135deg, #1d4ed8, #6366f1)",
-        text: "En tant qu'étudiant étranger au Québec, j'ai moi-même vécu la confusion et le stress liés à l'arrivée dans un nouveau système universitaire — l'incertitude sur les démarches, le manque d'infos centralisées, la différence de système d'enseignement.",
+        icon: "grid",
+        title: "Simplifier les démarches",
+        text: "Regrouper les informations utiles en un seul endroit pour éviter que l'étudiant se perde entre plusieurs plateformes.",
     },
     {
-        icon: "🧠", number: "02",
-        title: "Un problème réel et récurrent",
-        color: "linear-gradient(135deg, #0369a1, #0ea5e9)",
-        text: "Chaque année, des centaines d'étudiants arrivent avec les mêmes questions : Par quoi commencer ? Comment fonctionne la moyenne universitaire ? Comment éviter l'échec dès la première session ? Les infos existent, mais elles sont dispersées et peu adaptées.",
+        icon: "users",
+        title: "Accompagner humainement",
+        text: "Combiner l'aide de mentors avec des outils numériques pour offrir un soutien plus proche de la réalité étudiante.",
     },
     {
-        icon: "📚", number: "03",
-        title: "Un besoin d'accompagnement académique",
-        color: "linear-gradient(135deg, #7c3aed, #8b5cf6)",
-        text: "Plusieurs étudiants échouent non pas par manque d'intelligence, mais par manque de compréhension du système : poids des examens, gestion du temps, méthodes d'étude adaptées au Québec. Ce projet vise à combler ce fossé.",
-    },
-    {
-        icon: "🤝", number: "04",
-        title: "L'importance du soutien humain",
-        color: "linear-gradient(135deg, #059669, #10b981)",
-        text: "L'isolement est réel. On hésite à poser des questions, on ne sait pas vers qui se tourner. C'est pourquoi NouveauDépart intègre une mise en relation avec des mentors expérimentés, une messagerie et un assistant IA disponible 24h/24.",
+        icon: "compass",
+        title: "Guider étape par étape",
+        text: "Aider l'étudiant avant son arrivée, à son arrivée et après son installation avec des repères simples.",
     },
 ];
 
-const GOALS = [
-    { icon: "🗂️", text: "Centraliser les informations essentielles" },
-    { icon: "🧭", text: "Guider étape par étape dans les démarches" },
-    { icon: "🎓", text: "Expliquer le fonctionnement universitaire" },
-    { icon: "😌", text: "Réduire le stress lié à l'intégration" },
-    { icon: "💪", text: "Favoriser l'autonomie et la réussite" },
-    { icon: "🌟", text: "Offrir un accompagnement structuré" },
+const FEATURES = [
+    { icon: "home", title: "Tableau de bord", text: "Visualise tes priorités, ton profil et les actions importantes.", to: "/dashboard" },
+    { icon: "compass", title: "Suivre mon parcours", text: "Avance selon ton étape : avant, à l'arrivée ou après ton installation.", to: "/parcours" },
+    { icon: "check", title: "Compléter ma checklist", text: "Garde une vue claire sur les démarches importantes à faire.", to: "/checklist" },
+    { icon: "users", title: "Contacter un mentor", text: "Échange avec une personne qui connaît déjà le parcours.", to: "/mentors" },
+    { icon: "spark", title: "Événements", text: "Découvre les activités utiles pour t'intégrer à la vie universitaire.", to: "/evenements" },
+    { icon: "wallet", title: "Estimer mon budget", text: "Prévois tes dépenses mensuelles au Québec plus simplement.", to: "/budget" },
+    { icon: "bot", title: "NordikBot", text: "Pose tes questions sur l'université, les démarches et la vie au Québec.", to: "/assistant" },
+    { icon: "map", title: "Explorer la carte", text: "Repère campus, services, transport et lieux essentiels.", to: "/carte" },
+    { icon: "book", title: "Lire les guides", text: "Comprends les démarches avec des ressources simples et utiles.", to: "/study-success" },
 ];
+
+const JOURNEY_STEPS = [
+    {
+        icon: "plane",
+        title: "Avant mon arrivée",
+        text: "Préparer mes documents, mon budget, mon logement et mon départ.",
+        tasks: ["Admission", "CAQ et permis", "Budget", "Logement"],
+    },
+    {
+        icon: "home",
+        title: "À mon arrivée",
+        text: "Faire mes premières démarches, découvrir mon campus et m'installer.",
+        tasks: ["Téléphone", "Banque", "Transport", "Campus"],
+    },
+    {
+        icon: "star",
+        title: "Après mon arrivée",
+        text: "M'intégrer, réussir mes études, trouver de l'aide et participer à la vie universitaire.",
+        tasks: ["Études", "Mentors", "Événements", "Vie sociale"],
+    },
+];
+
+const STATS = [
+    { value: "3", label: "étapes de parcours" },
+    { value: "36+", label: "tâches pratiques" },
+    { value: "7+", label: "mentors disponibles" },
+    { value: "15+", label: "ressources utiles" },
+    { value: "24/7", label: "NordikBot" },
+];
+
+function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bon matin";
+    if (hour < 18) return "Bon après-midi";
+    return "Bonsoir";
+}
+
+function normalizeName(value) {
+    if (!value) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") return value.name || value.title || value.short_name || "";
+    return "";
+}
+
+function getRoleLabel(role) {
+    if (role === "admin") return "Administrateur";
+    if (role === "mentor") return "Mentor";
+    return "Étudiant international";
+}
 
 export default function Welcome() {
-    const { user, loading } = useAuth();
-    const { t } = useLanguage();
+    const { user } = useAuth();
     const navigate = useNavigate();
+    const storyRef = useRef(null);
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const t = setTimeout(() => setVisible(true), 150);
-        return () => clearTimeout(t);
+        const timeout = setTimeout(() => setVisible(true), 120);
+        return () => clearTimeout(timeout);
     }, []);
 
+    const profile = user?.profile || {};
     const firstName = user?.first_name || "";
     const lastName = user?.last_name || "";
-    const fullName = [firstName, lastName].filter(Boolean).join(" ");
-    const isMentor = user?.profile?.role === "mentor";
-    const profileUniversity = user?.profile?.university;
-    const uniName = user?.profile?.university_info?.name || (profileUniversity && typeof profileUniversity === "object" ? profileUniversity.name : "");
-    const avatarSrc = user?.profile?.avatar_url;
-    const avatarLetter = (firstName[0] || user?.email?.[0] || "?").toUpperCase();
-    const roleLabel = isMentor ? t("mentor") + " 🌟" : t("student") + " 🎓";
-    const roleColor = isMentor
-        ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
-        : "linear-gradient(135deg, #2563eb, #0ea5e9)";
+    const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
+    const displayName = fullName || user?.email || "Profil à compléter";
+    const roleLabel = getRoleLabel(profile.role);
+    const university = normalizeName(profile.university_info) || normalizeName(profile.university) || "Université non sélectionnée";
+    const campus = normalizeName(profile.campus_info) || normalizeName(profile.campus) || "Campus non défini";
+    const stage = normalizeName(profile.integration_stage) || profile.integration_stage_display || "Profil à compléter";
+    const avatarSrc = profile.avatar_url || user?.avatar_url;
+    const initial = (firstName?.[0] || user?.email?.[0] || "N").toUpperCase();
 
-    const hour = new Date().getHours();
-    const greet = hour < 12 ? t("morning") : hour < 18 ? t("afternoon") : t("evening");
+    function scrollToStory() {
+        storyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
     return (
-        <div style={{ background: "#f8fafc", minHeight: "100vh" }}>
+        <main className={`welcome-page ${visible ? "is-visible" : ""}`}>
+            <WelcomeHero
+                avatarSrc={avatarSrc}
+                initial={initial}
+                greeting={getGreeting()}
+                displayName={displayName}
+                roleLabel={roleLabel}
+                university={university}
+                campus={campus}
+                stage={stage}
+                onDashboard={() => navigate("/dashboard")}
+                onDiscover={scrollToStory}
+            />
+            <FeatureCardsSection />
+            <ProjectStorySection sectionRef={storyRef} />
+            <JourneyStepsSection />
+            <HumanAISection />
+            <WelcomeStatsSection />
+            <WelcomeCTA onDashboard={() => navigate("/dashboard")} />
+        </main>
+    );
+}
 
-            
-            <div style={{
-                background: "linear-gradient(160deg, #0f172a 0%, #1e1b4b 40%, #312e81 70%, #4338ca 100%)",
-                padding: "4rem 2rem 5rem",
-                textAlign: "center",
-                position: "relative",
-                overflow: "hidden",
-            }}>
-                
-                <div style={{ position: "absolute", top: -120, left: -120, width: 400, height: 400, borderRadius: "50%", background: "rgba(99,102,241,0.15)", pointerEvents: "none" }} />
-                <div style={{ position: "absolute", bottom: -80, right: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(139,92,246,0.12)", pointerEvents: "none" }} />
+function WelcomeHero({ avatarSrc, initial, greeting, displayName, roleLabel, university, campus, stage, onDashboard, onDiscover }) {
+    return (
+        <section className="welcome-hero">
+            <div className="welcome-hero-inner">
+                <div className="welcome-hero-copy">
+                    <div className="welcome-kicker">Accueil personnalisé</div>
+                    <p className="welcome-greeting">{greeting}, {displayName.split(" ")[0]}</p>
+                    <h1>Bienvenue sur ton espace NouveauDépart</h1>
+                    <p className="welcome-lead">Ton guide intelligent pour réussir ton intégration au Québec.</p>
+                    <p className="welcome-intro">
+                        Retrouve ton parcours, tes ressources, tes mentors et les outils utiles pour t'accompagner étape par étape.
+                    </p>
+                    <div className="welcome-actions">
+                        <button type="button" className="welcome-primary-btn" onClick={onDashboard}>Accéder à mon tableau de bord</button>
+                        <button type="button" className="welcome-secondary-btn" onClick={onDiscover}>Découvrir le projet</button>
+                    </div>
+                </div>
 
-                
-                <div style={{
-                    position: "relative", zIndex: 1,
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "translateY(0)" : "translateY(28px)",
-                    transition: "opacity 0.8s ease, transform 0.8s ease",
-                }}>
-                    
-                    <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: "0.85rem", marginBottom: "2rem" }}>
+                <UserSummaryCard
+                    avatarSrc={avatarSrc}
+                    initial={initial}
+                    displayName={displayName}
+                    roleLabel={roleLabel}
+                    university={university}
+                    campus={campus}
+                    stage={stage}
+                />
+            </div>
+        </section>
+    );
+}
 
-                        
-                        <div style={{
-                            width: 88, height: 88, borderRadius: "50%",
-                            background: avatarSrc ? "transparent" : roleColor,
-                            border: "3px solid rgba(255,255,255,0.3)",
-                            boxShadow: "0 0 0 7px rgba(255,255,255,0.07)",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            fontSize: "2rem", fontWeight: 800, color: "#fff",
-                            overflow: "hidden",
-                        }}>
-                            {avatarSrc
-                                ? <img src={avatarSrc} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                : avatarLetter}
+function UserSummaryCard({ avatarSrc, initial, displayName, roleLabel, university, campus, stage }) {
+    return (
+        <aside className="welcome-user-card" aria-label="Résumé du profil">
+            <div className="welcome-user-card-header">
+                <div className="welcome-avatar">
+                    {avatarSrc ? <img src={avatarSrc} alt="" /> : initial}
+                </div>
+                <div>
+                    <span>Profil connecté</span>
+                    <h2>{displayName}</h2>
+                    <p>{roleLabel}</p>
+                </div>
+            </div>
+            <div className="welcome-user-details">
+                <div>
+                    <span>Université</span>
+                    <strong>{university}</strong>
+                </div>
+                <div>
+                    <span>Campus</span>
+                    <strong>{campus}</strong>
+                </div>
+                <div>
+                    <span>Étape actuelle</span>
+                    <strong>{stage}</strong>
+                </div>
+            </div>
+            <Link to="/onboarding">Compléter mon profil</Link>
+        </aside>
+    );
+}
+
+function ProjectStorySection({ sectionRef }) {
+    return (
+        <section className="welcome-section welcome-story-section" ref={sectionRef}>
+            <div className="welcome-section-heading">
+                <span>Un projet né d'un besoin réel</span>
+                <h2>Pourquoi NouveauDépart ?</h2>
+                <p>
+                    NouveauDépart a été pensé pour aider les étudiants internationaux à mieux comprendre leur arrivée,
+                    à s'organiser et à trouver plus facilement les bonnes ressources au bon moment.
+                </p>
+            </div>
+            <div className="welcome-story-grid">
+                {STORY_CARDS.map((card) => (
+                    <article className="welcome-story-card" key={card.title}>
+                        <span><WelcomeIcon name={card.icon} /></span>
+                        <h3>{card.title}</h3>
+                        <p>{card.text}</p>
+                    </article>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function FeatureCardsSection() {
+    return (
+        <section className="welcome-section">
+            <div className="welcome-section-heading">
+                <span>Fonctionnalités</span>
+                <h2>Ce que tu peux faire avec NouveauDépart</h2>
+                <p>Chaque fonctionnalité a été pensée pour répondre à un besoin concret de l'étudiant international.</p>
+            </div>
+            <div className="welcome-feature-grid">
+                {FEATURES.map((feature) => (
+                    <Link className="welcome-feature-card" to={feature.to} key={feature.title}>
+                        <span><WelcomeIcon name={feature.icon} /></span>
+                        <h3>{feature.title}</h3>
+                        <p>{feature.text}</p>
+                        <strong>Ouvrir</strong>
+                    </Link>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function JourneyStepsSection() {
+    return (
+        <section className="welcome-section welcome-journey-section">
+            <div className="welcome-section-heading">
+                <span>Ton parcours</span>
+                <h2>Trois étapes pour mieux te situer</h2>
+                <p>NouveauDépart adapte les tâches et les ressources selon le moment où tu te trouves dans ton intégration.</p>
+            </div>
+            <div className="welcome-journey-grid">
+                {JOURNEY_STEPS.map((step, index) => (
+                    <article className="welcome-journey-card" key={step.title}>
+                        <div className="journey-index">0{index + 1}</div>
+                        <span><WelcomeIcon name={step.icon} /></span>
+                        <h3>{step.title}</h3>
+                        <p>{step.text}</p>
+                        <div className="journey-tags">
+                            {step.tasks.map((task) => <small key={task}>{task}</small>)}
                         </div>
-
-                        
-                        <div>
-                            <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginBottom: "0.25rem", letterSpacing: "0.04em" }}>
-                                {greet} 👋
-                            </div>
-                            <div style={{
-                                color: "#fff",
-                                fontSize: fullName ? "clamp(1.6rem,4vw,2.3rem)" : "1.4rem",
-                                fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1,
-                                marginBottom: "0.55rem",
-                            }}>
-                                {fullName ? `${fullName} 🍁` : t("welcome")}
-                            </div>
-                            
-                            {!loading && (
-                                <div style={{
-                                    display: "inline-block", background: roleColor,
-                                    borderRadius: "999px", padding: "0.28rem 0.9rem",
-                                    color: "#fff", fontSize: "0.78rem", fontWeight: 700,
-                                    marginBottom: uniName ? "0.45rem" : 0,
-                                }}>
-                                    {roleLabel}
-                                </div>
-                            )}
-                            {uniName && (
-                                <div style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.83rem", marginTop: "0.3rem" }}>
-                                    🏫 {uniName}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    
-                    <h1 style={{
-                        fontSize: "clamp(1.8rem,4vw,3rem)", fontWeight: 900, color: "#fff",
-                        letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: "1rem",
-                    }}>
-                        Nouveau<span style={{ color: "#a78bfa" }}>Départ</span>
-                    </h1>
-
-                    <p style={{
-                        fontSize: "clamp(0.95rem,2vw,1.15rem)", color: "rgba(255,255,255,0.7)",
-                        maxWidth: 560, margin: "0 auto 2.25rem", lineHeight: 1.75, fontStyle: "italic",
-                    }}>
-                        « Un outil centré sur l'humain, développé dans un cadre académique,
-                        mais inspiré d'une expérience réelle. »
-                    </p>
-
-                    
-                    <button
-                        onClick={() => navigate("/dashboard")}
-                        style={{
-                            background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
-                            color: "#fff", border: "none",
-                            padding: "0.95rem 2.5rem",
-                            borderRadius: "14px", fontSize: "1rem", fontWeight: 700,
-                            cursor: "pointer", boxShadow: "0 8px 32px rgba(99,102,241,0.45)",
-                            transition: "all 0.2s",
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(99,102,241,0.55)"; }}
-                        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(99,102,241,0.45)"; }}
-                    >
-                        {t("go_to_dashboard")} →
-                    </button>
-
-                    <div style={{ marginTop: "1rem", color: "rgba(255,255,255,0.35)", fontSize: "0.78rem" }}>
-                        ↓ {t("discover_story")}
-                    </div>
-                </div>
+                    </article>
+                ))}
             </div>
+        </section>
+    );
+}
 
-            
-            <div style={{ maxWidth: 860, margin: "0 auto", padding: "4rem 2rem 2rem" }}>
-                <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-                    <div style={{
-                        display: "inline-block",
-                        background: "linear-gradient(135deg,#6366f1,#8b5cf6)",
-                        borderRadius: "999px", padding: "0.35rem 1.1rem",
-                        color: "#fff", fontSize: "0.78rem", fontWeight: 700,
-                        marginBottom: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase",
-                    }}>
-                        {t("why_this_project")}
-                    </div>
-                    <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em", marginBottom: "0.65rem" }}>
-                        {t("what_pushed_me")}
-                    </h2>
-                    <p style={{ color: "#64748b", fontSize: "1rem", maxWidth: 580, margin: "0 auto", lineHeight: 1.7 }}>
-                        Ce projet est né d'un vécu personnel, d'une frustration réelle,
-                        et d'une envie sincère d'aider ceux qui vivent ce que j'ai vécu.
-                    </p>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                    {REASONS.map((r, i) => (
-                        <div key={r.number} style={{
-                            display: "flex", gap: "1.25rem", alignItems: "flex-start",
-                            background: "#fff", borderRadius: "20px", padding: "1.75rem",
-                            boxShadow: "0 4px 20px rgba(0,0,0,0.06)", border: "1px solid #f1f5f9",
-                            opacity: visible ? 1 : 0,
-                            transform: visible ? "translateX(0)" : "translateX(-16px)",
-                            transition: `opacity 0.6s ease ${0.2 + i * 0.1}s, transform 0.6s ease ${0.2 + i * 0.1}s`,
-                        }}>
-                            <div style={{
-                                flexShrink: 0, width: 60, height: 60, borderRadius: "16px",
-                                background: r.color, display: "flex", flexDirection: "column",
-                                alignItems: "center", justifyContent: "center",
-                                boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
-                            }}>
-                                <span style={{ fontSize: "1.4rem", lineHeight: 1 }}>{r.icon}</span>
-                                <span style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.6rem", fontWeight: 700, marginTop: 2 }}>{r.number}</span>
-                            </div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "#0f172a", marginBottom: "0.4rem" }}>{r.title}</h3>
-                                <p style={{ color: "#64748b", lineHeight: 1.7, fontSize: "0.93rem", margin: 0 }}>{r.text}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+function HumanAISection() {
+    return (
+        <section className="welcome-human-ai">
+            <div className="welcome-human-heading">
+                <span>Technologie et accompagnement</span>
+                <h2>Un soutien humain et intelligent</h2>
+                <p>
+                    NouveauDépart combine technologie et accompagnement humain pour proposer une expérience plus utile
+                    et plus rassurante.
+                </p>
             </div>
-
-            
-            <div style={{ background: "linear-gradient(160deg,#1e1b4b,#312e81,#4338ca)", padding: "4rem 2rem", marginTop: "2rem" }}>
-                <div style={{ maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
-                    <div style={{
-                        display: "inline-block", background: "rgba(255,255,255,0.15)",
-                        borderRadius: "999px", padding: "0.35rem 1.1rem",
-                        color: "#c7d2fe", fontSize: "0.78rem", fontWeight: 700,
-                        marginBottom: "0.85rem", letterSpacing: "0.06em", textTransform: "uppercase",
-                    }}>
-                        🎓 {t("project_goal")}
-                    </div>
-                    <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.1rem)", fontWeight: 800, color: "#fff", marginBottom: "0.65rem", letterSpacing: "-0.03em" }}>
-                        {t("aim_to_accomplish")}
-                    </h2>
-                    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "1rem", marginBottom: "2.25rem" }}>
-                        Une vision globale centrée sur l'humain, pas seulement sur l'information.
-                    </p>
-
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: "0.85rem", textAlign: "left" }}>
-                        {GOALS.map((g) => (
-                            <div key={g.text} style={{
-                                background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)",
-                                borderRadius: "14px", padding: "1.1rem 1.35rem",
-                                display: "flex", alignItems: "center", gap: "0.8rem",
-                                color: "#fff", transition: "background 0.2s",
-                            }}
-                                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
-                                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
-                            >
-                                <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{g.icon}</span>
-                                <span style={{ fontWeight: 600, fontSize: "0.9rem", lineHeight: 1.4 }}>{g.text}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            <div className="welcome-support-grid">
+                <article>
+                    <span><WelcomeIcon name="bot" /></span>
+                    <h3>NordikBot</h3>
+                    <p>Obtiens rapidement des réponses à tes questions sur l'université, les démarches et la vie au Québec.</p>
+                    <Link to="/assistant">Poser une question</Link>
+                </article>
+                <article>
+                    <span><WelcomeIcon name="users" /></span>
+                    <h3>Mentors</h3>
+                    <p>Échange avec des étudiants expérimentés qui peuvent t'aider à mieux t'intégrer.</p>
+                    <Link to="/mentors">Trouver un mentor</Link>
+                </article>
             </div>
+        </section>
+    );
+}
 
-            
-            <div style={{ maxWidth: 680, margin: "0 auto", padding: "4rem 2rem", textAlign: "center" }}>
-                <div style={{
-                    background: "#fff", borderRadius: "24px", padding: "2.75rem 2.25rem",
-                    boxShadow: "0 8px 40px rgba(0,0,0,0.08)", border: "1px solid #f1f5f9",
-                }}>
-                    <div style={{ fontSize: "2.8rem", marginBottom: "0.85rem" }}>💡</div>
-                    <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#0f172a", marginBottom: "0.85rem", letterSpacing: "-0.03em" }}>
-                        {t("global_vision")}
-                    </h2>
-                    <p style={{ color: "#64748b", fontSize: "0.98rem", lineHeight: 1.85, marginBottom: "1.85rem" }}>
-                        Ce projet ne vise pas uniquement à fournir de l'information.<br />
-                        Il vise à <strong style={{ color: "#6366f1" }}>rassurer</strong>,{" "}
-                        <strong style={{ color: "#0ea5e9" }}>structurer</strong>,{" "}
-                        <strong style={{ color: "#8b5cf6" }}>accompagner</strong>{" "}
-                        et <strong style={{ color: "#059669" }}>faciliter</strong> l'intégration académique
-                        et sociale des étudiants internationaux au Québec.
-                    </p>
-                    <button
-                        onClick={() => navigate("/dashboard")}
-                        style={{
-                            background: "linear-gradient(135deg,#4338ca,#6366f1)",
-                            color: "#fff", border: "none",
-                            padding: "0.95rem 2.5rem",
-                            borderRadius: "14px", fontSize: "1rem", fontWeight: 700,
-                            cursor: "pointer", boxShadow: "0 6px 24px rgba(99,102,241,0.35)",
-                            transition: "all 0.2s",
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 10px 32px rgba(99,102,241,0.5)"; }}
-                        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(99,102,241,0.35)"; }}
-                    >
-                        🚀 {t("start_adventure")}
-                    </button>
+function WelcomeStatsSection() {
+    return (
+        <section className="welcome-stats">
+            {STATS.map((stat) => (
+                <div key={stat.label}>
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
                 </div>
-            </div>
+            ))}
+        </section>
+    );
+}
 
-        </div>
+function WelcomeCTA({ onDashboard }) {
+    return (
+        <section className="welcome-cta">
+            <h2>Prêt à continuer ton intégration ?</h2>
+            <p>Ton espace NouveauDépart est prêt. Continue ton parcours, complète tes étapes et utilise les ressources disponibles.</p>
+            <div className="welcome-cta-actions">
+                <button type="button" className="welcome-primary-btn" onClick={onDashboard}>Accéder à mon tableau de bord</button>
+                <Link className="welcome-outline-link" to="/onboarding">Compléter mon profil</Link>
+            </div>
+        </section>
+    );
+}
+
+function WelcomeIcon({ name }) {
+    const paths = {
+        heart: "M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z",
+        grid: "M3 3h8v8H3V3Zm10 0h8v8h-8V3ZM3 13h8v8H3v-8Zm10 0h8v8h-8v-8Z",
+        users: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75",
+        compass: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm3.5-12.5-2.1 5-5 2.1 2.1-5 5-2.1Z",
+        check: "M20 6 9 17l-5-5",
+        bot: "M12 8V4m0 4h5a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3h5Zm-4 5h.01M16 13h.01M9 17h6",
+        calendar: "M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z",
+        spark: "M12 2l1.6 5.3L19 9l-5.4 1.7L12 16l-1.6-5.3L5 9l5.4-1.7L12 2Zm6 12 .8 2.7L21 18l-2.2.7L18 21l-.8-2.3L15 18l2.2-1.3L18 14Z",
+        wallet: "M3 7h18v12H3V7Zm3-4h12v4H6V3Zm12 10h.01",
+        map: "M9 18 3 21V6l6-3 6 3 6-3v15l-6 3-6-3Zm0 0V3m6 18V6",
+        book: "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5Zm0 0V21",
+        plane: "M22 2 11 13m11-11-7 20-4-9-9-4 20-7Z",
+        home: "M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3v-10.5Z",
+        star: "m12 2 3 6 6 .9-4.5 4.4 1.1 6.4L12 16.7 6.4 19.7l1.1-6.4L3 8.9 9 8l3-6Z",
+    };
+
+    return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d={paths[name] || paths.star} />
+        </svg>
     );
 }

@@ -1,0 +1,497 @@
+.welcome-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.08), transparent 22rem),
+        radial-gradient(circle at 88% 20%, rgba(124, 58, 237, 0.08), transparent 20rem),
+        linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+    color: #102044;
+    overflow-x: hidden;
+}
+
+.welcome-page > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.welcome-page.is-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.welcome-hero {
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem);
+}
+
+.welcome-hero-inner {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(21rem, 0.75fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+}
+
+.welcome-hero-copy {
+    max-width: 42rem;
+}
+
+.welcome-kicker,
+.welcome-section-heading span,
+.welcome-human-heading span {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid #dbeafe;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.76rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.welcome-greeting {
+    margin: 1.35rem 0 0.55rem;
+    color: #2563eb;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+}
+
+.welcome-hero h1 {
+    margin: 0;
+    max-width: 40rem;
+    color: #07152f;
+    font-size: clamp(2.45rem, 5vw, 4.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.07em;
+}
+
+.welcome-lead {
+    margin: 1.2rem 0 0;
+    color: #1d4ed8;
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    font-weight: 850;
+    line-height: 1.5;
+}
+
+.welcome-intro {
+    margin: 1rem 0 0;
+    max-width: 38rem;
+    color: #5f718d;
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.welcome-actions,
+.welcome-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.8rem;
+}
+
+.welcome-primary-btn,
+.welcome-secondary-btn,
+.welcome-outline-link {
+    min-height: 3.05rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.2rem;
+    border-radius: 0.95rem;
+    font: inherit;
+    font-weight: 900;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.welcome-primary-btn {
+    border: 0;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #fff;
+    box-shadow: 0 16px 36px rgba(37, 99, 235, 0.28);
+}
+
+.welcome-secondary-btn,
+.welcome-outline-link {
+    border: 1px solid #cfdcf0;
+    background: #fff;
+    color: #1d4ed8;
+}
+
+.welcome-primary-btn:hover,
+.welcome-secondary-btn:hover,
+.welcome-outline-link:hover {
+    transform: translateY(-2px);
+}
+
+.welcome-user-card,
+.welcome-story-card,
+.welcome-feature-card,
+.welcome-journey-card,
+.welcome-human-ai,
+.welcome-cta {
+    border: 1px solid #dfe8f5;
+    border-radius: 1.45rem;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 22px 65px rgba(15, 23, 42, 0.1);
+}
+
+.welcome-user-card {
+    padding: 1.25rem;
+    backdrop-filter: blur(16px);
+}
+
+.welcome-user-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.15rem;
+    border-bottom: 1px solid #e6eef9;
+}
+
+.welcome-avatar {
+    width: 4.25rem;
+    height: 4.25rem;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 1.15rem;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #fff;
+    font-size: 1.55rem;
+    font-weight: 950;
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.24);
+}
+
+.welcome-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.welcome-user-card-header span,
+.welcome-user-details span {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.welcome-user-card h2 {
+    margin: 0.2rem 0;
+    color: #07152f;
+    font-size: 1.35rem;
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+}
+
+.welcome-user-card p {
+    margin: 0;
+    color: #1d4ed8;
+    font-weight: 900;
+}
+
+.welcome-user-details {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.welcome-user-details div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: baseline;
+    padding: 0.85rem;
+    border-radius: 0.9rem;
+    background: #f8fbff;
+}
+
+.welcome-user-details strong {
+    color: #102044;
+    font-size: 0.92rem;
+}
+
+.welcome-user-card > a {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.82rem 1rem;
+    border-radius: 0.9rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    text-decoration: none;
+    font-weight: 900;
+}
+
+.welcome-section {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: clamp(3rem, 7vw, 5.5rem) 0 0;
+}
+
+.welcome-section-heading {
+    max-width: 720px;
+    margin: 0 0 2rem;
+}
+
+.welcome-section-heading h2,
+.welcome-human-ai h2,
+.welcome-cta h2 {
+    margin: 0.9rem 0 0;
+    color: #07152f;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: -0.06em;
+}
+
+.welcome-section-heading p,
+.welcome-human-ai p,
+.welcome-cta p {
+    margin: 1rem 0 0;
+    color: #64748b;
+    line-height: 1.75;
+}
+
+.welcome-feature-grid,
+.welcome-story-grid,
+.welcome-journey-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.welcome-feature-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.welcome-story-grid,
+.welcome-journey-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.welcome-story-card,
+.welcome-feature-card,
+.welcome-journey-card {
+    padding: 1.2rem;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.welcome-feature-card {
+    color: inherit;
+    text-decoration: none;
+}
+
+.welcome-story-card:hover,
+.welcome-feature-card:hover,
+.welcome-journey-card:hover {
+    transform: translateY(-4px);
+    border-color: #bfdbfe;
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.13);
+}
+
+.welcome-story-card > span,
+.welcome-feature-card > span,
+.welcome-journey-card > span,
+.welcome-support-grid article > span {
+    width: 2.65rem;
+    height: 2.65rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    color: #2563eb;
+}
+
+.welcome-page svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.welcome-story-card h3,
+.welcome-feature-card h3,
+.welcome-journey-card h3,
+.welcome-support-grid h3 {
+    margin: 1rem 0 0.5rem;
+    color: #102044;
+    font-size: 1.05rem;
+}
+
+.welcome-story-card p,
+.welcome-feature-card p,
+.welcome-journey-card p,
+.welcome-support-grid p {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.65;
+}
+
+.welcome-feature-card strong,
+.welcome-support-grid a {
+    display: inline-flex;
+    margin-top: 1rem;
+    color: #1d4ed8;
+    font-size: 0.88rem;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.welcome-journey-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.journey-index {
+    position: absolute;
+    right: 1rem;
+    top: 0.55rem;
+    color: #dce6f4;
+    font-size: 2.75rem;
+    font-weight: 950;
+    letter-spacing: -0.08em;
+}
+
+.journey-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1rem;
+}
+
+.journey-tags small {
+    padding: 0.34rem 0.58rem;
+    border-radius: 999px;
+    background: #f1f5fb;
+    color: #1e3a8a;
+    font-size: 0.76rem;
+    font-weight: 850;
+}
+
+.welcome-human-ai {
+    width: min(1120px, calc(100% - 2rem));
+    margin: clamp(3rem, 7vw, 5.5rem) auto 0;
+    padding: clamp(1.5rem, 4vw, 2.2rem);
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 1.4rem;
+    align-items: center;
+}
+
+.welcome-support-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.welcome-support-grid article {
+    padding: 1.25rem;
+    border: 1px solid #e5edf8;
+    border-radius: 1.2rem;
+    background: #f8fbff;
+}
+
+.welcome-stats {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 2rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.welcome-stats div {
+    padding: 1.15rem 1rem;
+    border: 1px solid #e5edf8;
+    border-radius: 1.15rem;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+}
+
+.welcome-stats strong {
+    display: block;
+    color: #1d4ed8;
+    font-size: 1.45rem;
+    letter-spacing: -0.04em;
+}
+
+.welcome-stats span {
+    display: block;
+    margin-top: 0.22rem;
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.welcome-cta {
+    width: min(860px, calc(100% - 2rem));
+    margin: clamp(3.5rem, 7vw, 5.5rem) auto;
+    padding: clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    background:
+        radial-gradient(circle at 90% 10%, rgba(37, 99, 235, 0.1), transparent 16rem),
+        #fff;
+}
+
+.welcome-cta-actions {
+    justify-content: center;
+}
+
+@media (max-width: 980px) {
+    .welcome-hero-inner,
+    .welcome-human-ai {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-user-card {
+        max-width: 34rem;
+    }
+
+    .welcome-feature-grid,
+    .welcome-story-grid,
+    .welcome-journey-grid,
+    .welcome-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .welcome-hero {
+        padding-top: 1.5rem;
+    }
+
+    .welcome-hero h1 {
+        font-size: 2.65rem;
+    }
+
+    .welcome-actions,
+    .welcome-primary-btn,
+    .welcome-secondary-btn,
+    .welcome-outline-link {
+        width: 100%;
+    }
+
+    .welcome-user-details div {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+
+    .welcome-feature-grid,
+    .welcome-story-grid,
+    .welcome-journey-grid,
+    .welcome-support-grid,
+    .welcome-stats {
+        grid-template-columns: 1fr;
+    }
+}

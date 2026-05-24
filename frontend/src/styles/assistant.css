@@ -1,0 +1,429 @@
+.assistant-page {
+    min-height: 100vh;
+    padding: clamp(1rem, 3vw, 2rem);
+    background:
+        radial-gradient(circle at 84% 8%, rgba(124, 58, 237, 0.08), transparent 20rem),
+        radial-gradient(circle at 12% 12%, rgba(37, 99, 235, 0.08), transparent 18rem),
+        linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+    color: #102044;
+}
+
+.assistant-shell {
+    width: min(920px, 100%);
+    margin: 0 auto;
+}
+
+.assistant-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem;
+    border: 1px solid #dbe5f4;
+    border-radius: 1.35rem;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+}
+
+.assistant-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+}
+
+.assistant-bot-icon,
+.nordik-message-avatar,
+.nordik-empty-icon {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #fff;
+    font-weight: 950;
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.2);
+}
+
+.assistant-bot-icon {
+    width: 3.4rem;
+    height: 3.4rem;
+    flex: 0 0 auto;
+    border-radius: 1rem;
+}
+
+.assistant-header span {
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.assistant-header h1 {
+    margin: 0.1rem 0;
+    color: #07152f;
+    font-size: clamp(1.6rem, 4vw, 2.35rem);
+    line-height: 1;
+    letter-spacing: -0.055em;
+}
+
+.assistant-header p {
+    max-width: 39rem;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.93rem;
+    line-height: 1.55;
+}
+
+.assistant-header-actions {
+    display: flex;
+    gap: 0.55rem;
+    flex: 0 0 auto;
+}
+
+.assistant-header-actions button,
+.assistant-header-actions a,
+.assistant-suggestions button,
+.nordik-input-row button {
+    min-height: 2.55rem;
+    border-radius: 0.85rem;
+    padding: 0.65rem 0.9rem;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.assistant-header-actions button {
+    border: 1px solid #dbe5f4;
+    background: #f8fbff;
+    color: #1d4ed8;
+}
+
+.assistant-header-actions a,
+.nordik-input-row button {
+    border: 0;
+    background: #1d4ed8;
+    color: #fff;
+}
+
+.assistant-header-actions button:hover,
+.assistant-header-actions a:hover,
+.assistant-suggestions button:hover,
+.nordik-input-row button:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.assistant-suggestions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 1rem 0;
+}
+
+.assistant-suggestions button {
+    min-height: 3.2rem;
+    border: 1px solid #dbe5f4;
+    background: #fff;
+    color: #24415f;
+    text-align: left;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+}
+
+.nordik-chat {
+    overflow: hidden;
+    border: 1px solid #dbe5f4;
+    border-radius: 1.4rem;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 22px 65px rgba(15, 23, 42, 0.1);
+}
+
+.nordik-messages {
+    height: min(66vh, 42rem);
+    min-height: 31rem;
+    overflow-y: auto;
+    padding: 1.1rem;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.045), transparent 16rem),
+        #f8fbff;
+    scroll-behavior: smooth;
+}
+
+.nordik-empty-state {
+    width: min(520px, 100%);
+    margin: 1.5rem auto 2rem;
+    padding: 1.7rem;
+    border: 1px solid #e5edf8;
+    border-radius: 1.25rem;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.06);
+}
+
+.nordik-empty-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto 0.9rem;
+    border-radius: 1rem;
+}
+
+.nordik-empty-state h2 {
+    margin: 0;
+    color: #07152f;
+    font-size: 1.35rem;
+}
+
+.nordik-empty-state p {
+    margin: 0.7rem auto 1rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.nordik-empty-state div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.nordik-empty-state button {
+    border: 1px solid #dbe5f4;
+    border-radius: 999px;
+    background: #f8fbff;
+    color: #1d4ed8;
+    padding: 0.48rem 0.75rem;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+.nordik-message {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.nordik-message.user {
+    flex-direction: row-reverse;
+}
+
+.nordik-message-avatar {
+    width: 2.35rem;
+    height: 2.35rem;
+    flex: 0 0 auto;
+    border-radius: 0.85rem;
+    font-size: 0.7rem;
+}
+
+.nordik-message.user .nordik-message-avatar {
+    background: #102044;
+}
+
+.nordik-message-content {
+    max-width: min(78%, 45rem);
+    min-width: 0;
+}
+
+.nordik-message.user .nordik-message-content {
+    display: grid;
+    justify-items: end;
+}
+
+.nordik-bubble {
+    position: relative;
+    padding: 0.9rem 1rem;
+    border: 1px solid #dbe5f4;
+    border-radius: 1.1rem 1.1rem 1.1rem 0.35rem;
+    background: #fff;
+    color: #102044;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: normal;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.055);
+}
+
+.nordik-bubble.mine {
+    border-color: #1d4ed8;
+    border-radius: 1.1rem 1.1rem 0.35rem 1.1rem;
+    background: #1d4ed8;
+    color: #fff;
+}
+
+.nordik-sources {
+    margin-top: 0.55rem;
+    padding: 0.75rem;
+    border: 1px solid #dbeafe;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #f8fbff, #eef6ff);
+}
+
+.nordik-sources p {
+    margin: 0 0 0.5rem;
+    color: #334155;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.nordik-sources div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.nordik-sources a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    border-radius: 999px;
+    background: #fff;
+    color: #1d4ed8;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.nordik-sources a:hover {
+    border-color: rgba(37, 99, 235, 0.55);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
+    transform: translateY(-1px);
+}
+
+.copy-message-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.45rem;
+    opacity: 0;
+    border: 1px solid #dbe5f4;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1d4ed8;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: opacity 0.16s ease;
+}
+
+.nordik-bubble:hover .copy-message-button,
+.copy-message-button:focus {
+    opacity: 1;
+}
+
+.nordik-bubble.typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #64748b;
+}
+
+.nordik-bubble.typing span {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: #2563eb;
+    animation: nordikPulse 1s infinite ease-in-out;
+}
+
+.nordik-bubble.typing span:nth-child(2) { animation-delay: 0.14s; }
+.nordik-bubble.typing span:nth-child(3) { animation-delay: 0.28s; }
+
+.nordik-bubble.typing em {
+    margin-left: 0.35rem;
+    font-style: normal;
+    font-size: 0.86rem;
+}
+
+@keyframes nordikPulse {
+    0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+    40% { opacity: 1; transform: translateY(-3px); }
+}
+
+.nordik-input-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    padding: 0.9rem;
+    border-top: 1px solid #e6eef9;
+    background: #fff;
+}
+
+.nordik-input-row textarea {
+    min-height: 3.05rem;
+    max-height: 9rem;
+    width: 100%;
+    resize: vertical;
+    border: 1px solid #d8e2f1;
+    border-radius: 1rem;
+    background: #f8fbff;
+    padding: 0.88rem 1rem;
+    color: #102044;
+    font: inherit;
+    line-height: 1.45;
+    outline: none;
+}
+
+.nordik-input-row textarea:focus {
+    border-color: #2563eb;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.11);
+}
+
+.nordik-input-row button {
+    min-width: 6.5rem;
+}
+
+.nordik-input-row button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+}
+
+@media (max-width: 880px) {
+    .assistant-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .assistant-suggestions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .assistant-page {
+        padding: 0.75rem;
+    }
+
+    .assistant-title-row {
+        align-items: flex-start;
+    }
+
+    .assistant-header-actions,
+    .assistant-header-actions button,
+    .assistant-header-actions a,
+    .assistant-suggestions,
+    .nordik-input-row {
+        width: 100%;
+    }
+
+    .assistant-header-actions,
+    .assistant-suggestions,
+    .nordik-input-row {
+        grid-template-columns: 1fr;
+        display: grid;
+    }
+
+    .nordik-messages {
+        min-height: 28rem;
+        height: 62vh;
+        padding: 0.85rem;
+    }
+
+    .nordik-message-content {
+        max-width: 86%;
+    }
+}

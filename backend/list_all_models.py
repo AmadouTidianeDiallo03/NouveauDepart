@@ -1,18 +1,25 @@
+import os
 
 import requests
-import json
+from dotenv import load_dotenv
 
-key = 'AIzaSyCXeZkrmPkb1LeyuJUMdrEjM6HsWAoFQ_c'
+load_dotenv()
+
+key = os.getenv("GEMINI_API_KEY", "")
 url = "https://generativelanguage.googleapis.com/v1beta/models"
 
+if not key:
+    raise SystemExit("GEMINI_API_KEY is missing in .env")
+
 try:
-    resp = requests.get(url, params={"key": key}, timeout=10)
+    resp = requests.get(url, headers={"x-goog-api-key": key}, timeout=10)
+    resp.raise_for_status()
     data = resp.json()
     with open("models_list.txt", "w", encoding="utf-8") as f:
-        for m in data.get('models', []):
-            name = m.get('name')
-            methods = m.get('supportedGenerationMethods', [])
+        for model in data.get("models", []):
+            name = model.get("name")
+            methods = model.get("supportedGenerationMethods", [])
             f.write(f"{name}: {methods}\n")
     print("Wrote results to models_list.txt")
-except Exception as e:
-    print(f"Error: {str(e)}")
+except requests.RequestException as exc:
+    print(f"Error: {exc}")
