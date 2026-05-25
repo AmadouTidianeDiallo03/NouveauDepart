@@ -51,14 +51,25 @@ const NAV_ITEMS = [
 ];
 
 const QUICK_ACTIONS = [
-    { to: "/assistant", label: "Poser une question Ã  NordikBot", icon: "bot" },
-    { to: "/parcours", label: "Changer mon Ã©tape", icon: "send" },
+    { to: "/assistant", label: "Poser une question à NordikBot", icon: "bot" },
+    { to: "/parcours", label: "Changer mon étape", icon: "send" },
     { to: "/checklist", label: "Voir ma checklist", icon: "check" },
     { to: "/mentors", label: "Contacter un mentor", icon: "users" },
-    { to: "/evenements", label: "Voir les Ã©vÃ©nements", icon: "calendar" },
+    { to: "/evenements", label: "Voir les événements", icon: "calendar" },
     { to: "/budget", label: "Modifier mon budget", icon: "wallet" },
     { to: "/carte", label: "Ouvrir la carte", icon: "map" },
-    { to: "/study-success", label: "Consulter les guides", icon: "book" },
+    { to: "/university", label: "Université", icon: "school" },
+    { to: "/study-success", label: "Réussite académique", icon: "book" },
+    { to: "/glossary", label: "Glossaire", icon: "book" },
+];
+
+const ACADEMIC_SHORTCUTS = [
+    { to: "/study-success#credits", label: "Système de crédits", detail: "Comprendre crédits, cours et charge de session", icon: "book" },
+    { to: "/study-success#evaluations", label: "Évaluations & notes", detail: "Lire les plans de cours et suivre les examens", icon: "document" },
+    { to: "/study-success#methodes", label: "Méthodes d'étude", detail: "Organiser ses révisions et son rythme de travail", icon: "bolt" },
+    { to: "/glossary?search=NAS", label: "NAS", detail: "Définition et contexte administratif", icon: "document" },
+    { to: "/glossary?search=CAQ", label: "CAQ", detail: "Comprendre ce document d'immigration", icon: "document" },
+    { to: "/glossary?search=registrariat", label: "Registrariat", detail: "Savoir quand contacter ce service", icon: "school" },
 ];
 
 export default function Dashboard() {
@@ -198,6 +209,7 @@ function StudentDashboard({ dashboard }) {
             </section>
 
             <QuickActionsCard actions={QUICK_ACTIONS} />
+            <AcademicShortcutsCard />
         </>
     );
 }
@@ -557,7 +569,7 @@ function GuidesCard({ guides }) {
             <div className="guide-list">
                 {guides?.length ? (
                     guides.slice(0, 3).map((guide) => (
-                        <Link key={guide.id} className="guide-item" to="/study-success">
+                        <Link key={guide.id} className="guide-item" to={guideDestination(guide)}>
                             <div className="guide-icon"><Icon name="book" /></div>
                             <div>
                                 <strong>{guide.title}</strong>
@@ -573,6 +585,17 @@ function GuidesCard({ guides }) {
             <Link className="card-link" to="/study-success">Voir tous les guides <Icon name="arrow" /></Link>
         </section>
     );
+}
+
+function guideDestination(guide) {
+    const text = `${guide?.title || ""} ${guide?.category || ""}`.toLowerCase();
+    if (text.includes("crédit") || text.includes("credit")) return "/study-success#credits";
+    if (text.includes("note") || text.includes("évaluation") || text.includes("evaluation")) return "/study-success#evaluations";
+    if (text.includes("méthode") || text.includes("methode") || text.includes("étude") || text.includes("etude")) return "/study-success#methodes";
+    if (text.includes("calendrier") || text.includes("organisation")) return "/study-success#organisation";
+    if (text.includes("aide") || text.includes("mentor")) return "/study-success#aide";
+    if (text.includes("plagiat") || text.includes("intégrité") || text.includes("integrite")) return "/study-success#integrite";
+    return "/study-success";
 }
 
 function MessagesCard({ messages }) {
@@ -667,6 +690,26 @@ function QuickActionsCard({ actions }) {
                     <Link key={`${action.to}-${action.label}`} to={action.to} className="quick-action">
                         <span><Icon name={action.icon} /></span>
                         <strong>{action.label}</strong>
+                    </Link>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function AcademicShortcutsCard() {
+    return (
+        <section className="premium-card academic-shortcuts-card">
+            <CardHeader icon="book" title="Ressources académiques utiles" />
+            <div className="academic-shortcuts-grid">
+                {ACADEMIC_SHORTCUTS.map((item) => (
+                    <Link key={item.to} to={item.to} className="academic-shortcut">
+                        <span><Icon name={item.icon} /></span>
+                        <div>
+                            <strong>{item.label}</strong>
+                            <small>{item.detail}</small>
+                        </div>
+                        <Icon name="arrow" />
                     </Link>
                 ))}
             </div>

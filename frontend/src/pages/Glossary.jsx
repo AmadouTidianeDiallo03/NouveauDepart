@@ -1,128 +1,222 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
+import "../styles/glossary.css";
+
+const categories = ["Tous", "Université", "Immigration", "Administration", "Vie au Québec", "Emploi", "Expressions québécoises"];
 
 const glossaryData = [
-    { term: "AE (Auxiliaire d'enseignement)", emoji: "🎓", definition: "Étudiant·e de cycle supérieur qui aide à animer les travaux pratiques (labs) et à corriger les travaux." },
-    { term: "Association étudiante", emoji: "🤝", definition: "Organisation qui représente les étudiants d'un programme ou d'une faculté." },
-    { term: "Baccalauréat (Bac)", emoji: "🏆", definition: "Diplôme de 1er cycle universitaire (3 ans, 90 crédits). ⚠️ Différent du baccalauréat français !" },
-    { term: "CÉGEP", emoji: "🏫", definition: "Collège d'enseignement général et professionnel. Étape entre le secondaire et l'université au Québec." },
-    { term: "Code permanent", emoji: "🔑", definition: "Identifiant unique émis par le ministère de l'Éducation du Québec (ex: TREM12345678)." },
-    { term: "Contingentement", emoji: "🚦", definition: "Programme où le nombre de places est limité et l'admission sélective." },
-    { term: "Cote R", emoji: "📈", definition: "Note de rendement au collégial utilisée pour l'admission à l'université." },
-    { term: "Examen intra (midterm)", emoji: "📝", definition: "Examen de mi-session (octobre pour l'automne, février pour l'hiver)." },
-    { term: "Matricule", emoji: "🪪", definition: "Numéro d'identification étudiant propre à votre université." },
-    { term: "NAS (Numéro d'assurance sociale)", emoji: "🏦", definition: "Indispensable pour travailler légalement au Canada." },
-    { term: "Plan de cours (Syllabus)", emoji: "📋", definition: "Document décrivant les objectifs, évaluations et règles d'un cours." },
-    { term: "RAMQ", emoji: "🏥", definition: "Régie de l'assurance maladie du Québec." },
-    { term: "Registrariat", emoji: "🏛️", definition: "Service administratif gérant les inscriptions, notes et diplômes." },
-    { term: "Session", emoji: "📅", definition: "Semestre universitaire (Automne, Hiver, Été)." },
-    { term: "CAQ (Certificat d'acceptation du Québec)", emoji: "📄", definition: "Document nécessaire avant d'obtenir le permis d'études canadien pour étudier au Québec." },
-    { term: "Opus (Carte OPUS)", emoji: "🚌", definition: "Carte de transport en commun rechargeable utilisée dans plusieurs villes du Québec." },
+    {
+        term: "NAS",
+        category: "Administration",
+        definition: "Numéro d'assurance sociale nécessaire pour travailler au Canada et accéder à certains services.",
+        example: "J'ai besoin de mon NAS pour commencer mon emploi étudiant.",
+    },
+    {
+        term: "CAQ",
+        category: "Immigration",
+        definition: "Certificat d'acceptation du Québec, souvent nécessaire avant de demander un permis d'études.",
+        example: "Après mon admission, je dois vérifier si je dois demander un CAQ.",
+    },
+    {
+        term: "Permis d'études",
+        category: "Immigration",
+        definition: "Document fédéral qui autorise un étudiant international à étudier au Canada.",
+        example: "Mon permis d'études doit rester valide pendant ma formation.",
+    },
+    {
+        term: "RAMQ",
+        category: "Administration",
+        definition: "Régie de l'assurance maladie du Québec, liée à la couverture de soins de santé.",
+        example: "Je dois vérifier si je suis admissible à la RAMQ.",
+    },
+    {
+        term: "Baccalauréat",
+        category: "Université",
+        definition: "Diplôme universitaire de premier cycle, souvent composé d'environ 90 crédits.",
+        example: "Je commence un baccalauréat en informatique.",
+    },
+    {
+        term: "Crédit",
+        category: "Université",
+        definition: "Unité qui mesure la charge d'un cours et la progression dans un programme.",
+        example: "Ce cours vaut 3 crédits.",
+    },
+    {
+        term: "Registrariat",
+        category: "Université",
+        definition: "Service administratif qui gère notamment les inscriptions, dossiers, attestations et relevés.",
+        example: "Je contacte le registrariat pour une preuve d'inscription.",
+    },
+    {
+        term: "Relevé de notes",
+        category: "Université",
+        definition: "Document officiel qui présente les cours suivis et les notes obtenues.",
+        example: "Je dois fournir mon relevé de notes pour une demande administrative.",
+    },
+    {
+        term: "Plan de cours",
+        category: "Université",
+        definition: "Document qui décrit les objectifs, les évaluations, les dates importantes et les règles d'un cours.",
+        example: "Je lis mon plan de cours pour connaître les dates de remise.",
+    },
+    {
+        term: "Session",
+        category: "Université",
+        definition: "Période d'études, par exemple automne, hiver ou été.",
+        example: "Je commence ma première session à l'automne.",
+    },
+    {
+        term: "Carte OPUS",
+        category: "Vie au Québec",
+        definition: "Carte rechargeable utilisée pour le transport en commun dans plusieurs villes du Québec.",
+        example: "Je recharge ma carte OPUS pour prendre l'autobus.",
+    },
+    {
+        term: "Bail",
+        category: "Vie au Québec",
+        definition: "Contrat de location entre un locataire et un propriétaire.",
+        example: "Je lis le bail avant de signer mon logement.",
+    },
+    {
+        term: "Emploi étudiant",
+        category: "Emploi",
+        definition: "Travail effectué pendant les études, selon les règles de ton statut et de ton permis.",
+        example: "Je vérifie mes droits avant de chercher un emploi étudiant.",
+    },
+    {
+        term: "Courriel",
+        category: "Expressions québécoises",
+        definition: "Mot utilisé au Québec pour parler d'un email.",
+        example: "J'envoie un courriel à mon professeur.",
+    },
 ];
 
-export default function Glossary() {
-    const [search, setSearch] = useState("");
+const popularTerms = ["CAQ", "NAS", "Permis d'études", "Registrariat", "Relevé de notes", "Crédit", "Baccalauréat"];
 
-    const filtered = glossaryData.filter(item =>
-        item.term.toLowerCase().includes(search.toLowerCase()) ||
-        item.definition.toLowerCase().includes(search.toLowerCase())
-    );
+export default function Glossary() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const initialSearch = searchParams.get("search") || "";
+    const [search, setSearch] = useState(initialSearch);
+    const [category, setCategory] = useState("Tous");
+
+    useEffect(() => {
+        setSearch(searchParams.get("search") || "");
+    }, [searchParams]);
+
+    function updateSearch(value) {
+        setSearch(value);
+        const next = new URLSearchParams(searchParams);
+        if (value.trim()) next.set("search", value);
+        else next.delete("search");
+        setSearchParams(next, { replace: true });
+    }
+
+    const filtered = useMemo(() => {
+        const query = search.trim().toLowerCase();
+        return glossaryData.filter((item) => {
+            const matchesCategory = category === "Tous" || item.category === category;
+            const matchesSearch = !query
+                || item.term.toLowerCase().includes(query)
+                || item.definition.toLowerCase().includes(query)
+                || item.example.toLowerCase().includes(query);
+            return matchesCategory && matchesSearch;
+        });
+    }, [search, category]);
 
     return (
-        <div className="page-content" style={{ background: "linear-gradient(180deg, #faf5ff 0%, #f8fafc 100%)", minHeight: "100vh" }}>
-            
-            <div style={{
-                background: "linear-gradient(135deg, #4c1d95, #7c3aed, #8b5cf6)",
-                padding: "2.5rem 0 5rem",
-                marginBottom: "-3rem",
-                position: "relative",
-                overflow: "hidden",
-            }}>
-                <div style={{ position: "absolute", top: -50, right: -50, width: 260, height: 260, borderRadius: "50%", background: "rgba(167,139,250,0.25)" }} />
-                <div className="container container-sm">
+        <div className="glossary-page">
+            <section className="glossary-hero">
+                <div className="glossary-container">
                     <BackButton />
-                    <div style={{ color: "#c4b5fd", fontSize: "0.82rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
-                        📖 Vocabulaire québécois
+                    <div className="glossary-hero-grid">
+                        <div>
+                            <span className="glossary-kicker">Vocabulaire québécois</span>
+                            <h1>Glossaire</h1>
+                            <p>Comprends les mots importants de la vie universitaire et administrative au Québec.</p>
+                            <small>Recherche rapidement un terme comme NAS, CAQ, baccalauréat, registrariat ou relevé de notes.</small>
+                        </div>
+                        <div className="glossary-popular">
+                            <strong>Termes populaires</strong>
+                            <div>
+                                {popularTerms.map((term) => (
+                                    <button key={term} type="button" onClick={() => updateSearch(term)}>{term}</button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    <h1 style={{ color: "#fff", marginBottom: "0.4rem" }}>Glossaire</h1>
-                    <p style={{ color: "rgba(255,255,255,0.75)", marginBottom: "1.75rem", fontSize: "0.95rem" }}>
-                        Comprendre le vocabulaire universitaire et administratif du Québec — aucune surprise !
-                    </p>
-
-                    
-                    <div style={{ position: "relative" }}>
-                        <span style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", fontSize: "1.1rem", pointerEvents: "none" }}>🔍</span>
+                    <div className="glossary-search">
+                        <span aria-hidden="true">⌕</span>
                         <input
-                            type="text"
-                            placeholder="Rechercher un terme (ex: NAS, CÉGEP, Bac...)"
+                            type="search"
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            style={{
-                                width: "100%",
-                                padding: "0.85rem 1rem 0.85rem 2.75rem",
-                                borderRadius: "14px",
-                                border: "none",
-                                fontSize: "0.95rem",
-                                boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                                outline: "none",
-                            }}
+                            onChange={(event) => updateSearch(event.target.value)}
+                            placeholder="Rechercher un terme : NAS, CAQ, Bac, registrariat..."
                         />
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div className="container container-sm" style={{ position: "relative", zIndex: 1 }}>
-                
-                <div style={{ marginBottom: "1.25rem", fontSize: "0.88rem", color: "#64748b", fontWeight: 600 }}>
+            <main className="glossary-container glossary-main">
+                <div className="glossary-filters" aria-label="Filtres du glossaire">
+                    {categories.map((item) => (
+                        <button
+                            key={item}
+                            type="button"
+                            className={category === item ? "active" : ""}
+                            onClick={() => setCategory(item)}
+                        >
+                            {item}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="glossary-result-count">
                     {filtered.length === glossaryData.length
                         ? `${glossaryData.length} termes disponibles`
-                        : `${filtered.length} résultat(s) pour "${search}"`
-                    }
+                        : `${filtered.length} résultat(s)${search ? ` pour "${search}"` : ""}`}
                 </div>
 
                 {filtered.length === 0 ? (
-                    <div style={{
-                        background: "#fff", borderRadius: "20px", padding: "3rem",
-                        textAlign: "center", color: "#94a3b8", boxShadow: "0 4px 20px rgba(0,0,0,0.06)"
-                    }}>
-                        <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🔎</div>
-                        <div style={{ fontWeight: 700 }}>Aucun terme trouvé</div>
-                        <div style={{ fontSize: "0.88rem", marginTop: "0.3rem" }}>Essaie un autre mot-clé</div>
-                    </div>
+                    <section className="glossary-empty">
+                        <div>?</div>
+                        <h2>Aucun terme trouvé.</h2>
+                        <p>Essaie un autre mot-clé ou demande directement une explication à NordikBot.</p>
+                        <Link to={`/assistant?question=${encodeURIComponent(`Explique-moi le terme ${search || "universitaire"}`)}`}>Demander à NordikBot</Link>
+                    </section>
                 ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                        {filtered.map((item, idx) => (
-                            <div key={idx} style={{
-                                background: "#fff",
-                                borderRadius: "16px",
-                                padding: "1.1rem 1.5rem",
-                                display: "flex",
-                                gap: "1rem",
-                                alignItems: "flex-start",
-                                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                                border: "1px solid #f1f5f9",
-                                transition: "transform 0.15s, box-shadow 0.15s",
-                            }}
-                                onMouseEnter={e => { e.currentTarget.style.transform = "translateX(4px)"; e.currentTarget.style.borderColor = "#8b5cf6"; }}
-                                onMouseLeave={e => { e.currentTarget.style.transform = "translateX(0)"; e.currentTarget.style.borderColor = "#f1f5f9"; }}
-                            >
-                                <div style={{
-                                    width: 42, height: 42, borderRadius: "12px", flexShrink: 0,
-                                    background: "linear-gradient(135deg, #ede9fe, #ddd6fe)",
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    fontSize: "1.25rem",
-                                }}>
-                                    {item.emoji}
+                    <section className="glossary-grid">
+                        {filtered.map((item) => (
+                            <article className="glossary-card" id={slug(item.term)} key={item.term}>
+                                <div className="glossary-card-head">
+                                    <div className="glossary-term-icon">{item.term.slice(0, 2).toUpperCase()}</div>
+                                    <div>
+                                        <h2>{item.term}</h2>
+                                        <span>{item.category}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div style={{ fontWeight: 700, color: "#4c1d95", marginBottom: "0.25rem", fontSize: "0.95rem" }}>{item.term}</div>
-                                    <div style={{ fontSize: "0.88rem", color: "#64748b", lineHeight: 1.6 }}>{item.definition}</div>
+                                <p>{item.definition}</p>
+                                <div className="glossary-example">
+                                    <strong>Exemple</strong>
+                                    <span>{item.example}</span>
                                 </div>
-                            </div>
+                                <Link to={`/assistant?question=${encodeURIComponent(`Explique-moi ${item.term}`)}`}>
+                                    Poser une question à NordikBot
+                                </Link>
+                            </article>
                         ))}
-                    </div>
+                    </section>
                 )}
-            </div>
+            </main>
         </div>
     );
+}
+
+function slug(value) {
+    return String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
 }

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import AssistantChat from "../components/AssistantChat";
 import "../styles/assistant.css";
 
@@ -11,7 +11,13 @@ const suggestions = [
 ];
 
 export default function Assistant() {
-    const [starterQuestion, setStarterQuestion] = useState("");
+    const [searchParams] = useSearchParams();
+    const [starterQuestion, setStarterQuestion] = useState(searchParams.get("question") || "");
+
+    useEffect(() => {
+        const question = searchParams.get("question") || "";
+        if (question) setStarterQuestion(question);
+    }, [searchParams]);
 
     function newConversation() {
         setStarterQuestion("");
