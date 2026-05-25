@@ -14,6 +14,7 @@ router.register("events", admin_views.AdminEventViewSet, basename="admin-events"
 router.register("knowledge-base", admin_views.AdminKnowledgeViewSet, basename="admin-knowledge-base")
 router.register("feedbacks", admin_views.AdminFeedbackViewSet, basename="admin-feedbacks")
 router.register("mentors", admin_views.AdminMentorViewSet, basename="admin-mentors")
+router.register("uqar-sources", admin_views.AdminUQARSourceViewSet, basename="admin-uqar-sources")
 
 urlpatterns = [
     path("stats/", admin_views.admin_stats, name="admin-stats"),

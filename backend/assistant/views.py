@@ -1,10 +1,22 @@
+import logging
+
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import AssistantFeedback, AssistantLog
-from .services.gemini_service import GeminiServiceError, build_official_sources, generate_gemini_response
+from .services.gemini_service import (
+    GeminiServiceError,
+    analyze_message_context,
+    build_detected_domain,
+    build_detected_intent,
+    build_official_contacts,
+    build_official_sources,
+    generate_gemini_response,
+)
+
+logger = logging.getLogger(__name__)
 
 
 @api_view(["POST"])
@@ -17,25 +29,51 @@ def chat_view(request):
 
     user_context = build_user_context(request)
     history = request.data.get("history") or []
+    question_analysis = analyze_message_context(message, user_context)
 
     try:
         answer = generate_gemini_response(
             message=message,
             user_context=user_context,
             conversation_history=history,
+            question_analysis=question_analysis,
         )
+        domain = build_detected_domain(message, user_context, question_analysis)
+        intent = build_detected_intent(message, user_context, question_analysis)
         sources = build_official_sources(
             message=message,
             answer=answer,
             user_context=user_context,
             conversation_history=history,
+            question_analysis=question_analysis,
+        )
+        contacts = build_official_contacts(
+            message=message,
+            answer=answer,
+            user_context=user_context,
+            conversation_history=history,
+            question_analysis=question_analysis,
+        )
+        logger.info(
+            "NordikBot API answer length=%s domain=%s intent=%s sources=%s contacts=%s",
+            len(answer or ""),
+            domain,
+            intent,
+            len(sources),
+            len(contacts),
         )
     except GeminiServiceError:
         answer = "Désolé, je n'arrive pas à répondre pour le moment. Réessaie dans quelques instants."
+        domain = "general"
         sources = []
+        contacts = []
+        intent = "general"
     except Exception:
         answer = "Désolé, je n'arrive pas à répondre pour le moment. Réessaie dans quelques instants."
+        domain = "general"
         sources = []
+        contacts = []
+        intent = "general"
 
     AssistantLog.objects.create(
         user=request.user,
@@ -44,7 +82,7 @@ def chat_view(request):
         sources=sources,
         confidence="",
     )
-    return Response({"answer": answer, "sources": sources})
+    return Response({"answer": answer, "domain": domain, "intent": intent, "sources": sources, "contacts": contacts})
 
 
 @api_view(["POST"])

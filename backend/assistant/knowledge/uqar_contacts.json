@@ -1,0 +1,47 @@
+[
+  {
+    "key": "guichet_rimouski",
+    "label": "Guichet étudiant - Campus de Rimouski",
+    "campus": "Rimouski",
+    "email": "guichetrimouski@uqar.ca",
+    "phone": "418 723-1986, poste 1530",
+    "location": "Local E-106",
+    "keywords": ["guichet", "rimouski", "vie étudiante", "services aux étudiants", "frais", "dossier", "aide", "contact"]
+  },
+  {
+    "key": "guichet_levis",
+    "label": "Guichet étudiant - Campus de Lévis",
+    "campus": "Lévis",
+    "email": "guichetlevis@uqar.ca",
+    "phone": "418 833-8800, poste 3222",
+    "location": "Local 1011",
+    "keywords": ["guichet", "lévis", "levis", "vie étudiante", "services aux étudiants", "frais", "dossier", "aide", "contact"]
+  },
+  {
+    "key": "campus_rimouski",
+    "label": "Campus de Rimouski",
+    "campus": "Rimouski",
+    "email": "uqar@uqar.ca",
+    "phone": "418 723-1986 | Sans frais : 1 800 511-3382",
+    "location": "300, allée des Ursulines, Rimouski",
+    "keywords": ["campus", "rimouski", "adresse", "téléphone", "telephone", "nous joindre"]
+  },
+  {
+    "key": "campus_levis",
+    "label": "Campus de Lévis",
+    "campus": "Lévis",
+    "email": "campus_levis@uqar.ca",
+    "phone": "418 833-8800 | Sans frais : 1 800 463-4712",
+    "location": "1595, boulevard Alphonse-Desjardins, Lévis",
+    "keywords": ["campus", "lévis", "levis", "adresse", "téléphone", "telephone", "nous joindre"]
+  },
+  {
+    "key": "annuaire_uqar",
+    "label": "Annuaire UQAR",
+    "campus": "Tous les campus",
+    "email": "",
+    "phone": "",
+    "location": "https://annuaire.uqar.ca",
+    "keywords": ["annuaire", "bottin", "personne", "service", "unité administrative", "local", "poste"]
+  }
+]

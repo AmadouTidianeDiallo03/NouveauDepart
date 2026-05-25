@@ -231,6 +231,9 @@
 
 .nordik-bubble {
     position: relative;
+    height: auto;
+    max-height: none;
+    overflow: visible;
     padding: 0.9rem 1rem;
     border: 1px solid #dbe5f4;
     border-radius: 1.1rem 1.1rem 1.1rem 0.35rem;
@@ -240,6 +243,7 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-break: normal;
+    text-overflow: clip;
     box-shadow: 0 10px 26px rgba(15, 23, 42, 0.055);
 }
 
@@ -250,7 +254,8 @@
     color: #fff;
 }
 
-.nordik-sources {
+.nordik-sources,
+.nordik-contacts {
     margin-top: 0.55rem;
     padding: 0.75rem;
     border: 1px solid #dbeafe;
@@ -258,7 +263,8 @@
     background: linear-gradient(180deg, #f8fbff, #eef6ff);
 }
 
-.nordik-sources p {
+.nordik-sources p,
+.nordik-contacts p {
     margin: 0 0 0.5rem;
     color: #334155;
     font-size: 0.78rem;
@@ -290,6 +296,47 @@
     border-color: rgba(37, 99, 235, 0.55);
     box-shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
     transform: translateY(-1px);
+}
+
+.nordik-contact-list {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.nordik-contact-card {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.85rem;
+    background: #fff;
+    color: #334155;
+    font-size: 0.82rem;
+}
+
+.nordik-contact-card strong {
+    color: #0f172a;
+    font-size: 0.9rem;
+}
+
+.nordik-contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+    margin-top: 0.15rem;
+}
+
+.nordik-contact-actions a,
+.nordik-contact-actions button {
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 0.32rem 0.6rem;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-decoration: none;
 }
 
 .copy-message-button {

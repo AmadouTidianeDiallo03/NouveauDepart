@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from rest_framework import status, viewsets
@@ -73,6 +76,65 @@ class AdminUserViewSet(viewsets.ReadOnlyModelViewSet):
 class AdminMentorViewSet(AdminModelViewSet):
     queryset = Profile.objects.filter(role="mentor").select_related("user", "university")
     serializer_class = AdminMentorSerializer
+
+
+class AdminUQARSourceViewSet(viewsets.ViewSet):
+    permission_classes = [IsAdminRole]
+
+    @property
+    def path(self):
+        return Path(__file__).resolve().parent.parent / "assistant" / "knowledge" / "uqar_official_sources.json"
+
+    def list(self, request):
+        return Response(self._items())
+
+    def create(self, request):
+        items = self._items()
+        payload = self._normalize_payload(request.data)
+        if not payload.get("key"):
+            payload["key"] = f"uqar_source_{len(items) + 1}"
+        items.append(payload)
+        self._save(items)
+        return Response({**payload, "id": payload["key"]}, status=status.HTTP_201_CREATED)
+
+    def update(self, request, pk=None):
+        items = self._items()
+        for index, item in enumerate(items):
+            if item.get("key") == pk:
+                payload = {**item, **self._normalize_payload(request.data), "key": pk}
+                items[index] = payload
+                self._save(items)
+                return Response({**payload, "id": payload["key"]})
+        return Response({"detail": "Source UQAR introuvable."}, status=status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, pk=None):
+        items = self._items()
+        filtered = [item for item in items if item.get("key") != pk]
+        if len(filtered) == len(items):
+            return Response({"detail": "Source UQAR introuvable."}, status=status.HTTP_404_NOT_FOUND)
+        self._save(filtered)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def _items(self):
+        with self.path.open("r", encoding="utf-8") as file:
+            return [{**item, "id": item.get("key")} for item in json.load(file)]
+
+    def _save(self, items):
+        cleaned = [{key: value for key, value in item.items() if key != "id"} for item in items]
+        with self.path.open("w", encoding="utf-8") as file:
+            json.dump(cleaned, file, ensure_ascii=False, indent=2)
+
+    def _normalize_payload(self, data):
+        keywords = data.get("keywords", [])
+        if isinstance(keywords, str):
+            keywords = [word.strip() for word in keywords.split(",") if word.strip()]
+        return {
+            "key": data.get("key") or "",
+            "title": data.get("title") or "",
+            "url": data.get("url") or "",
+            "category": data.get("category") or "general",
+            "keywords": keywords,
+        }
 
 
 @api_view(["GET"])

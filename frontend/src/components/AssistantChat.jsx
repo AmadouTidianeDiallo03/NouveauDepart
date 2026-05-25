@@ -125,10 +125,19 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
             });
             const answer = cleanDisplayText(res.data?.answer || "");
             const sources = Array.isArray(res.data?.sources) ? res.data.sources : [];
-            setMessages((prev) => [...prev, { role: "bot", question, content: answer || "Désolé, je n'ai pas reçu de réponse complète. Réessaie dans quelques instants.", sources }]);
+            const contacts = Array.isArray(res.data?.contacts) ? res.data.contacts : [];
+            setMessages((prev) => [...prev, {
+                role: "bot",
+                question,
+                content: answer || "Désolé, je n'ai pas reçu de réponse complète. Réessaie dans quelques instants.",
+                sources,
+                contacts,
+                domain: res.data?.domain || "general",
+                intent: res.data?.intent || "general",
+            }]);
         } catch (err) {
             const detail = err.response?.data?.detail || "Désolé, je n'arrive pas à répondre pour le moment. Réessaie dans quelques instants.";
-            setMessages((prev) => [...prev, { role: "bot", question, content: detail, sources: [] }]);
+            setMessages((prev) => [...prev, { role: "bot", question, content: detail, sources: [], contacts: [] }]);
         } finally {
             setLoading(false);
         }
@@ -182,13 +191,36 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
                                 )}
                             </div>
                             {msg.role === "bot" && msg.sources?.length > 0 && (
-                                <div className="nordik-sources" aria-label="Sources utiles">
-                                    <p>Sources utiles</p>
+                                <div className="nordik-sources" aria-label="Sources officielles">
+                                    <p>Sources officielles</p>
                                     <div>
                                         {msg.sources.map((source) => (
                                             <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer">
                                                 {source.title}
                                             </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {msg.role === "bot" && msg.contacts?.length > 0 && (
+                                <div className="nordik-contacts" aria-label="Contacts utiles">
+                                    <p>Contacts utiles</p>
+                                    <div className="nordik-contact-list">
+                                        {msg.contacts.map((contact) => (
+                                            <article key={`${contact.label}-${contact.email || contact.phone}`} className="nordik-contact-card">
+                                                <strong>{contact.label}</strong>
+                                                {contact.campus && <span>Campus : {contact.campus}</span>}
+                                                {contact.location && <span>Lieu : {contact.location}</span>}
+                                                {contact.phone && <span>Téléphone : {contact.phone}</span>}
+                                                {contact.email && (
+                                                    <div className="nordik-contact-actions">
+                                                        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                                                        <button type="button" onClick={() => copyMessage(contact.email, `email-${i}`)}>
+                                                            {copiedIndex === `email-${i}` ? "Copié" : "Copier"}
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </article>
                                         ))}
                                     </div>
                                 </div>

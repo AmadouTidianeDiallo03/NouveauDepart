@@ -1,0 +1,100 @@
+[
+  {
+    "key": "uqar_main",
+    "title": "Site officiel de l'UQAR",
+    "url": "https://www.uqar.ca",
+    "category": "general",
+    "keywords": ["uqar", "université", "universite", "campus", "rimouski", "lévis", "levis", "programmes"]
+  },
+  {
+    "key": "uqar_admission",
+    "title": "Admission UQAR",
+    "url": "https://www.uqar.ca/programmes-formations-et-admission/admission/",
+    "category": "admission",
+    "keywords": ["admission", "demande d'admission", "candidature", "admis", "programme"]
+  },
+  {
+    "key": "uqar_admission_international",
+    "title": "Admission UQAR - Étudiants internationaux",
+    "url": "https://www.uqar.ca/programmes-formations-et-admission/admission/etudiant-es-etrangers/admission-pour-etudiants-internationaux/",
+    "category": "admission",
+    "keywords": ["admission", "étudiants internationaux", "etudiants internationaux", "documents", "demande d'admission", "international"]
+  },
+  {
+    "key": "uqar_admission_online",
+    "title": "Admission en ligne UQAR",
+    "url": "https://admission.uqar.ca/",
+    "category": "admission",
+    "keywords": ["admission en ligne", "déposer une demande", "deposer une demande", "suivre ma demande", "dossier d'admission"]
+  },
+  {
+    "key": "uqar_mon_dossier",
+    "title": "Mon dossier UQAR",
+    "url": "https://mondossier.uqar.ca",
+    "category": "dossier_etudiant",
+    "keywords": ["mon dossier", "portail étudiant", "portail etudiant", "dossier étudiant", "dossier etudiant", "horaire", "relevé de notes", "preuve d'inscription", "état de compte"]
+  },
+  {
+    "key": "uqar_calendar",
+    "title": "Calendrier universitaire UQAR",
+    "url": "https://www.uqar.ca/programmes-formations-et-admission/calendrier-universitaire/",
+    "category": "calendrier",
+    "keywords": ["calendrier", "dates importantes", "session", "trimestre", "abandon", "examens", "inscription"]
+  },
+  {
+    "key": "uqar_fees",
+    "title": "Frais de scolarité UQAR",
+    "url": "https://www.uqar.ca/programmes-formations-et-admission/frais-de-scolarite/",
+    "category": "frais_scolarite",
+    "keywords": ["frais", "scolarité", "scolarite", "paiement", "état de compte", "versement", "payer"]
+  },
+  {
+    "key": "uqar_life",
+    "title": "Vie étudiante UQAR",
+    "url": "https://www.uqar.ca/vie-etudiante/",
+    "category": "vie_etudiante",
+    "keywords": ["vie étudiante", "vie etudiante", "guichet étudiant", "services aux étudiants", "soutien", "activités"]
+  },
+  {
+    "key": "uqar_directory",
+    "title": "Annuaire UQAR",
+    "url": "https://annuaire.uqar.ca",
+    "category": "contacts",
+    "keywords": ["annuaire", "bottin", "contact", "personne", "service", "poste", "local", "unité administrative"]
+  },
+  {
+    "key": "uqar_programs",
+    "title": "Programmes d'études UQAR",
+    "url": "https://www.uqar.ca/programmes-formations-et-admission/programmes-detudes/",
+    "category": "programme",
+    "keywords": ["programme", "programmes", "formation", "baccalauréat", "maîtrise", "doctorat", "cycles"]
+  },
+  {
+    "key": "immigration_quebec",
+    "title": "Immigration Québec",
+    "url": "https://www.quebec.ca/immigration",
+    "category": "caq",
+    "keywords": ["caq", "certificat d'acceptation du québec", "immigration", "mifi"]
+  },
+  {
+    "key": "service_canada_sin",
+    "title": "Service Canada - Numéro d'assurance sociale",
+    "url": "https://www.canada.ca/fr/emploi-developpement-social/services/numero-assurance-sociale.html",
+    "category": "nas",
+    "keywords": ["nas", "numéro d'assurance sociale", "numero d'assurance sociale", "assurance sociale", "travailler"]
+  },
+  {
+    "key": "canada_study_permit",
+    "title": "Gouvernement du Canada - Permis d'études",
+    "url": "https://www.canada.ca/fr/immigration-refugies-citoyennete/services/etudier-canada/permis-etudes.html",
+    "category": "permis_etudes",
+    "keywords": ["permis d'études", "permis etudes", "visa étudiant", "visa etudiant", "ircc"]
+  },
+  {
+    "key": "ramq",
+    "title": "RAMQ - Assurance maladie Québec",
+    "url": "https://www.ramq.gouv.qc.ca",
+    "category": "ramq",
+    "keywords": ["ramq", "assurance maladie", "carte soleil", "santé"]
+  }
+]

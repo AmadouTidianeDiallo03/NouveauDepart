@@ -1,0 +1,11 @@
+[
+  {
+    "key": "guichet_levis",
+    "label": "Guichet étudiant - Campus de Lévis",
+    "campus": "Lévis",
+    "email": "guichetlevis@uqar.ca",
+    "phone": "418 833-8800, poste 3222",
+    "location": "Local 1011",
+    "keywords": ["guichet", "lévis", "contact"]
+  }
+]

@@ -54,6 +54,12 @@ const CONFIG = {
         fields: ["university", "campus", "city", "country_origin", "languages", "program", "study_level", "help_topics", "specialties", "availability_status", "is_active", "is_verified"],
         columns: ["id", "full_name", "university_name", "country_origin", "availability_status", "is_active"],
     },
+    "uqar-sources": {
+        title: "Sources UQAR",
+        endpoint: "/admin/uqar-sources/",
+        fields: ["key", "title", "url", "category", "keywords"],
+        columns: ["id", "title", "category", "url", "keywords"],
+    },
 };
 
 const NAV = [
@@ -65,6 +71,7 @@ const NAV = [
     ["events", "Événements"],
     ["mentors", "Mentors"],
     ["knowledge-base", "Base IA"],
+    ["uqar-sources", "Sources UQAR"],
     ["feedbacks", "Feedbacks"],
 ];
 
