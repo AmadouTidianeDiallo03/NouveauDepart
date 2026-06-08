@@ -34,6 +34,12 @@ APP_KEYWORDS = {
 UQAR_KEYWORDS = {
     "demande d'admission": "admission",
     "admission": "admission",
+    "bac administration": "program_administration",
+    "bac en administration": "program_administration",
+    "baccalaureat administration": "program_administration",
+    "baccalaureat en administration": "program_administration",
+    "administration uqar": "program_administration",
+    "programme administration": "program_administration",
     "bac informatique": "programme_informatique",
     "bac en informatique": "programme_informatique",
     "baccalaureat informatique": "programme_informatique",
@@ -71,6 +77,18 @@ ADMIN_KEYWORDS = {
 }
 
 ACADEMIC_KEYWORDS = {
+    "programme de bac": "bachelor_credits",
+    "bac c'est combien": "bachelor_credits",
+    "bac c est combien": "bachelor_credits",
+    "combien de credits": "bachelor_credits",
+    "combien de credit": "bachelor_credits",
+    "credits d'un bac": "bachelor_credits",
+    "credit d'un bac": "bachelor_credits",
+    "bac administration": "program_administration",
+    "bac en administration": "program_administration",
+    "baccalaureat administration": "program_administration",
+    "baccalaureat en administration": "program_administration",
+    "programme administration": "program_administration",
     "bac informatique": "programme_informatique",
     "bac en informatique": "programme_informatique",
     "baccalaureat informatique": "programme_informatique",
@@ -202,6 +220,15 @@ Réponse : {{"domain":"administrative","intent":"nas","needs_sources":true,"need
 Question : C'est quoi un cours obligatoire ?
 Réponse : {{"domain":"academic","intent":"course_definition","needs_sources":false,"needs_contacts":false}}
 
+Question : Un programme de bac c'est combien de crédits ?
+Réponse : {{"domain":"academic","intent":"bachelor_credits","needs_sources":false,"needs_contacts":false}}
+
+Question : Et le bac en administration à UQAR ?
+Réponse : {{"domain":"uqar","intent":"program_administration","needs_sources":true,"needs_contacts":false}}
+
+Question : Tu connais le programme de bac en informatique de l'UQAR ?
+Réponse : {{"domain":"uqar","intent":"programme_informatique","needs_sources":true,"needs_contacts":false}}
+
 Question : Quelle est la capitale de la France ?
 Réponse : {{"domain":"general","intent":"general_question","needs_sources":false,"needs_contacts":false}}
 
@@ -220,7 +247,7 @@ def _keyword_classification(message, user_context=None):
             return {"domain": "administrative", "intent": intent, "needs_sources": True, "needs_contacts": False}
     for keyword, intent in UQAR_KEYWORDS.items():
         if keyword in text:
-            if intent in {"programme", "programme_informatique"} and not _mentions_uqar(message, user_context):
+            if intent in {"programme", "programme_informatique", "program_administration"} and not _mentions_uqar(message, user_context):
                 return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
             if intent in UQAR_CONTEXTUAL_INTENTS and not _mentions_uqar(message, user_context):
                 return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
@@ -244,7 +271,7 @@ def _apply_keyword_safety(message, user_context, classification):
 
     if any(keyword in text for keyword in UQAR_KEYWORDS):
         intent = next(intent for keyword, intent in UQAR_KEYWORDS.items() if keyword in text)
-        if intent in {"programme", "programme_informatique"} and not _mentions_uqar(message, user_context):
+        if intent in {"programme", "programme_informatique", "program_administration"} and not _mentions_uqar(message, user_context):
             return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
         if intent in UQAR_CONTEXTUAL_INTENTS and not _mentions_uqar(message, user_context):
             return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}

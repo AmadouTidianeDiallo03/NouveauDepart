@@ -22,58 +22,40 @@ logger = logging.getLogger(__name__)
 SYSTEM_PROMPT = """
 Tu es NordikBot, l'assistant intelligent de NouveauDépart.
 
-NouveauDépart aide les étudiants internationaux à mieux comprendre leur intégration au Québec, leur université et leurs démarches.
+Ton rôle est d'aider les étudiants internationaux à comprendre :
+- l'application NouveauDépart ;
+- l'UQAR ;
+- les démarches administratives ;
+- les études universitaires au Québec ;
+- la vie étudiante ;
+- l'intégration au Québec.
 
-Tu dois répondre comme un assistant IA naturel, utile, clair et rassurant.
+Tu dois répondre comme une vraie IA utile, claire, naturelle et professionnelle.
 
-Règles principales :
-- Réponds dans la langue de l'utilisateur.
-- Si l'utilisateur écrit en français, réponds en français.
-- Réponds directement à la question.
-- Si la question est compréhensible, donne toujours une réponse utile.
-- Ne dis pas trop vite que tu n'as pas assez d'information.
-- Si tu n'as pas une information officielle exacte, donne une réponse générale prudente et indique que les détails doivent être vérifiés auprès de la source officielle.
-- Ne réponds pas comme un robot froid.
-- Ne dis pas "En tant qu'assistant intelligent".
-- Ne dis pas "je n'ai pas de sentiments".
-- Si l'utilisateur te demande comment ça va, réponds simplement et naturellement.
-- Donne des réponses complètes quand la question demande une démarche.
-- Ne coupe pas tes réponses.
-- Ne rejette pas une question simple.
-- Ne demande pas de reformuler si la question est compréhensible.
-- Utilise le contexte de conversation quand l'utilisateur pose une question de suivi.
-- Structure tes réponses avec des paragraphes courts ou des listes propres.
+Règles :
+- Réponds toujours dans la langue de l'utilisateur.
+- Si la question est compréhensible, donne une réponse directement.
+- Ne demande pas plus de contexte si tu peux déjà répondre utilement.
+- Si l'information est générale, réponds avec tes connaissances générales.
+- Si l'information dépend d'une université, d'un programme ou d'une date, donne une réponse prudente et conseille de vérifier la source officielle.
+- Si des sources sont disponibles, utilise-les.
+- Si aucune source précise n'est disponible, ne bloque pas la réponse.
+- Ne dis pas "je n'ai pas assez d'information fiable" sauf si la question est vraiment impossible.
+- Ne dis pas "donne-moi plus de contexte" sauf si la demande est trop vague.
+- Ne fabrique pas de faux liens, faux contacts ou fausses conditions d'admission.
+- Structure les réponses avec des phrases simples.
+- Utilise des paragraphes courts.
 - Ne mets pas d'astérisques Markdown visibles.
-- Ne montre jamais ton raisonnement interne.
-- Ne montre jamais de brouillon.
-- Ne donne pas de fausses informations officielles.
-- Ne fabrique pas de faux liens, de faux cours, de faux contacts ou de fausses conditions.
-- Utilise les sources fournies par le backend quand elles sont disponibles.
-- Si une information peut changer, conseille de vérifier auprès du site officiel ou du service concerné.
-
-Domaines d'aide :
-- démarches d'arrivée ;
-- admission ;
-- inscription aux cours ;
-- UQAR ;
-- logement ;
-- NAS ;
-- CAQ ;
-- permis d'études ;
-- budget ;
-- transport ;
-- mentors ;
-- événements ;
-- vie universitaire.
+- Ne coupe pas tes réponses.
+- Ne donne pas une réponse froide ou robotique.
 
 Style :
-- français facile ;
-- naturel ;
-- clair ;
-- professionnel ;
 - humain ;
+- clair ;
+- concret ;
+- rassurant ;
 - utile ;
-- pas trop long, mais complet.
+- adapté à un étudiant international.
 """.strip()
 
 FALLBACK_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"]
@@ -222,7 +204,7 @@ def build_official_contacts(message, answer="", user_context=None, conversation_
 
 def build_relevant_programs(message, user_context=None, question_analysis=None):
     question_analysis = question_analysis or analyze_question_context(message, user_context)
-    if question_analysis.get("intent") not in {"programme", "programme_informatique"}:
+    if question_analysis.get("intent") not in {"programme", "programme_informatique", "program_administration"}:
         return []
     if question_analysis.get("domain") not in {"uqar", "academic"}:
         return []
@@ -242,6 +224,8 @@ def build_answer_strategy(domain, intent, sources=None, programs=None):
         return "Réponds dans le contexte de l'UQAR avec les sources officielles fournies."
     if domain == "uqar":
         return "Donne une réponse générale prudente dans le contexte de l'UQAR et recommande de vérifier le site officiel."
+    if intent == "bachelor_credits":
+        return "Réponds directement avec la règle générale des crédits d'un baccalauréat au Québec."
     if domain == "academic":
         return "Réponds directement avec une explication pédagogique claire. N'exige pas une source sauf si la question demande une information officielle."
     if domain == "administrative":
@@ -440,6 +424,28 @@ def fallback_answer_for_question(message, user_context=None):
         return (
             "Oui. Un baccalauréat en informatique est généralement un programme de premier cycle qui forme aux bases de la programmation, des bases de données, du génie logiciel, des systèmes, des réseaux et du développement d'applications.\n\n"
             "Les cours exacts, les conditions d'admission, la durée et les stages possibles varient selon l'université. Il faut donc vérifier la page officielle du programme de l'établissement qui t'intéresse."
+        )
+
+    if _has_any(text, ["bac administration", "bac en administration", "baccalaureat administration", "baccalaureat en administration", "administration uqar", "programme administration"]):
+        if "uqar" in text or "uqar" in _fold(university):
+            return (
+                "Le baccalauréat en administration à l'UQAR est généralement un programme de premier cycle qui aide à comprendre le fonctionnement des organisations et de la gestion.\n\n"
+                "On y retrouve habituellement des notions comme la comptabilité, la finance, le marketing, la gestion des ressources humaines, le management, l'économie et la stratégie.\n\n"
+                "À l'UQAR, il faut consulter la page officielle du programme pour connaître les cours exacts, les concentrations possibles, les conditions d'admission et le cheminement recommandé."
+            )
+        return (
+            "Un baccalauréat en administration est généralement un programme de premier cycle centré sur la gestion des organisations.\n\n"
+            "On y aborde souvent la comptabilité, la finance, le marketing, les ressources humaines, le management, l'économie et la stratégie. "
+            "Les cours exacts et les concentrations varient selon l'université, donc il faut vérifier la grille officielle du programme."
+        )
+
+    if _has_any(text, ["programme de bac", "bac c'est combien", "bac c est combien", "combien de credits", "combien de credit", "credits d'un bac", "credit d'un bac"]):
+        return (
+            "Au Québec, un baccalauréat universitaire compte généralement 90 crédits. "
+            "Comme un cours vaut souvent 3 crédits, cela représente environ 30 cours.\n\n"
+            "À temps plein, un étudiant suit souvent 4 à 5 cours par session, donc environ 12 à 15 crédits. "
+            "Un bac de 90 crédits se fait généralement en 3 ans, mais cela peut varier selon le programme, le rythme de l'étudiant et l'université.\n\n"
+            "Pour un programme précis, il faut toujours vérifier la grille officielle du programme."
         )
 
     if _has_any(text, ["arrivée", "arrivee", "arriv", "premières démarches", "premieres demarches", "installation", "nouvel arrivant"]):

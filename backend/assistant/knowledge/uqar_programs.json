@@ -3,6 +3,8 @@
     "key": "uqar_bac_informatique",
     "title": "Baccalauréat en informatique - UQAR",
     "level": "Premier cycle",
+    "type": "Baccalauréat",
+    "typical_credits": "Généralement 90 crédits",
     "domain": "Informatique",
     "university": "Université du Québec à Rimouski (UQAR)",
     "description": "Programme de premier cycle qui prépare les étudiants aux domaines de l’informatique, de la programmation, des bases de données, du génie logiciel, des systèmes et du développement d’applications.",
@@ -19,6 +21,33 @@
       "base de données",
       "cours informatique",
       "grille de cheminement"
+    ],
+    "source_title": "Programmes d'études UQAR",
+    "source_url": "https://www.uqar.ca/programmes-formations-et-admission/programmes-detudes/"
+  },
+  {
+    "key": "uqar_bac_administration",
+    "title": "Baccalauréat en administration - UQAR",
+    "level": "Premier cycle",
+    "type": "Baccalauréat",
+    "typical_credits": "Généralement 90 crédits",
+    "domain": "Administration",
+    "university": "Université du Québec à Rimouski (UQAR)",
+    "description": "Programme de premier cycle qui prépare les étudiants à comprendre la gestion, le fonctionnement des organisations, la comptabilité, la finance, le marketing, les ressources humaines, le management et l'économie.",
+    "keywords": [
+      "bac administration",
+      "bac en administration",
+      "baccalauréat administration",
+      "baccalauréat en administration",
+      "administration uqar",
+      "programme administration",
+      "gestion",
+      "comptabilité",
+      "finance",
+      "marketing",
+      "ressources humaines",
+      "management",
+      "économie"
     ],
     "source_title": "Programmes d'études UQAR",
     "source_url": "https://www.uqar.ca/programmes-formations-et-admission/programmes-detudes/"
