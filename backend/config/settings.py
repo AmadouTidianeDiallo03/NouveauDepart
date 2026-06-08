@@ -3,16 +3,29 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me-in-production")
-DEBUG = os.getenv("DEBUG", "True") == "True"
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,0.0.0.0,testserver",
-).split(",")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or os.environ.get("SECRET_KEY", "dev-secret-key")
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "testserver",
+    ".railway.app",
+    ".up.railway.app",
+]
+
+RAILWAY_ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "")
+if RAILWAY_ALLOWED_HOSTS:
+    ALLOWED_HOSTS += [host.strip() for host in RAILWAY_ALLOWED_HOSTS.split(",") if host.strip()]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -36,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -65,12 +79,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if dj_database_url:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+            conn_max_age=600,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -86,6 +108,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -111,11 +134,26 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-CORS_ALLOWED_ORIGINS = [
+FRONTEND_URL = os.environ.get("FRONTEND_URL")
+
+CORS_ALLOWED_ORIGINS = []
+if FRONTEND_URL:
+    CORS_ALLOWED_ORIGINS.append(FRONTEND_URL)
+
+CORS_ALLOWED_ORIGINS += [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = []
+if FRONTEND_URL:
+    CSRF_TRUSTED_ORIGINS.append(FRONTEND_URL)
+
+CSRF_TRUSTED_ORIGINS += [
+    "https://*.railway.app",
+    "https://*.up.railway.app",
+]
 
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
