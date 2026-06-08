@@ -8,6 +8,13 @@ try:
 except ImportError:
     dj_database_url = None
 
+try:
+    import whitenoise  # noqa: F401
+except ImportError:
+    HAS_WHITENOISE = False
+else:
+    HAS_WHITENOISE = True
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,13 +50,12 @@ INSTALLED_APPS = [
     "universities",
     "guides",
     "chat",
-    "assistant",
+    "assistant.apps.AssistantConfig",
     "studentlife",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -58,6 +64,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if HAS_WHITENOISE:
+    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 ROOT_URLCONF = "config.urls"
 
@@ -108,7 +117,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+if HAS_WHITENOISE:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -166,5 +176,4 @@ SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
 }
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+from assistant.config import GEMINI_API_KEY, GEMINI_MODEL

@@ -1,9 +1,10 @@
 import json
 import unicodedata
 from functools import lru_cache
-from pathlib import Path
 
-KNOWLEDGE_DIR = Path(__file__).resolve().parent.parent / "knowledge"
+from assistant.config import knowledge_directory
+
+KNOWLEDGE_DIR = knowledge_directory()
 
 INTENT_KEYWORDS = {
     "admission": ["admission", "demande d'admission", "candidature", "admis", "admission en ligne"],

@@ -1,8 +1,10 @@
 from django.urls import path, include
 from accounts.dashboard_views import dashboard
 from accounts import mentor_views
+from assistant.views import health_view
 
 urlpatterns = [
+    path("health/", health_view, name="api-health"),
     path("auth/", include("accounts.urls")),
     path("admin/", include("config.admin_urls")),
     path("mentors/", mentor_views.mentors_list, name="api-mentors-list"),

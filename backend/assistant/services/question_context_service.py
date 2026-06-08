@@ -4,8 +4,8 @@ import re
 import unicodedata
 
 import requests
-from django.conf import settings
 
+from assistant.config import GEMINI_API_KEY, GEMINI_MODEL
 from .uqar_knowledge_service import get_relevant_contacts, get_relevant_sources
 
 logger = logging.getLogger(__name__)
@@ -118,11 +118,11 @@ def analyze_question_context(message, user_context=None):
 
 
 def classify_with_gemini(message, user_context=None):
-    api_key = getattr(settings, "GEMINI_API_KEY", "")
+    api_key = GEMINI_API_KEY
     if not api_key:
         return _keyword_classification(message, user_context)
 
-    model = getattr(settings, "GEMINI_MODEL", "gemini-1.5-flash")
+    model = GEMINI_MODEL
     prompt = _build_classifier_prompt(message, user_context or {})
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],

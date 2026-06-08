@@ -3,8 +3,8 @@ import re
 import unicodedata
 
 import requests
-from django.conf import settings
 
+from assistant.config import GEMINI_API_KEY, GEMINI_MODEL
 from .question_context_service import (
     analyze_question_context,
     get_contacts_by_domain_and_intent,
@@ -87,7 +87,7 @@ def generate_gemini_response(message, user_context=None, conversation_history=No
         logger.info("NordikBot direct conversational answer used for question=%r", message)
         return direct_answer
 
-    api_key = getattr(settings, "GEMINI_API_KEY", "")
+    api_key = GEMINI_API_KEY
     if not api_key:
         fallback = fallback_answer_for_question(message, user_context)
         if fallback:
@@ -117,7 +117,7 @@ def generate_gemini_response(message, user_context=None, conversation_history=No
         question_analysis=question_analysis,
     )
     answer_strategy = build_answer_strategy(domain, intent, official_sources, programs)
-    model = getattr(settings, "GEMINI_MODEL", "gemini-1.5-flash")
+    model = GEMINI_MODEL
     models = [model] + [fallback for fallback in FALLBACK_MODELS if fallback != model]
 
     payload = {

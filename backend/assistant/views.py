@@ -1,10 +1,13 @@
 import logging
 
+from django.conf import settings
+from django.db import connection
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from .config import GEMINI_MODEL, gemini_is_configured, knowledge_diagnostics
 from .models import AssistantFeedback, AssistantLog
 from .services.gemini_service import (
     GeminiServiceError,
@@ -17,6 +20,40 @@ from .services.gemini_service import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def health_view(request):
+    database_connected = True
+    database_error = ""
+    try:
+        connection.ensure_connection()
+    except Exception as exc:
+        database_connected = False
+        database_error = str(exc)
+
+    knowledge = knowledge_diagnostics()
+    required_files = {
+        "uqar_contacts.json",
+        "uqar_official_sources.json",
+        "uqar_programs.json",
+    }
+    knowledge_files = set(knowledge["files"])
+
+    payload = {
+        "status": "ok" if database_connected and knowledge["exists"] else "degraded",
+        "debug": settings.DEBUG,
+        "gemini_configured": gemini_is_configured(),
+        "model": GEMINI_MODEL,
+        "knowledge_path_exists": knowledge["exists"],
+        "knowledge_files_loaded": required_files.issubset(knowledge_files),
+        "knowledge_files": knowledge["files"],
+        "database": "connected" if database_connected else "error",
+    }
+    if database_error and settings.DEBUG:
+        payload["database_error"] = database_error
+    return Response(payload)
 
 
 @api_view(["POST"])
