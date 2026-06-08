@@ -25,6 +25,15 @@ const NEEDS = [
 
 const COUNTRIES = ["", "Côte d’Ivoire", "Sénégal", "Cameroun", "Maroc", "Tunisie", "France", "Haïti", "Algérie", "Canada", "Autre"];
 
+const FALLBACK_UNIVERSITIES = [
+    {
+        id: 1,
+        name: "Université du Québec à Rimouski (UQAR)",
+        city: "Rimouski",
+        website_url: "https://www.uqar.ca",
+    },
+];
+
 export default function Onboarding() {
     const { user, refreshUser } = useAuth();
     const navigate = useNavigate();
@@ -59,11 +68,15 @@ export default function Onboarding() {
             .then((res) => {
                 if (!mounted) return;
                 const data = res.data.results || res.data;
-                setUniversities(Array.isArray(data) ? data : []);
+                const apiUniversities = Array.isArray(data) ? data : [];
+                setUniversities(apiUniversities.length ? apiUniversities : FALLBACK_UNIVERSITIES);
             })
             .catch((err) => {
                 console.error("Universities loading error:", err.response?.data || err.message);
-                if (mounted) setError("Impossible de charger la liste des universités pour le moment.");
+                if (mounted) {
+                    setUniversities(FALLBACK_UNIVERSITIES);
+                    setError("La liste officielle des universités n'est pas disponible pour le moment. UQAR est proposée temporairement.");
+                }
             })
             .finally(() => mounted && setInitialLoading(false));
 

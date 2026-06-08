@@ -63,12 +63,14 @@ def chat_view(request):
             len(contacts),
         )
     except GeminiServiceError:
+        logger.exception("NordikBot Gemini service error for question=%r", message)
         answer = "Désolé, je n'arrive pas à répondre pour le moment. Réessaie dans quelques instants."
         domain = "general"
         sources = []
         contacts = []
         intent = "general"
     except Exception:
+        logger.exception("NordikBot unexpected error for question=%r", message)
         answer = "Désolé, je n'arrive pas à répondre pour le moment. Réessaie dans quelques instants."
         domain = "general"
         sources = []

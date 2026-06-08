@@ -90,7 +90,7 @@ def classify_with_gemini(message, user_context=None):
     if not api_key:
         return _keyword_classification(message, user_context)
 
-    model = getattr(settings, "GEMINI_MODEL", "gemini-3.5-flash")
+    model = getattr(settings, "GEMINI_MODEL", "gemini-1.5-flash")
     prompt = _build_classifier_prompt(message, user_context or {})
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],

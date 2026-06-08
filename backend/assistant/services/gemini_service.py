@@ -66,8 +66,11 @@ Style :
 - pas trop long, mais complet.
 """.strip()
 
-FALLBACK_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
-INVALID_FALLBACK = "Désolé, je n'ai pas réussi à formuler une réponse claire. Peux-tu reformuler ta question ?"
+FALLBACK_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"]
+INVALID_FALLBACK = (
+    "Je peux t'aider, mais je n'ai pas assez d'information fiable pour te donner une réponse précise ici.\n\n"
+    "Essaie de préciser le sujet, par exemple : admission, inscription aux cours, NAS, CAQ, logement, budget, mentors ou UQAR."
+)
 INVALID_RESPONSE_PATTERNS = [
     r"\bwait\b",
     r"do not cut off",
@@ -117,7 +120,7 @@ def generate_gemini_response(message, user_context=None, conversation_history=No
         conversation_history=history,
         question_analysis=question_analysis,
     )
-    model = getattr(settings, "GEMINI_MODEL", "gemini-3.5-flash")
+    model = getattr(settings, "GEMINI_MODEL", "gemini-1.5-flash")
     models = [model] + [fallback for fallback in FALLBACK_MODELS if fallback != model]
 
     payload = {
