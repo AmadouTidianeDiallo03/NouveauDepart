@@ -34,6 +34,14 @@ APP_KEYWORDS = {
 UQAR_KEYWORDS = {
     "demande d'admission": "admission",
     "admission": "admission",
+    "bac informatique": "programme_informatique",
+    "bac en informatique": "programme_informatique",
+    "baccalaureat informatique": "programme_informatique",
+    "baccalaureat en informatique": "programme_informatique",
+    "informatique uqar": "programme_informatique",
+    "programme informatique": "programme_informatique",
+    "programme d'etudes": "programme",
+    "grille de cheminement": "programme",
     "inscription aux cours": "inscription_cours",
     "rimouski": "campus",
     "levis": "campus",
@@ -63,6 +71,12 @@ ADMIN_KEYWORDS = {
 }
 
 ACADEMIC_KEYWORDS = {
+    "bac informatique": "programme_informatique",
+    "bac en informatique": "programme_informatique",
+    "baccalaureat informatique": "programme_informatique",
+    "baccalaureat en informatique": "programme_informatique",
+    "programme informatique": "programme_informatique",
+    "programme d'etudes": "programme",
     "cours": "course_definition",
     "credits": "credits",
     "credit": "credits",
@@ -129,9 +143,9 @@ def get_sources_by_domain_and_intent(domain, intent, message, user_context=None)
         return []
     if domain == "administrative":
         return get_relevant_sources(message, {})
-    if domain == "academic" and not _message_mentions_uqar(message):
+    if domain == "academic" and not _mentions_uqar(message, user_context):
         return []
-    if domain == "uqar" or (domain == "academic" and _message_mentions_uqar(message)):
+    if domain == "uqar" or (domain == "academic" and _mentions_uqar(message, user_context)):
         return get_relevant_sources(message, user_context)
     return []
 
@@ -206,6 +220,8 @@ def _keyword_classification(message, user_context=None):
             return {"domain": "administrative", "intent": intent, "needs_sources": True, "needs_contacts": False}
     for keyword, intent in UQAR_KEYWORDS.items():
         if keyword in text:
+            if intent in {"programme", "programme_informatique"} and not _mentions_uqar(message, user_context):
+                return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
             if intent in UQAR_CONTEXTUAL_INTENTS and not _mentions_uqar(message, user_context):
                 return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
             return {"domain": "uqar", "intent": intent, "needs_sources": True, "needs_contacts": intent in {"contacts", "campus", "vie_etudiante", "registrariat", "dossier_etudiant", "preuve_inscription", "releve_notes"}}
@@ -228,6 +244,8 @@ def _apply_keyword_safety(message, user_context, classification):
 
     if any(keyword in text for keyword in UQAR_KEYWORDS):
         intent = next(intent for keyword, intent in UQAR_KEYWORDS.items() if keyword in text)
+        if intent in {"programme", "programme_informatique"} and not _mentions_uqar(message, user_context):
+            return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
         if intent in UQAR_CONTEXTUAL_INTENTS and not _mentions_uqar(message, user_context):
             return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
         return {
@@ -243,7 +261,7 @@ def _apply_keyword_safety(message, user_context, classification):
 
     if any(keyword in text for keyword in ACADEMIC_KEYWORDS):
         intent = next(intent for keyword, intent in ACADEMIC_KEYWORDS.items() if keyword in text)
-        if _message_mentions_uqar(message):
+        if _mentions_uqar(message, user_context):
             return {"domain": "uqar", "intent": intent, "needs_sources": True, "needs_contacts": False}
         return {"domain": "academic", "intent": intent, "needs_sources": False, "needs_contacts": False}
 

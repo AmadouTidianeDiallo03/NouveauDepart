@@ -10,14 +10,19 @@ from .question_context_service import (
     get_contacts_by_domain_and_intent,
     get_sources_by_domain_and_intent,
 )
-from .uqar_knowledge_service import format_contacts_for_prompt, format_sources_for_prompt
+from .uqar_knowledge_service import (
+    format_contacts_for_prompt,
+    format_programs_for_prompt,
+    format_sources_for_prompt,
+    get_relevant_programs,
+)
 
 logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = """
 Tu es NordikBot, l'assistant intelligent de NouveauDépart.
 
-NouveauDépart aide les étudiants internationaux à réussir leur intégration au Québec.
+NouveauDépart aide les étudiants internationaux à mieux comprendre leur intégration au Québec, leur université et leurs démarches.
 
 Tu dois répondre comme un assistant IA naturel, utile, clair et rassurant.
 
@@ -25,6 +30,9 @@ Règles principales :
 - Réponds dans la langue de l'utilisateur.
 - Si l'utilisateur écrit en français, réponds en français.
 - Réponds directement à la question.
+- Si la question est compréhensible, donne toujours une réponse utile.
+- Ne dis pas trop vite que tu n'as pas assez d'information.
+- Si tu n'as pas une information officielle exacte, donne une réponse générale prudente et indique que les détails doivent être vérifiés auprès de la source officielle.
 - Ne réponds pas comme un robot froid.
 - Ne dis pas "En tant qu'assistant intelligent".
 - Ne dis pas "je n'ai pas de sentiments".
@@ -39,6 +47,8 @@ Règles principales :
 - Ne montre jamais ton raisonnement interne.
 - Ne montre jamais de brouillon.
 - Ne donne pas de fausses informations officielles.
+- Ne fabrique pas de faux liens, de faux cours, de faux contacts ou de fausses conditions.
+- Utilise les sources fournies par le backend quand elles sont disponibles.
 - Si une information peut changer, conseille de vérifier auprès du site officiel ou du service concerné.
 
 Domaines d'aide :
@@ -68,8 +78,7 @@ Style :
 
 FALLBACK_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"]
 INVALID_FALLBACK = (
-    "Je peux t'aider, mais je n'ai pas assez d'information fiable pour te donner une réponse précise ici.\n\n"
-    "Essaie de préciser le sujet, par exemple : admission, inscription aux cours, NAS, CAQ, logement, budget, mentors ou UQAR."
+    "Je peux t'aider. Donne-moi simplement un peu plus de contexte, par exemple l'université, le programme, la démarche ou la page de NouveauDépart dont tu parles."
 )
 INVALID_RESPONSE_PATTERNS = [
     r"\bwait\b",
@@ -120,12 +129,31 @@ def generate_gemini_response(message, user_context=None, conversation_history=No
         conversation_history=history,
         question_analysis=question_analysis,
     )
+    programs = build_relevant_programs(
+        message=message,
+        user_context=user_context,
+        question_analysis=question_analysis,
+    )
+    answer_strategy = build_answer_strategy(domain, intent, official_sources, programs)
     model = getattr(settings, "GEMINI_MODEL", "gemini-1.5-flash")
     models = [model] + [fallback for fallback in FALLBACK_MODELS if fallback != model]
 
     payload = {
         "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
-        "contents": _build_contents(history, _build_prompt(message, user_context, history, domain, intent, official_sources, contacts)),
+        "contents": _build_contents(
+            history,
+            _build_prompt(
+                message,
+                user_context,
+                history,
+                domain,
+                intent,
+                official_sources,
+                contacts,
+                programs,
+                answer_strategy,
+            ),
+        ),
         "generationConfig": {
             "temperature": 0.3,
             "maxOutputTokens": 2000,
@@ -192,6 +220,37 @@ def build_official_contacts(message, answer="", user_context=None, conversation_
     )
 
 
+def build_relevant_programs(message, user_context=None, question_analysis=None):
+    question_analysis = question_analysis or analyze_question_context(message, user_context)
+    if question_analysis.get("intent") not in {"programme", "programme_informatique"}:
+        return []
+    if question_analysis.get("domain") not in {"uqar", "academic"}:
+        return []
+    return get_relevant_programs(message, user_context)
+
+
+def build_answer_strategy(domain, intent, sources=None, programs=None):
+    sources = sources or []
+    programs = programs or []
+    if domain == "uqar" and programs:
+        return (
+            "Réponds avec une vue d'ensemble utile du programme UQAR fourni. "
+            "Ne donne pas de cours, de durée, de stages ou de conditions précises si ces détails ne sont pas dans les informations officielles fournies. "
+            "Oriente vers les sources officielles pour les détails exacts."
+        )
+    if domain == "uqar" and sources:
+        return "Réponds dans le contexte de l'UQAR avec les sources officielles fournies."
+    if domain == "uqar":
+        return "Donne une réponse générale prudente dans le contexte de l'UQAR et recommande de vérifier le site officiel."
+    if domain == "academic":
+        return "Réponds directement avec une explication pédagogique claire. N'exige pas une source sauf si la question demande une information officielle."
+    if domain == "administrative":
+        return "Donne les étapes générales et rappelle de vérifier les sources gouvernementales pertinentes."
+    if domain == "nouveaudepart_app":
+        return "Explique comment utiliser NouveauDépart, sans ajouter de sources externes inutiles."
+    return "Réponds normalement de façon claire et utile."
+
+
 def build_detected_intent(message, user_context=None, question_analysis=None):
     question_analysis = question_analysis or analyze_question_context(message, user_context)
     return question_analysis["intent"]
@@ -226,7 +285,7 @@ def extract_gemini_text(data):
     return "\n".join(texts).strip(), finish_reason
 
 
-def _build_prompt(message, user_context, history, domain, intent, official_sources, contacts):
+def _build_prompt(message, user_context, history, domain, intent, official_sources, contacts, programs, answer_strategy):
     context_lines = []
     if user_context.get("first_name"):
         context_lines.append(f"Prénom : {user_context['first_name']}")
@@ -255,8 +314,12 @@ def _build_prompt(message, user_context, history, domain, intent, official_sourc
         f"{intent}\n\n"
         "Sources officielles disponibles pour cette question :\n"
         f"{format_sources_for_prompt(official_sources)}\n\n"
+        "Programmes UQAR pertinents disponibles :\n"
+        f"{format_programs_for_prompt(programs)}\n\n"
         "Contacts UQAR disponibles pour cette question :\n"
         f"{format_contacts_for_prompt(contacts)}\n\n"
+        "Stratégie de réponse :\n"
+        f"{answer_strategy}\n\n"
         "Exemples de style attendu :\n"
         "Question : Comment ça va aujourd'hui ?\n"
         "Réponse : Ça va bien, merci ! Je suis prêt à t'aider aujourd'hui. Tu peux me poser une question sur ton arrivée au Québec, l'UQAR, le logement, le budget ou tes démarches.\n\n"
@@ -275,6 +338,8 @@ def _build_prompt(message, user_context, history, domain, intent, official_sourc
         "Ne donne pas Service Canada si la question ne parle pas du NAS ou d'un service fédéral.\n"
         "Ne donne pas UQAR si la question ne parle pas de l'UQAR.\n"
         "Réponds à la question de manière complète, claire et structurée.\n"
+        "Si les détails officiels exacts manquent, donne une explication générale fiable puis indique de vérifier les sources officielles.\n"
+        "N'écris pas que tu n'as pas assez d'information si tu peux donner une réponse générale utile.\n"
         "Ne rejette pas une question simple.\n"
         "Ne demande pas de reformuler si la question est compréhensible.\n"
         "Ne coupe pas la réponse.\n"
@@ -364,6 +429,18 @@ def validate_ai_response(question, answer):
 def fallback_answer_for_question(message, user_context=None):
     text = _fold(message)
     university = (user_context or {}).get("university") or "ton université"
+
+    if _has_any(text, ["bac informatique", "bac en informatique", "baccalaureat informatique", "baccalaureat en informatique", "informatique uqar", "programme informatique"]):
+        if "uqar" in text or "uqar" in _fold(university):
+            return (
+                "Oui, je peux t'en parler. Le baccalauréat en informatique de l'UQAR est un programme de premier cycle lié aux bases de l'informatique et du développement logiciel.\n\n"
+                "De façon générale, ce type de programme touche à la programmation, aux bases de données, aux systèmes, au génie logiciel, aux réseaux, aux mathématiques appliquées et à la résolution de problèmes informatiques.\n\n"
+                "Pour l'UQAR, il faut vérifier la page officielle du programme pour connaître les cours exacts, les conditions d'admission, la durée, les stages possibles et le cheminement proposé. Si tu es étudiant international, vérifie aussi les documents demandés et les dates limites."
+            )
+        return (
+            "Oui. Un baccalauréat en informatique est généralement un programme de premier cycle qui forme aux bases de la programmation, des bases de données, du génie logiciel, des systèmes, des réseaux et du développement d'applications.\n\n"
+            "Les cours exacts, les conditions d'admission, la durée et les stages possibles varient selon l'université. Il faut donc vérifier la page officielle du programme de l'établissement qui t'intéresse."
+        )
 
     if _has_any(text, ["arrivée", "arrivee", "arriv", "premières démarches", "premieres demarches", "installation", "nouvel arrivant"]):
         return (

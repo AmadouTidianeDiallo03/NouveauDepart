@@ -25,7 +25,19 @@ INTENT_KEYWORDS = {
     "mentor": ["mentor", "mentors", "accompagnement"],
     "evenement": ["événement", "evenement", "activité", "activite", "atelier"],
     "campus": ["campus", "rimouski", "lévis", "levis", "adresse"],
-    "programme": ["programme", "programmes", "formation", "baccalauréat", "maîtrise", "doctorat"],
+    "programme_informatique": [
+        "bac informatique",
+        "bac en informatique",
+        "baccalauréat informatique",
+        "baccalauréat en informatique",
+        "baccalaureat informatique",
+        "baccalaureat en informatique",
+        "informatique uqar",
+        "programme informatique",
+        "cours informatique",
+        "grille de cheminement",
+    ],
+    "programme": ["programme", "programmes", "formation", "baccalauréat", "baccalaureat", "maîtrise", "maitrise", "doctorat"],
     "international": ["international", "étranger", "etranger", "étudiant international", "etudiant international"],
 }
 
@@ -41,7 +53,8 @@ SOURCE_BY_INTENT = {
     "contacts": ["uqar_directory", "uqar_main"],
     "vie_etudiante": ["uqar_life", "uqar_directory", "uqar_main"],
     "campus": ["uqar_main", "uqar_directory"],
-    "programme": ["uqar_programs", "uqar_admission"],
+    "programme": ["uqar_programs", "uqar_admission", "uqar_main"],
+    "programme_informatique": ["uqar_programs", "uqar_admission", "uqar_main"],
     "international": ["uqar_admission_international", "immigration_quebec", "canada_study_permit"],
     "nas": ["service_canada_sin"],
     "caq": ["immigration_quebec"],
@@ -70,6 +83,11 @@ def load_official_sources():
 @lru_cache(maxsize=1)
 def load_uqar_contacts():
     return _load_json("uqar_contacts.json")
+
+
+@lru_cache(maxsize=1)
+def load_uqar_programs():
+    return _load_json("uqar_programs.json")
 
 
 def detect_intent(message):
@@ -131,6 +149,15 @@ def get_relevant_contacts(message, user_context=None):
     return _dedupe_contacts([_contact_payload(contact) for contact in selected])
 
 
+def get_relevant_programs(message, user_context=None):
+    text = _fold(message)
+    selected = []
+    for program in load_uqar_programs():
+        if any(_fold(keyword) in text for keyword in program.get("keywords", [])):
+            selected.append(_program_payload(program))
+    return selected[:3]
+
+
 def get_relevant_uqar_sources(intent, user_message, user_context=None):
     return get_relevant_sources(user_message, user_context)
 
@@ -158,6 +185,19 @@ def format_contacts_for_prompt(contacts):
     return "\n".join(lines)
 
 
+def format_programs_for_prompt(programs):
+    if not programs:
+        return "- Aucun programme UQAR spécifique fourni."
+    lines = []
+    for program in programs:
+        lines.append(
+            f"- {program['title']} | niveau : {program.get('level') or 'non précisé'} | "
+            f"domaine : {program.get('domain') or 'non précisé'} | description : {program.get('description') or 'non précisé'} | "
+            f"source : {program.get('source_title')} ({program.get('source_url')})"
+        )
+    return "\n".join(lines)
+
+
 def _load_json(filename):
     with (KNOWLEDGE_DIR / filename).open("r", encoding="utf-8") as file:
         return json.load(file)
@@ -174,6 +214,19 @@ def _contact_payload(contact):
         "email": contact.get("email", ""),
         "phone": contact.get("phone", ""),
         "location": contact.get("location", ""),
+    }
+
+
+def _program_payload(program):
+    return {
+        "key": program["key"],
+        "title": program["title"],
+        "level": program.get("level", ""),
+        "domain": program.get("domain", ""),
+        "university": program.get("university", ""),
+        "description": program.get("description", ""),
+        "source_title": program.get("source_title", ""),
+        "source_url": program.get("source_url", ""),
     }
 
 
