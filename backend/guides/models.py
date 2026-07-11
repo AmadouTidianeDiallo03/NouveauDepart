@@ -64,5 +64,5 @@ class UserTask(models.Model):
         unique_together = ["user", "task"]
 
     def __str__(self):
-        status = "✓" if self.done else "○"
-        return f"{status} {self.user.username} – {self.task.title}"
+        status = "âœ“" if self.done else "â—‹"
+        return f"{status} {self.user.username} - {self.task.title}"

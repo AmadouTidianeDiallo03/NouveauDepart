@@ -165,4 +165,4 @@ class MentorRequest(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.mentee.username} → {self.mentor.username} ({self.status})"
+        return f"{self.mentee.username} â†’ {self.mentor.username} ({self.status})"

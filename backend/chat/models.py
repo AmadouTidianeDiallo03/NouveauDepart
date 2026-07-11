@@ -12,7 +12,7 @@ class Conversation(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Conversation: {self.user1.email} ↔ {self.user2.email}"
+        return f"Conversation: {self.user1.email} â†” {self.user2.email}"
 
     @classmethod
     def get_or_create_between(cls, user_a, user_b):

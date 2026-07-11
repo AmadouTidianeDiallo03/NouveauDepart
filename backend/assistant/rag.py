@@ -444,7 +444,7 @@ def compact(text, limit=420):
     text = re.sub(r"\s+", " ", text or "").strip()
     if len(text) <= limit:
         return text
-    return text[: limit - 1].rstrip() + "…"
+    return text[: limit - 1].rstrip() + "..."
 
 
 def build_context(scored):

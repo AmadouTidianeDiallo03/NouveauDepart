@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import api from "../services/api";
 import { logout } from "../services/auth";
@@ -21,12 +21,12 @@ const NAV_ITEMS = [
             { to: "/mentors", label: "Mentors", icon: "users", roles: ["student", "admin"] },
             { to: "/conversations", label: "Messages", icon: "mail", roles: ["student", "mentor", "admin"] },
             { to: "/mentors/rendez-vous", label: "Rendez-vous", icon: "calendar", roles: ["student", "mentor", "admin"] },
-            { to: "/dashboard", label: "Ã‰tudiants accompagnÃ©s", icon: "users", roles: ["mentor"] },
-            { to: "/evenements", label: "Ã‰vÃ©nements", icon: "calendar", roles: ["student", "mentor", "admin"] },
+            { to: "/dashboard", label: "Étudiants accompagnés", icon: "users", roles: ["mentor"] },
+            { to: "/evenements", label: "Événements", icon: "calendar", roles: ["student", "mentor", "admin"] },
         ],
     },
     {
-        title: "Outils Ã©tudiants",
+        title: "Outils étudiants",
         items: [
             { to: "/budget", label: "Budget", icon: "wallet", roles: ["student", "admin"] },
             { to: "/assistant", label: "IA", icon: "bot", roles: ["student", "admin"] },
@@ -36,7 +36,7 @@ const NAV_ITEMS = [
     {
         title: "Ressources",
         items: [
-            { to: "/university", label: "UniversitÃ©", icon: "school", roles: ["student", "admin"] },
+            { to: "/university", label: "Université", icon: "school", roles: ["student", "admin"] },
             { to: "/study-success", label: "Guides", icon: "book", roles: ["student", "admin"] },
             { to: "/glossary", label: "Glossaire", icon: "book", roles: ["student", "admin"] },
             { to: "/study-success", label: "Ressources", icon: "book", roles: ["mentor"] },
@@ -115,7 +115,7 @@ export default function Dashboard() {
             setMentorRequests((prev) => prev.filter((request) => request.id !== requestId));
         } catch (err) {
             console.error("Mentor request action error:", err);
-            alert("Erreur lors de la rÃ©ponse Ã  la demande.");
+            alert("Erreur lors de la réponse à la demande.");
         }
     }
 
@@ -217,7 +217,7 @@ function StudentDashboard({ dashboard }) {
 function MentorDashboard({ dashboard, mentorRequests, onAction, onViewProfile }) {
     return (
         <>
-            <HeroBanner dashboard={dashboard} subtitle="Voici ton espace mentor pour accompagner les Ã©tudiants." />
+            <HeroBanner dashboard={dashboard} subtitle="Voici ton espace mentor pour accompagner les étudiants." />
             <section className="premium-card mentor-card">
                 <CardHeader icon="users" title="Demandes de mentorat" />
                 {mentorRequests.length > 0 ? (
@@ -235,14 +235,14 @@ function MentorDashboard({ dashboard, mentorRequests, onAction, onViewProfile })
                     <EmptyState
                         icon="mail"
                         title="Aucune demande en attente"
-                        text="Les nouvelles demandes de mentorat apparaÃ®tront ici."
+                        text="Les nouvelles demandes de mentorat apparaîtront ici."
                     />
                 )}
             </section>
             <QuickActionsCard
                 actions={[
                     { to: "/conversations", label: "Voir mes messages", icon: "mail" },
-                    { to: "/assistant", label: "Poser une question Ã  NordikBot", icon: "bot" },
+                    { to: "/assistant", label: "Poser une question à NordikBot", icon: "bot" },
                     { to: "/glossary", label: "Consulter le glossaire", icon: "book" },
                 ]}
             />
@@ -258,11 +258,11 @@ function DashboardSidebar({ role, open, onClose, onToggle }) {
     return (
         <aside className={`dashboard-sidebar open ${open ? "" : "compact"}`}>
             <div className="dashboard-sidebar-head">
-            <Link to="/dashboard" className="dashboard-logo" onClick={onClose} title="NouveauDÃ©part">
+            <Link to="/dashboard" className="dashboard-logo" onClick={onClose} title="NouveauDépart">
                 <span className="dashboard-logo-mark"><Icon name="school" /></span>
-                <span>NouveauDÃ©part</span>
+                <span>NouveauDépart</span>
             </Link>
-                <button className="dashboard-collapse-button" type="button" onClick={onToggle} title={open ? "RÃ©duire le menu" : "Agrandir le menu"} aria-label={open ? "RÃ©duire le menu" : "Agrandir le menu"}>
+                <button className="dashboard-collapse-button" type="button" onClick={onToggle} title={open ? "Réduire le menu" : "Agrandir le menu"} aria-label={open ? "Réduire le menu" : "Agrandir le menu"}>
                     <Icon name="menu" />
                 </button>
             </div>
@@ -287,8 +287,8 @@ function DashboardSidebar({ role, open, onClose, onToggle }) {
                     <span />
                     <span />
                 </div>
-                <strong>Votre succÃ¨s commence ici.</strong>
-                <p>Nous sommes lÃ  pour vous accompagner Ã  chaque Ã©tape de votre parcours au QuÃ©bec.</p>
+                <strong>Votre succès commence ici.</strong>
+                <p>Nous sommes là pour vous accompagner à chaque étape de votre parcours au Québec.</p>
             </div>
         </aside>
     );
@@ -431,18 +431,18 @@ function DashboardTopbar({ dashboard }) {
 }
 function HeroBanner({ dashboard, subtitle }) {
     const fullName = [dashboard.user?.first_name, dashboard.user?.last_name].filter(Boolean).join(" ").trim();
-    const displayName = fullName || "cher Ã©tudiant";
-    const university = dashboard.profile?.university || "UniversitÃ© non renseignÃ©e";
-    const campus = dashboard.profile?.campus || "Campus non renseignÃ©";
+    const displayName = fullName || "cher étudiant";
+    const university = dashboard.profile?.university || "Université non renseignée";
+    const campus = dashboard.profile?.campus || "Campus non renseigné";
 
     return (
         <section className="dashboard-hero">
             <div className="hero-content">
-                <div className="hero-kicker">Espace Ã©tudiant NouveauDÃ©part</div>
+                <div className="hero-kicker">Espace étudiant NouveauDépart</div>
                 <h1>Bonjour <span>{displayName}</span>, bienvenue dans ton espace personnel.</h1>
-                <p>{subtitle || "Voici ce qui est important pour avancer dans ton intÃ©gration."}</p>
+                <p>{subtitle || "Voici ce qui est important pour avancer dans ton intégration."}</p>
                 <div className="hero-badges">
-                    <span><Icon name="school" /> UniversitÃ© : {university}</span>
+                    <span><Icon name="school" /> Université : {university}</span>
                     <span><Icon name="pin" /> Campus : {campus}</span>
                 </div>
             </div>
@@ -466,13 +466,13 @@ function ProgressCard({ progress }) {
 
     return (
         <section className="premium-card progress-card">
-            <CardHeader title="Progression dâ€™intÃ©gration" />
+            <CardHeader title="Progression d'intégration" />
             <div className="progress-card-body">
                 <ProgressRing value={percentage} />
                 <div>
                     <div className="metric-value">{percentage} %</div>
                     <div className="metric-row">
-                        <span>{completed} tÃ¢che(s) complÃ©tÃ©e(s)</span>
+                        <span>{completed} tâche(s) complétée(s)</span>
                         <strong>{total} au total</strong>
                     </div>
                 </div>
@@ -480,8 +480,8 @@ function ProgressCard({ progress }) {
             <div className="progress-divider" />
             <p className="card-help">
                 {completed > 0
-                    ? `Tu as complÃ©tÃ© ${percentage} % de ton parcours dâ€™intÃ©gration.`
-                    : "Tu peux commencer ton parcours en complÃ©tant ta premiÃ¨re checklist."}
+                    ? `Tu as complété ${percentage} % de ton parcours d'intégration.`
+                    : "Tu peux commencer ton parcours en complétant ta première checklist."}
             </p>
         </section>
     );
@@ -490,31 +490,31 @@ function ProgressCard({ progress }) {
 function StageCard({ stage }) {
     return (
         <section className="premium-card stage-card">
-            <CardHeader title="Mon Ã©tape actuelle" />
+            <CardHeader title="Mon étape actuelle" />
             <div className="stage-card-body">
                 <div className="large-icon"><Icon name="send" /></div>
                 <div>
-                    <div className="stage-title">{stage?.title || "Ã‰tape non choisie"}</div>
-                    <p>Tu es actuellement dans lâ€™Ã©tape : {stage?.title || "non dÃ©finie"}.</p>
+                    <div className="stage-title">{stage?.title || "Étape non choisie"}</div>
+                    <p>Tu es actuellement dans l'étape : {stage?.title || "non définie"}.</p>
                 </div>
             </div>
             <Link className="premium-button primary" to="/parcours">
-                Changer mon Ã©tape <Icon name="arrow" />
+                Changer mon étape <Icon name="arrow" />
             </Link>
         </section>
     );
 }
 
 function CampusInfoCard({ campusInfo, universityId }) {
-    const university = campusInfo?.university || "UniversitÃ© non renseignÃ©e";
-    const campus = campusInfo?.campus || "Campus non renseignÃ©";
+    const university = campusInfo?.university || "Université non renseignée";
+    const campus = campusInfo?.campus || "Campus non renseigné";
     const services = campusInfo?.services || [];
     const to = universityId ? `/university/${universityId}` : "/university";
 
     return (
         <section className="premium-card campus-card">
             <CardHeader title="Informations campus" />
-            <InfoRow label="UniversitÃ©" value={university} />
+            <InfoRow label="Université" value={university} />
             <InfoRow label="Campus" value={campus} />
             <div className="services-block">
                 <span>Services utiles</span>
@@ -532,21 +532,21 @@ function CampusInfoCard({ campusInfo, universityId }) {
 function TasksCard({ tasks }) {
     return (
         <section className="premium-card list-card">
-            <CardHeader icon="check" title="TÃ¢ches importantes" />
+            <CardHeader icon="check" title="Tâches importantes" />
             <div className="task-list">
                 {tasks?.length ? (
                     tasks.slice(0, 5).map((task) => <TaskItem key={`${task.source || "task"}-${task.id}`} task={task} />)
                 ) : (
-                    <EmptyState icon="check" title="Aucune tÃ¢che prioritaire" text="Ton parcours apparaÃ®tra ici dÃ¨s que des tÃ¢ches seront disponibles." />
+                    <EmptyState icon="check" title="Aucune tâche prioritaire" text="Ton parcours apparaîtra ici dès que des tâches seront disponibles." />
                 )}
             </div>
-            <Link className="card-link" to="/checklist">Voir toutes les tÃ¢ches <Icon name="arrow" /></Link>
+            <Link className="card-link" to="/checklist">Voir toutes les tâches <Icon name="arrow" /></Link>
         </section>
     );
 }
 
 function TaskItem({ task }) {
-    const done = task.status === "complÃ©tÃ©";
+    const done = task.status === "complété";
     const destination = task.source === "stage" ? "/parcours" : "/checklist";
 
     return (
@@ -556,7 +556,7 @@ function TaskItem({ task }) {
                 <strong>{task.title}</strong>
                 <span>{task.category || "Parcours"}</span>
             </div>
-            <em className={done ? "done" : ""}>{done ? "ComplÃ©tÃ©" : "Ã€ faire"}</em>
+            <em className={done ? "done" : ""}>{done ? "Complété" : "À faire"}</em>
             <Icon name="chevron" />
         </Link>
     );
@@ -565,7 +565,7 @@ function TaskItem({ task }) {
 function GuidesCard({ guides }) {
     return (
         <section className="premium-card list-card">
-            <CardHeader icon="book" title="Guides recommandÃ©s" />
+            <CardHeader icon="book" title="Guides recommandés" />
             <div className="guide-list">
                 {guides?.length ? (
                     guides.slice(0, 3).map((guide) => (
@@ -579,7 +579,7 @@ function GuidesCard({ guides }) {
                         </Link>
                     ))
                 ) : (
-                    <EmptyState icon="book" title="Aucun guide recommandÃ©" text="Les guides adaptÃ©s Ã  ton profil apparaÃ®tront ici." />
+                    <EmptyState icon="book" title="Aucun guide recommandé" text="Les guides adaptés à ton profil apparaîtront ici." />
                 )}
             </div>
             <Link className="card-link" to="/study-success">Voir tous les guides <Icon name="arrow" /></Link>
@@ -614,8 +614,8 @@ function MessagesCard({ messages }) {
             ) : (
                 <EmptyState
                     icon="chat"
-                    title="Tu nâ€™as pas encore de message."
-                    text="Tu peux contacter un mentor pour obtenir de lâ€™aide."
+                    title="Tu n'as pas encore de message."
+                    text="Tu peux contacter un mentor pour obtenir de l'aide."
                 />
             )}
             <Link className="premium-button primary compact" to="/conversations">
@@ -628,20 +628,20 @@ function MessagesCard({ messages }) {
 function EventsMiniCard({ events }) {
     return (
         <section className="premium-card list-card">
-            <CardHeader icon="calendar" title="Ã‰vÃ©nements Ã  venir" />
+            <CardHeader icon="calendar" title="Événements à venir" />
             <div className="guide-list">
                 {events?.length ? events.map((event) => (
                     <Link key={event.id} className="guide-item" to="/evenements">
                         <div className="guide-icon"><Icon name="calendar" /></div>
                         <div>
                             <strong>{event.title}</strong>
-                            <span>{new Date(event.date).toLocaleDateString("fr-CA")} Â· {event.location}</span>
+                            <span>{new Date(event.date).toLocaleDateString("fr-CA")} · {event.location}</span>
                         </div>
                         <Icon name="chevron" />
                     </Link>
-                )) : <EmptyState icon="calendar" title="Aucun Ã©vÃ©nement Ã  venir" text="Les activitÃ©s utiles apparaÃ®tront ici." />}
+                )) : <EmptyState icon="calendar" title="Aucun événement à venir" text="Les activités utiles apparaîtront ici." />}
             </div>
-            <Link className="card-link" to="/evenements">Voir tous les Ã©vÃ©nements <Icon name="arrow" /></Link>
+            <Link className="card-link" to="/evenements">Voir tous les événements <Icon name="arrow" /></Link>
         </section>
     );
 }
@@ -649,14 +649,14 @@ function EventsMiniCard({ events }) {
 function BudgetMiniCard({ budget }) {
     return (
         <section className="premium-card messages-card">
-            <CardHeader icon="wallet" title="Mon budget Ã©tudiant" />
+            <CardHeader icon="wallet" title="Mon budget étudiant" />
             {budget ? (
                 <div className="empty-state">
                     <div className="metric-value">{Number(budget.monthly_total).toFixed(0)} $</div>
-                    <p>Budget mensuel estimÃ©</p>
+                    <p>Budget mensuel estimé</p>
                 </div>
             ) : (
-                <EmptyState icon="wallet" title="Tu nâ€™as pas encore estimÃ© ton budget." text="Ajoute tes dÃ©penses pour mieux prÃ©voir ton mois." />
+                <EmptyState icon="wallet" title="Tu n'as pas encore estimé ton budget." text="Ajoute tes dépenses pour mieux prévoir ton mois." />
             )}
             <Link className="premium-button primary compact" to="/budget">Modifier mon budget <Icon name="arrow" /></Link>
         </section>
@@ -671,12 +671,12 @@ function AppointmentsMiniCard({ appointments }) {
             {next ? (
                 <div className="message-item">
                     <strong>{next.mentor_name}</strong>
-                    <span>{next.date} Ã  {next.start_time} Â· {next.status}</span>
+                    <span>{next.date} à {next.start_time} · {next.status}</span>
                 </div>
             ) : (
-                <EmptyState icon="calendar" title="Tu nâ€™as pas encore de rendez-vous avec un mentor." text="RÃ©serve un moment pour obtenir un accompagnement direct." />
+                <EmptyState icon="calendar" title="Tu n'as pas encore de rendez-vous avec un mentor." text="Réserve un moment pour obtenir un accompagnement direct." />
             )}
-            <Link className="premium-button primary compact" to="/mentors/rendez-vous">RÃ©server un rendez-vous <Icon name="arrow" /></Link>
+            <Link className="premium-button primary compact" to="/mentors/rendez-vous">Réserver un rendez-vous <Icon name="arrow" /></Link>
         </section>
     );
 }

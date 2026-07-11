@@ -8,14 +8,14 @@ from accounts.models import Profile
 
 UNIVERSITIES = [
     {
-        "name": "Université du Québec à Rimouski (UQAR) – Campus Lévis",
+        "name": "Université du Québec à Rimouski (UQAR) - Campus Lévis",
         "city": "Lévis",
         "website_url": "https://www.uqar.ca",
         "resources_json": {
             "registrariat": "https://www.uqar.ca/inscription",
             "services_internationaux": "https://www.uqar.ca/international",
             "bibliothèque": "https://www.uqar.ca/bibliotheque",
-            "café_étudiant": "Campus Lévis – Pavillon principal",
+            "café_étudiant": "Campus Lévis - Pavillon principal",
         },
     },
     {
@@ -58,15 +58,15 @@ STEPS = [
         ],
     },
     {
-        "title": "Université – Premiers pas",
-        "title_en": "University – First Steps",
+        "title": "Université - Premiers pas",
+        "title_en": "University - First Steps",
         "category": "university",
         "order": 2,
         "tasks": [
             ("Activer votre compte étudiant (courriel, VPN, portail)", "Activate your student account (email, VPN, portal)", "Connectez-vous sur le portail de votre université pour activer les accès.", "Log in to your university portal to activate access."),
             ("Récupérer votre carte étudiante", "Pick up your student card", "Rendez-vous au bureau des inscriptions avec une pièce d'identité.", "Go to the registrar's office with a photo ID."),
-            ("Assister à la journée d'orientation", "Attend orientation day", "Obligatoire pour les nouveaux étudiants – vérifiez la date sur votre portail.", "Mandatory for new students – check the date on your portal."),
-            ("Visiter le campus – repérer vos salles de cours", "Visit campus – locate your classrooms", "Téléchargez le plan du campus.", "Download the campus map."),
+            ("Assister à la journée d'orientation", "Attend orientation day", "Obligatoire pour les nouveaux étudiants - vérifiez la date sur votre portail.", "Mandatory for new students - check the date on your portal."),
+            ("Visiter le campus - repérer vos salles de cours", "Visit campus - locate your classrooms", "Téléchargez le plan du campus.", "Download the campus map."),
             ("Rejoindre les groupes étudiants (Discord, Facebook)", "Join student groups (Discord, Facebook)", "Cherchez le groupe de votre programme sur les réseaux sociaux.", "Search for your program's group on social media."),
             ("Rencontrer votre conseiller pédagogique", "Meet your academic advisor", "Planifiez un rendez-vous dès la première semaine.", "Schedule a meeting during the first week."),
             ("Comprendre votre horaire et votre grille de cours", "Understand your schedule and course grid", "Vérifiez les crédits requis et les cours obligatoires.", "Check required credits and mandatory courses."),
@@ -82,7 +82,7 @@ STEPS = [
             ("Obtenir la carte de transport en commun étudiant", "Get a student transit card", "Rendez-vous au bureau de la STL, STM, RTC, ou Exo selon votre ville.", "Visit the STL, STM, RTC, or Exo office depending on your city."),
             ("Télécharger les applications de transport (Chrono, m ticketing)", "Download transit apps (Chrono, m ticketing)", "Permet de voir les horaires en temps réel.", "Shows real-time schedules."),
             ("Localiser les arrêts de bus/métro proches de chez vous", "Find bus/metro stops near your home", "Utilisez Google Maps ou l'app de votre réseau de transport.", "Use Google Maps or your transit app."),
-            ("Apprendre les lignes clés vers votre campus", "Learn key routes to campus", "Mémorisez 1–2 alternatives en cas de retard.", "Memorize 1–2 alternatives in case of delays."),
+            ("Apprendre les lignes clés vers votre campus", "Learn key routes to campus", "Mémorisez 1-2 alternatives en cas de retard.", "Memorize 1-2 alternatives in case of delays."),
             ("Vérifier si votre université offre un service de navette", "Check if your university offers a shuttle service", "Certains campus ont des navettes gratuites vers la ville.", "Some campuses have free shuttles to the city."),
             ("Explorer les options de covoiturage (Netlift, BlaBlaCar)", "Explore carpooling options (Netlift, BlaBlaCar)", "Utile pour les déplacements hors campus.", "Useful for off-campus travel."),
         ],
@@ -94,7 +94,7 @@ STEPS = [
         "order": 4,
         "tasks": [
             ("Comprendre le système de crédits québécois", "Understand the Quebec credit system", "Un cours = 3 crédits en général. Baccalauréat = 90 crédits.", "One course = 3 credits in general. Bachelor's = 90 credits."),
-            ("Connaître le mode d'évaluation (pondération)", "Learn the grading system (weighting)", "Travaux, midterms, examen final – vérifiez le plan de cours.", "Assignments, midterms, final exam – check the course plan."),
+            ("Connaître le mode d'évaluation (pondération)", "Learn the grading system (weighting)", "Travaux, midterms, examen final - vérifiez le plan de cours.", "Assignments, midterms, final exam - check the course plan."),
             ("Lire et comprendre le plan de cours (syllabus)", "Read and understand the course syllabus", "Le plan de cours définit les règles, les dates, et les critères.", "The course plan defines rules, dates, and criteria."),
             ("Créer un calendrier de révision", "Create a study schedule", "Répartissez vos études sur toute la session.", "Spread your study sessions across the semester."),
             ("Identifier les ressources d'aide en ligne (bibliothèque, bases de données)", "Identify online resources (library, databases)", "Accès gratuit à Érudit, ProQuest, REPÈRES via votre université.", "Free access to Érudit, ProQuest, REPÈRES through your university."),
@@ -102,7 +102,7 @@ STEPS = [
             ("Rejoindre un groupe d'étude", "Join a study group", "Demandez à vos collègues de cours.", "Ask your classmates."),
             ("Connaître la politique sur l'intégrité académique (plagiat)", "Learn the academic integrity policy (plagiarism)", "Important : citation, paraphrase, Turnitin.", "Important: citation, paraphrasing, Turnitin."),
             ("Utiliser les outils numériques universitaires (Moodle, Teams, Zoom)", "Use university digital tools (Moodle, Teams, Zoom)", "Vérifiez les plateformes utilisées dans chaque cours.", "Check which platforms each course uses."),
-            ("Demander de l'aide avant les examens", "Ask for help before exams", "N'attendez pas la dernière minute – contactez votre professeur ou tuteur.", "Don't wait until the last minute – contact your professor or tutor."),
+            ("Demander de l'aide avant les examens", "Ask for help before exams", "N'attendez pas la dernière minute - contactez votre professeur ou tuteur.", "Don't wait until the last minute - contact your professor or tutor."),
         ],
     },
 ]
@@ -116,7 +116,7 @@ MENTORS = [
         "university_index": 0,  # UQAR
         "city": "Lévis",
         "language": "fr",
-        "bio": "Étudiant en informatique à l'UQAR – Campus Lévis depuis 2 ans. Je peux vous aider à vous repérer dans la ville et à l'université.",
+        "bio": "Étudiant en informatique à l'UQAR - Campus Lévis depuis 2 ans. Je peux vous aider à vous repérer dans la ville et à l'université.",
     },
     {
         "email": "sarah.mentor@nordik.local",
@@ -165,7 +165,7 @@ class Command(BaseCommand):
     help = "Seed the database with sample universities, steps, tasks, and mentors."
 
     def handle(self, *args, **options):
-        self.stdout.write("🌱 Seeding database...")
+        self.stdout.write(" Seeding database...")
 
         universities = []
         for data in UNIVERSITIES:
@@ -175,7 +175,7 @@ class Command(BaseCommand):
             )
             universities.append(uni)
             action = "created" if created else "updated"
-            self.stdout.write(f"  ✓ University {action}: {uni.name}")
+            self.stdout.write(f"  âœ“ University {action}: {uni.name}")
 
         for step_data in STEPS:
             tasks_data = step_data.pop("tasks")
@@ -184,7 +184,7 @@ class Command(BaseCommand):
                 defaults=step_data,
             )
             action = "created" if created else "updated"
-            self.stdout.write(f"  ✓ Step {action}: {step.title}")
+            self.stdout.write(f"  âœ“ Step {action}: {step.title}")
 
             for order, (title_fr, title_en, desc_fr, desc_en) in enumerate(tasks_data, start=1):
                 Task.objects.update_or_create(
@@ -232,7 +232,7 @@ class Command(BaseCommand):
                 },
             )
             action = "created" if created else "updated"
-            self.stdout.write(f"  ✓ Mentor {action}: {user.get_full_name()} ({uni.city})")
+            self.stdout.write(f"  âœ“ Mentor {action}: {user.get_full_name()} ({uni.city})")
 
-        self.stdout.write(self.style.SUCCESS("\n✅ Seed complete!"))
+        self.stdout.write(self.style.SUCCESS("\nâœ… Seed complete!"))
         self.stdout.write("   Mentor password for all test accounts: mentor1234")

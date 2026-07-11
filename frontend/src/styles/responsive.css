@@ -1,0 +1,379 @@
+/* Responsive safety net loaded last. */
+
+html,
+body,
+#root {
+    min-width: 0;
+    width: 100%;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+main,
+section,
+article,
+aside,
+header,
+footer,
+div,
+form {
+    min-width: 0;
+}
+
+button,
+input,
+select,
+textarea {
+    max-width: 100%;
+}
+
+textarea {
+    overflow-wrap: break-word;
+}
+
+table {
+    max-width: 100%;
+}
+
+.app-shell-main,
+.dashboard-main,
+.admin-main {
+    min-width: 0;
+}
+
+.card,
+.premium-card,
+.admin-form,
+.admin-table-wrap,
+.nordik-chat,
+.assistant-header,
+.auth-card,
+.welcome-card,
+.checklist-card,
+.mentor-card,
+.event-card,
+.glossary-card,
+.university-card,
+.study-card {
+    max-width: 100%;
+}
+
+.btn,
+.premium-button,
+.admin-quick a,
+.admin-form button,
+.assistant-header-actions button,
+.assistant-header-actions a,
+.nordik-input-row button {
+    min-height: 44px;
+}
+
+.card-header,
+.dashboard-topbar,
+.assistant-header,
+.admin-quick,
+.hero-badges,
+.service-tags,
+.nordik-contact-actions {
+    flex-wrap: wrap;
+}
+
+.task-item strong,
+.guide-item strong,
+.message-item strong,
+.academic-shortcut strong,
+.quick-action strong,
+.mentor-card__name,
+.card-header h2,
+.admin-table td,
+.admin-table th {
+    overflow-wrap: anywhere;
+}
+
+.admin-table-wrap,
+.mentor-table-wrap,
+.events-table-wrap,
+.checklist-table-wrap {
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1280px) {
+    .app-shell-main {
+        margin-left: 92px;
+    }
+
+    .app-shell:not(.sidebar-collapsed) .app-shell-main {
+        margin-left: 280px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .page-content,
+    .assistant-page,
+    .checklist-page,
+    .events-page,
+    .glossary-page,
+    .mentors-page,
+    .university-page,
+    .study-success-page,
+    .onboarding-page,
+    .welcome-page {
+        padding-inline: clamp(0.85rem, 3vw, 1.4rem);
+    }
+
+    .dashboard-grid-top,
+    .dashboard-grid-bottom,
+    .quick-actions-grid,
+    .academic-shortcuts-grid,
+    .admin-stats,
+    .admin-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .assistant-shell,
+    .container,
+    .container-lg {
+        width: min(100%, 100vw);
+    }
+}
+
+@media (max-width: 980px) {
+    .app-shell-main,
+    .app-shell.sidebar-collapsed .app-shell-main,
+    .app-shell:not(.sidebar-collapsed) .app-shell-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .app-sidebar,
+    .app-sidebar.compact,
+    .dashboard-sidebar,
+    .dashboard-sidebar.compact {
+        width: min(280px, calc(100vw - 2rem));
+        max-width: calc(100vw - 2rem);
+    }
+
+    .layout-2col,
+    .admin-page,
+    .dashboard-grid-top,
+    .dashboard-grid-bottom,
+    .academic-shortcuts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campus-card,
+    .messages-card {
+        grid-column: auto;
+    }
+
+    .hero-illustration,
+    .quebec-flag,
+    .skyline {
+        display: none;
+    }
+}
+
+@media (max-width: 760px) {
+    :root {
+        --nav-height: 58px;
+    }
+
+    .container {
+        padding-inline: 1rem;
+    }
+
+    .page-content {
+        padding-block: 1rem 2rem;
+    }
+
+    .dashboard-main,
+    .premium-dashboard.sidebar-hidden .dashboard-main {
+        padding: 4.35rem 0.85rem 1rem;
+    }
+
+    .dashboard-hero,
+    .assistant-header,
+    .admin-header {
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    .assistant-header,
+    .assistant-title-row,
+    .dashboard-topbar,
+    .progress-card-body,
+    .stage-card-body,
+    .mentor-card__header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .assistant-header-actions,
+    .assistant-header-actions button,
+    .assistant-header-actions a,
+    .premium-button,
+    .btn,
+    .admin-quick a,
+    .admin-form button {
+        width: 100%;
+    }
+
+    .assistant-suggestions,
+    .quick-actions-grid,
+    .admin-stats,
+    .admin-form,
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+
+    .task-item {
+        grid-template-columns: 2rem minmax(0, 1fr);
+    }
+
+    .task-item em,
+    .task-item > svg {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .guide-item,
+    .academic-shortcut {
+        grid-template-columns: 2rem minmax(0, 1fr);
+    }
+
+    .guide-item > svg,
+    .academic-shortcut > svg {
+        display: none;
+    }
+
+    .nordik-message,
+    .nordik-message.user {
+        gap: 0.5rem;
+    }
+
+    .nordik-message-content,
+    .nordik-message.user .nordik-message-content,
+    .chat-bubble {
+        max-width: 100%;
+    }
+
+    .nordik-messages {
+        min-height: 24rem;
+        height: min(62vh, 36rem);
+        padding: 0.75rem;
+    }
+
+    .nordik-input-row,
+    .chat-input-row {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+        padding: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 15px;
+    }
+
+    .app-sidebar-toggle,
+    .dashboard-sidebar-toggle {
+        top: 0.75rem;
+        left: 0.75rem;
+    }
+
+    .app-sidebar,
+    .app-sidebar.compact,
+    .dashboard-sidebar,
+    .dashboard-sidebar.compact {
+        width: min(18rem, calc(100vw - 1rem));
+        max-width: calc(100vw - 1rem);
+    }
+
+    .assistant-page,
+    .dashboard-main,
+    .admin-main,
+    .page-content {
+        padding-inline: 0.65rem;
+    }
+
+    .premium-card,
+    .card,
+    .admin-form,
+    .admin-table-wrap,
+    .nordik-chat,
+    .assistant-header {
+        border-radius: 0.85rem;
+        padding: 0.85rem;
+    }
+
+    .dashboard-hero h1,
+    .hero-content h1,
+    .assistant-header h1 {
+        font-size: 1.35rem;
+        line-height: 1.2;
+        letter-spacing: 0;
+    }
+
+    .hero-badges span,
+    .service-tags span,
+    .badge {
+        width: 100%;
+        justify-content: center;
+        white-space: normal;
+    }
+
+    .premium-profile-dropdown,
+    .premium-notification-dropdown,
+    .dashboard-dropdown {
+        left: 0;
+        right: auto;
+        width: calc(100vw - 1.3rem);
+        min-width: 0;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.65rem;
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 360px) {
+    html {
+        font-size: 14px;
+    }
+
+    .assistant-bot-icon,
+    .large-icon,
+    .empty-illustration {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .notification-button,
+    .user-avatar,
+    .premium-user-avatar {
+        width: 2.2rem;
+        height: 2.2rem;
+    }
+}

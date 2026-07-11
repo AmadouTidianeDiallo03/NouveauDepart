@@ -562,7 +562,7 @@ def _looks_ill_formed(text):
     lowered = stripped.lower()
     if lowered.endswith(UNFINISHED_ENDINGS):
         return True
-    if stripped.endswith((",", ":", ";", "-", "–")):
+    if stripped.endswith((",", ":", ";", "-")):
         return True
     return False
 

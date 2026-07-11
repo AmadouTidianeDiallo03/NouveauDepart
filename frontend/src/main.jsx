@@ -7,6 +7,7 @@ import "./styles/components.css";
 import { AuthProvider } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import "./styles/responsive.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>

@@ -9,8 +9,8 @@ STAGES = [
         "description": "Préparer mon départ, mes documents et mon installation.",
         "order": 1,
         "tasks": [
-            ("Vérifier ma lettre d’admission", "Confirmer que l’admission est reçue et conserver une copie.", "haute", "Admission"),
-            ("Préparer mes documents", "Rassembler passeport, CAQ, permis d’études, assurances et documents universitaires.", "haute", "Documents"),
+            ("Vérifier ma lettre d'admission", "Confirmer que l'admission est reçue et conserver une copie.", "haute", "Admission"),
+            ("Préparer mes documents", "Rassembler passeport, CAQ, permis d'études, assurances et documents universitaires.", "haute", "Documents"),
             ("Préparer mon budget", "Estimer les frais de scolarité, le logement, le transport et les premières dépenses.", "moyenne", "Budget"),
             ("Chercher un logement", "Comparer les options près du campus et prévoir une solution temporaire si nécessaire.", "haute", "Logement"),
             ("Préparer mes bagages", "Prévoir vêtements, documents papier et objets essentiels pour les premières semaines.", "basse", "Départ"),
@@ -23,10 +23,10 @@ STAGES = [
         "order": 2,
         "tasks": [
             ("Acheter une carte SIM", "Obtenir un numéro local pour les démarches et les contacts importants.", "moyenne", "Installation"),
-            ("Ouvrir un compte bancaire", "Comparer les banques et préparer les pièces d’identité nécessaires.", "moyenne", "Banque"),
+            ("Ouvrir un compte bancaire", "Comparer les banques et préparer les pièces d'identité nécessaires.", "moyenne", "Banque"),
             ("Comprendre le transport", "Repérer les trajets entre le logement, le campus et les services essentiels.", "haute", "Transport"),
             ("Visiter le campus", "Identifier le registrariat, la bibliothèque et les services aux étudiants.", "haute", "Campus"),
-            ("Vérifier mon inscription", "Confirmer l’inscription aux cours, l’horaire et les accès numériques.", "haute", "Université"),
+            ("Vérifier mon inscription", "Confirmer l'inscription aux cours, l'horaire et les accès numériques.", "haute", "Université"),
         ],
     },
     {
@@ -39,7 +39,7 @@ STAGES = [
             ("Contacter un mentor", "Échanger avec un étudiant expérimenté pour poser tes questions.", "moyenne", "Mentorat"),
             ("Participer aux activités", "Découvrir la vie étudiante et créer un réseau.", "basse", "Vie étudiante"),
             ("Chercher un emploi étudiant", "Comprendre les règles, préparer un CV et repérer les offres.", "moyenne", "Emploi"),
-            ("Utiliser les services aux étudiants", "Demander de l’aide au besoin : études, adaptation, santé ou finances.", "haute", "Soutien"),
+            ("Utiliser les services aux étudiants", "Demander de l'aide au besoin : études, adaptation, santé ou finances.", "haute", "Soutien"),
         ],
     },
 ]

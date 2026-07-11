@@ -11,7 +11,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="NordikAventure API",
         default_version="v1",
-        description="API pour l'application NordikAventure – intégration étudiante au Québec",
+        description="API pour l'application NordikAventure - intégration étudiante au Québec",
         contact=openapi.Contact(email="admin@nordik.local"),
     ),
     public=True,

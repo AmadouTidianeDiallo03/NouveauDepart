@@ -174,7 +174,7 @@ def toggle_stage_task(request, task_id):
     stage = get_current_stage(request.user)
     task = StageTask.objects.filter(id=task_id, stage=stage).first()
     if not task:
-        return Response({"detail": "Tâche introuvable pour l’étape actuelle."}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "Tâche introuvable pour l'étape actuelle."}, status=status.HTTP_404_NOT_FOUND)
 
     progress = get_progress(request.user, stage)
     completed = set(progress.completed_tasks or [])
