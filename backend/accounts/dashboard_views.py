@@ -216,8 +216,9 @@ def dashboard(request):
     return Response(
         {
             "user": {
-                "first_name": user.first_name or user.username or user.email,
+                "first_name": user.first_name,
                 "last_name": user.last_name,
+                "full_name": user.get_full_name(),
                 "email": user.email,
             },
             "profile": {
@@ -229,7 +230,7 @@ def dashboard(request):
                 "integration_stage": profile.integration_stage if profile else "",
             },
             "current_stage": stage_payload.get("current_stage"),
-            "progress": _progress_payload(user, visible_tasks),
+            "progress": stage_payload.get("progress") or _progress_payload(user, visible_tasks),
             "important_tasks": _important_tasks(user, list(visible_tasks)),
             "recommended_guides": stage_payload.get("recommended_guides") or _recommended_guides(visible_tasks.select_related("step"), university),
             "stage_quick_actions": stage_payload.get("quick_actions", []),

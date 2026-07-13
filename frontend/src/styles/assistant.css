@@ -138,6 +138,117 @@
     box-shadow: 0 22px 65px rgba(15, 23, 42, 0.1);
 }
 
+.nordik-voice-toolbar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #e6eef9;
+    background: linear-gradient(135deg, #07152f, #102044);
+    color: #fff;
+}
+
+.nordik-voice-button,
+.nordik-input-mic,
+.speak-message-button,
+.nordik-stop-audio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.nordik-voice-button,
+.nordik-input-mic {
+    width: 2.85rem;
+    height: 2.85rem;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #fff;
+    color: #102044;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.22);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+
+.nordik-input-mic {
+    background: #eff6ff;
+    color: #1d4ed8;
+    box-shadow: none;
+}
+
+.nordik-voice-button:hover:not(:disabled),
+.nordik-input-mic:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.nordik-voice-button.listening,
+.nordik-input-mic.listening {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.16), 0 14px 30px rgba(37, 99, 235, 0.28);
+    animation: nordikListening 1.1s ease-in-out infinite;
+}
+
+.nordik-voice-button:disabled,
+.nordik-input-mic:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.nordik-voice-button svg,
+.nordik-input-mic svg,
+.speak-message-button svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.nordik-voice-status {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.nordik-voice-status strong {
+    font-size: 0.92rem;
+}
+
+.nordik-voice-status span {
+    overflow: hidden;
+    color: rgba(219, 234, 254, 0.78);
+    font-size: 0.8rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nordik-voice-status em {
+    color: #fecaca;
+    font-size: 0.78rem;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.nordik-stop-audio {
+    min-height: 2.35rem;
+    border-radius: 999px;
+    padding: 0.45rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-weight: 900;
+}
+
+@keyframes nordikListening {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
 .nordik-messages {
     height: min(66vh, 42rem);
     min-height: 31rem;
@@ -340,10 +451,6 @@
 }
 
 .copy-message-button {
-    position: absolute;
-    right: 0.5rem;
-    top: 0.45rem;
-    opacity: 0;
     border: 1px solid #dbe5f4;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.92);
@@ -355,9 +462,30 @@
     transition: opacity 0.16s ease;
 }
 
-.nordik-bubble:hover .copy-message-button,
-.copy-message-button:focus {
+.nordik-message-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+    opacity: 0;
+    transition: opacity 0.16s ease;
+}
+
+.nordik-bubble:hover .nordik-message-tools,
+.nordik-message-tools:focus-within {
     opacity: 1;
+}
+
+.speak-message-button {
+    gap: 0.28rem;
+    min-height: 1.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.22);
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 900;
 }
 
 .nordik-bubble.typing {
@@ -391,7 +519,7 @@
 
 .nordik-input-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 0.7rem;
     padding: 0.9rem;
     border-top: 1px solid #e6eef9;
@@ -472,5 +600,22 @@
 
     .nordik-message-content {
         max-width: 86%;
+    }
+
+    .nordik-voice-toolbar {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .nordik-stop-audio {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .nordik-voice-status span {
+        white-space: normal;
+    }
+
+    .nordik-message-tools {
+        opacity: 1;
     }
 }

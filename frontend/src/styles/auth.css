@@ -90,11 +90,13 @@
 
 .auth-brand-copy h1 {
     margin: 0;
-    max-width: 33rem;
+    max-width: 36rem;
     color: #fff;
-    font-size: clamp(2.35rem, 5vw, 4.2rem);
-    line-height: 0.95;
-    letter-spacing: -0.055em;
+    font-size: clamp(2.25rem, 4.4vw, 4rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    overflow-wrap: normal;
 }
 
 .auth-brand-copy span {
@@ -407,6 +409,11 @@
     .auth-brand-copy {
         margin-top: 2.5rem;
     }
+
+    .auth-brand-copy h1 {
+        max-width: 42rem;
+        font-size: clamp(2.2rem, 8vw, 3.35rem);
+    }
 }
 
 @media (max-width: 560px) {
@@ -426,5 +433,11 @@
     .auth-form-row {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .auth-brand-copy h1 {
+        font-size: 2.15rem;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
     }
 }

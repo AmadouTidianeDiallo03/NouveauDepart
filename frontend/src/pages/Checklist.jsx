@@ -74,7 +74,6 @@ export default function Checklist() {
         search: "",
         category: "all",
         status: "all",
-        stage: "all",
     });
 
     useEffect(() => {
@@ -84,30 +83,15 @@ export default function Checklist() {
             setLoading(true);
             setError("");
             try {
-                const [stepsRes, progressRes, stageRes] = await Promise.allSettled([
-                    api.get("/guides/steps/"),
-                    api.get("/guides/progress/"),
-                    api.get("/integration-stages/current/"),
-                ]);
+                const response = await api.get("/integration-stages/dashboard/");
 
                 if (!mounted) return;
-                if (stepsRes.status !== "fulfilled" || progressRes.status !== "fulfilled") {
-                    throw new Error("Checklist loading failed");
-                }
+                const checklist = normalizeStageChecklist(response.data);
 
-                const stepsData = stepsRes.value.data.results || stepsRes.value.data;
-                const withTasks = await Promise.all(
-                    stepsData.map(async (step) => {
-                        const response = await api.get(`/guides/steps/${step.id}/tasks/`);
-                        return { ...step, tasks: response.data.tasks || [] };
-                    })
-                );
-
-                if (!mounted) return;
-                setSteps(withTasks);
-                setProgress(progressRes.value.data);
-                setStage(stageRes.status === "fulfilled" ? stageRes.value.data?.current_stage : null);
-                setOpenSteps(withTasks.length ? { [withTasks[0].id]: true } : {});
+                setSteps(checklist.steps);
+                setProgress(checklist.progress);
+                setStage(checklist.stage);
+                setOpenSteps(checklist.steps.length ? { [checklist.steps[0].id]: true } : {});
             } catch (err) {
                 console.error("Checklist loading error:", err);
                 if (mounted) setError("Impossible de charger la checklist pour le moment.");
@@ -129,7 +113,7 @@ export default function Checklist() {
                 stepId: step.id,
                 stepTitle: step.title,
                 category: step.category || "default",
-                stageKey: inferStage(task, step),
+                stageKey: task.stageKey,
             }))
         );
     }, [steps]);
@@ -141,15 +125,11 @@ export default function Checklist() {
 
     async function toggleTask(taskId) {
         try {
-            const response = await api.post(`/guides/tasks/${taskId}/toggle/`);
-            const done = response.data.done;
-            setSteps((current) =>
-                current.map((step) => ({
-                    ...step,
-                    tasks: (step.tasks || []).map((task) => (task.id === taskId ? { ...task, done } : task)),
-                }))
-            );
-            setProgress((current) => updateProgress(current, steps, taskId, done));
+            const response = await api.post(`/integration-stages/tasks/${taskId}/toggle/`);
+            const checklist = normalizeStageChecklist(response.data);
+            setSteps(checklist.steps);
+            setProgress(checklist.progress);
+            setStage(checklist.stage);
         } catch (err) {
             console.error("Checklist toggle error:", err);
         }
@@ -160,7 +140,7 @@ export default function Checklist() {
     }
 
     function resetFilters() {
-        setFilters({ search: "", category: "all", status: "all", stage: "all" });
+        setFilters({ search: "", category: "all", status: "all" });
     }
 
     if (loading) {
@@ -310,14 +290,7 @@ function ChecklistFilters({ filters, onChange, onReset, steps }) {
             <select value={filters.status} onChange={(event) => setFilter("status", event.target.value)}>
                 <option value="all">Tous les statuts</option>
                 <option value="todo">À faire</option>
-                <option value="in_progress">En cours</option>
                 <option value="done">Complétées</option>
-            </select>
-            <select value={filters.stage} onChange={(event) => setFilter("stage", event.target.value)}>
-                <option value="all">Toutes les étapes</option>
-                <option value="before_arrival">Avant mon arrivée</option>
-                <option value="arrival">À mon arrivée</option>
-                <option value="after_arrival">Après mon arrivée</option>
             </select>
             <button type="button" onClick={onReset}>Réinitialiser</button>
         </section>
@@ -569,6 +542,59 @@ function buildStats(steps, progress, stage) {
     };
 }
 
+function normalizeStageChecklist(payload = {}) {
+    const stage = payload.current_stage || null;
+    const tasks = payload.tasks || [];
+    const groups = new Map();
+
+    tasks.forEach((task) => {
+        const category = task.category || "Parcours";
+        const key = normalizeCategoryKey(category);
+        if (!groups.has(key)) {
+            groups.set(key, {
+                id: key,
+                title: category,
+                category,
+                rawCategory: category,
+                tasks: [],
+            });
+        }
+
+        groups.get(key).tasks.push({
+            ...task,
+            stepId: key,
+            stepTitle: category,
+            category,
+            rawCategory: category,
+            done: Boolean(task.done || task.status === "complété"),
+            stageKey: task.stage_key || stage?.key || "",
+        });
+    });
+
+    return {
+        stage,
+        progress: payload.progress || buildProgressFromSteps([...groups.values()]),
+        steps: [...groups.values()],
+    };
+}
+
+function buildProgressFromSteps(steps) {
+    const total = steps.reduce((sum, step) => sum + (step.tasks?.length || 0), 0);
+    const done = steps.reduce((sum, step) => sum + countDone(step.tasks), 0);
+
+    return {
+        completed_tasks: done,
+        done_tasks: done,
+        total_tasks: total,
+        percentage: percent(done, total),
+        by_category: steps.map((step) => ({
+            category: step.rawCategory || step.title,
+            total: step.tasks?.length || 0,
+            done: countDone(step.tasks),
+        })),
+    };
+}
+
 function filterSteps(steps, filters) {
     const query = filters.search.trim().toLowerCase();
 
@@ -582,39 +608,11 @@ function filterSteps(steps, filters) {
                 const matchesStatus =
                     filters.status === "all" ||
                     (filters.status === "done" && task.done) ||
-                    (filters.status === "todo" && !task.done) ||
-                    (filters.status === "in_progress" && !task.done && (task.how_to || task.tips || task.locations));
-                const matchesStage = filters.stage === "all" || inferStage(task, step) === filters.stage;
-                return matchesSearch && matchesStatus && matchesStage;
+                    (filters.status === "todo" && !task.done);
+                return matchesSearch && matchesStatus;
             }),
         }))
         .filter((step) => step.tasks.length > 0);
-}
-
-function updateProgress(current, steps, taskId, done) {
-    if (!current) return current;
-    const previousTask = steps.flatMap((step) => step.tasks || []).find((task) => task.id === taskId);
-    if (!previousTask || previousTask.done === done) return current;
-
-    const doneTasks = Math.max(0, current.done_tasks + (done ? 1 : -1));
-    const total = Math.max(current.total_tasks, 1);
-    return {
-        ...current,
-        done_tasks: doneTasks,
-        percentage: Math.round((doneTasks / total) * 100),
-        by_category: (current.by_category || []).map((cat) => {
-            const step = steps.find((item) => item.id === previousTask.stepId || item.tasks?.some((task) => task.id === taskId));
-            if (!step || cat.step_id !== step.id) return cat;
-            return { ...cat, done: Math.max(0, cat.done + (done ? 1 : -1)) };
-        }),
-    };
-}
-
-function inferStage(task, step) {
-    const text = `${task.title} ${task.description} ${step.title}`.toLowerCase();
-    if (text.includes("arrivée") || text.includes("sim") || text.includes("banque") || text.includes("campus")) return "arrival";
-    if (text.includes("emploi") || text.includes("travail") || text.includes("activité") || text.includes("réussite")) return "after_arrival";
-    return "before_arrival";
 }
 
 function inferPriority(task, category) {
@@ -629,7 +627,23 @@ function inferPriority(task, category) {
 }
 
 function categoryMeta(category) {
-    return CATEGORY_META[category] || CATEGORY_META.default;
+    if (CATEGORY_META[category]) {
+        return CATEGORY_META[category];
+    }
+
+    return {
+        ...CATEGORY_META.default,
+        label: category || CATEGORY_META.default.label,
+    };
+}
+
+function normalizeCategoryKey(category) {
+    return String(category || "parcours")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
 }
 
 function countDone(tasks = []) {

@@ -4,6 +4,7 @@ import api from "../services/api";
 import { updateMe } from "../services/auth";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
+import { COUNTRY_OPTIONS } from "../constants/countries";
 import "../styles/onboarding.css";
 
 const STAGES = [
@@ -22,8 +23,6 @@ const NEEDS = [
     "Intégration culturelle",
     "Études",
 ];
-
-const COUNTRIES = ["", "Côte d’Ivoire", "Sénégal", "Cameroun", "Maroc", "Tunisie", "France", "Haïti", "Algérie", "Canada", "Autre"];
 
 const FALLBACK_UNIVERSITIES = [
     {
@@ -293,8 +292,9 @@ export default function Onboarding() {
                             <div className="field-grid two">
                                 <Field label="Pays d’origine" valid={Boolean(form.country_origin)}>
                                     <select name="country_origin" value={form.country_origin} onChange={handleInputChange}>
-                                        {COUNTRIES.map((country) => (
-                                            <option key={country || "empty"} value={country}>{country || "Choisir un pays"}</option>
+                                        <option value="">Choisir un pays</option>
+                                        {COUNTRY_OPTIONS.map((country) => (
+                                            <option key={country} value={country}>{country}</option>
                                         ))}
                                     </select>
                                 </Field>

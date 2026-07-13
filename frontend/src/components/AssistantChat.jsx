@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
@@ -44,6 +44,14 @@ function cleanDisplayText(text) {
         .trim();
 }
 
+function cleanSpeechText(text) {
+    return cleanDisplayText(text)
+        .replace(/https?:\/\/\S+/g, "")
+        .replace(/\[[^\]]+\]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 function clearAssistantStorage() {
     [localStorage, sessionStorage].forEach((storage) => {
         Object.keys(storage)
@@ -52,14 +60,37 @@ function clearAssistantStorage() {
     });
 }
 
+function getSpeechRecognition() {
+    if (typeof window === "undefined") return null;
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function getFrenchVoice() {
+    const voices = window.speechSynthesis?.getVoices?.() || [];
+    return (
+        voices.find((voice) => voice.lang?.toLowerCase().startsWith("fr-ca")) ||
+        voices.find((voice) => voice.lang?.toLowerCase().startsWith("fr")) ||
+        null
+    );
+}
+
 export default function AssistantChat({ starterQuestion = "", suggestions = [] }) {
     const { user } = useAuth();
     const [messages, setMessages] = useState([welcomeMessage]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [copiedIndex, setCopiedIndex] = useState(null);
+    const [listening, setListening] = useState(false);
+    const [voiceError, setVoiceError] = useState("");
+    const [speakingIndex, setSpeakingIndex] = useState(null);
     const bottomRef = useRef(null);
     const textareaRef = useRef(null);
+    const recognitionRef = useRef(null);
+    const finalTranscriptRef = useRef("");
+    const voiceReplyPendingRef = useRef(false);
+
+    const speechRecognitionSupported = useMemo(() => Boolean(getSpeechRecognition()), []);
+    const speechSynthesisSupported = typeof window !== "undefined" && "speechSynthesis" in window;
 
     useEffect(() => {
         clearAssistantStorage();
@@ -81,22 +112,30 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
 
     useEffect(() => {
         function resetConversation() {
+            window.speechSynthesis?.cancel();
+            recognitionRef.current?.abort?.();
             clearAssistantStorage();
             setMessages([welcomeMessage]);
             setInput("");
             setCopiedIndex(null);
+            setListening(false);
+            setSpeakingIndex(null);
+            setVoiceError("");
         }
 
         window.addEventListener("nordikbot:new-conversation", resetConversation);
         return () => window.removeEventListener("nordikbot:new-conversation", resetConversation);
     }, []);
 
-    async function handleSend(e) {
-        e.preventDefault();
-        const question = input.trim();
-        if (!question || loading) return;
+    useEffect(() => {
+        return () => {
+            window.speechSynthesis?.cancel();
+            recognitionRef.current?.abort?.();
+        };
+    }, []);
 
-        const history = messages
+    function buildHistory() {
+        return messages
             .filter((msg) => msg.role === "user" || msg.role === "bot")
             .filter(isCleanHistoryMessage)
             .slice(-6)
@@ -104,10 +143,19 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
                 role: msg.role === "bot" ? "assistant" : "user",
                 content: cleanDisplayText(msg.content),
             }));
+    }
+
+    async function sendQuestion(rawQuestion, options = {}) {
+        const question = String(rawQuestion || "").trim();
+        if (!question || loading) return;
+
+        const history = buildHistory();
 
         setMessages((prev) => [...prev, { role: "user", content: question }]);
         setInput("");
         setLoading(true);
+        setVoiceError("");
+        voiceReplyPendingRef.current = Boolean(options.speakResponse);
 
         try {
             const res = await api.post("/assistant/chat/", {
@@ -126,7 +174,7 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
             const answer = cleanDisplayText(res.data?.answer || "");
             const sources = Array.isArray(res.data?.sources) ? res.data.sources : [];
             const contacts = Array.isArray(res.data?.contacts) ? res.data.contacts : [];
-            setMessages((prev) => [...prev, {
+            const botMessage = {
                 role: "bot",
                 question,
                 content: answer || "Désolé, je n'ai pas reçu de réponse complète. Réessaie dans quelques instants.",
@@ -134,13 +182,30 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
                 contacts,
                 domain: res.data?.domain || "general",
                 intent: res.data?.intent || "general",
-            }]);
+            };
+
+            setMessages((prev) => {
+                const next = [...prev, botMessage];
+                if (voiceReplyPendingRef.current) {
+                    setTimeout(() => speakText(botMessage.content, next.length - 1), 80);
+                }
+                return next;
+            });
         } catch (err) {
             const detail = err.response?.data?.detail || "Désolé, je n'arrive pas à répondre pour le moment. Réessaie dans quelques instants.";
             setMessages((prev) => [...prev, { role: "bot", question, content: detail, sources: [], contacts: [] }]);
+            if (voiceReplyPendingRef.current) {
+                setTimeout(() => speakText(detail, "error"), 80);
+            }
         } finally {
             setLoading(false);
+            voiceReplyPendingRef.current = false;
         }
+    }
+
+    async function handleSend(e) {
+        e.preventDefault();
+        await sendQuestion(input);
     }
 
     function handleKeyDown(e) {
@@ -148,6 +213,93 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
             e.preventDefault();
             e.currentTarget.form?.requestSubmit();
         }
+    }
+
+    function startVoiceQuestion() {
+        if (!speechRecognitionSupported || loading) {
+            setVoiceError("La reconnaissance vocale n'est pas disponible dans ce navigateur.");
+            return;
+        }
+
+        if (listening) {
+            recognitionRef.current?.stop?.();
+            return;
+        }
+
+        const Recognition = getSpeechRecognition();
+        const recognition = new Recognition();
+        recognition.lang = "fr-CA";
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        finalTranscriptRef.current = "";
+        setVoiceError("");
+        setInput("");
+
+        recognition.onstart = () => setListening(true);
+        recognition.onerror = (event) => {
+            const message = event.error === "not-allowed"
+                ? "Autorise le micro dans ton navigateur pour parler à NordikBot."
+                : "Je n'ai pas pu écouter correctement. Réessaie.";
+            setVoiceError(message);
+            setListening(false);
+        };
+        recognition.onresult = (event) => {
+            let interim = "";
+            let finalText = "";
+
+            for (let i = event.resultIndex; i < event.results.length; i += 1) {
+                const transcript = event.results[i][0]?.transcript || "";
+                if (event.results[i].isFinal) {
+                    finalText += transcript;
+                } else {
+                    interim += transcript;
+                }
+            }
+
+            if (finalText.trim()) {
+                finalTranscriptRef.current = `${finalTranscriptRef.current} ${finalText}`.trim();
+            }
+
+            setInput((finalTranscriptRef.current || interim).trim());
+        };
+        recognition.onend = () => {
+            setListening(false);
+            const finalQuestion = finalTranscriptRef.current.trim();
+            if (finalQuestion) {
+                sendQuestion(finalQuestion, { speakResponse: true });
+            }
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+    }
+
+    function speakText(text, index) {
+        if (!speechSynthesisSupported) {
+            setVoiceError("La lecture audio n'est pas disponible dans ce navigateur.");
+            return;
+        }
+
+        const speechText = cleanSpeechText(text);
+        if (!speechText) return;
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(speechText);
+        utterance.lang = "fr-CA";
+        utterance.rate = 0.95;
+        utterance.pitch = 1;
+        const voice = getFrenchVoice();
+        if (voice) utterance.voice = voice;
+
+        utterance.onstart = () => setSpeakingIndex(index);
+        utterance.onend = () => setSpeakingIndex(null);
+        utterance.onerror = () => setSpeakingIndex(null);
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+        window.speechSynthesis?.cancel();
+        setSpeakingIndex(null);
     }
 
     async function copyMessage(text, index) {
@@ -164,6 +316,29 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
 
     return (
         <section className="nordik-chat">
+            <div className="nordik-voice-toolbar" aria-label="Mode vocal NordikBot">
+                <button
+                    className={`nordik-voice-button ${listening ? "listening" : ""}`}
+                    type="button"
+                    onClick={startVoiceQuestion}
+                    disabled={loading || !speechRecognitionSupported}
+                    title={speechRecognitionSupported ? "Parler à NordikBot" : "Reconnaissance vocale non disponible"}
+                    aria-label={listening ? "Arrêter l'écoute" : "Parler à NordikBot"}
+                >
+                    <VoiceIcon name="microphone" />
+                </button>
+                <div className="nordik-voice-status">
+                    <strong>{listening ? "J'écoute..." : "Mode vocal"}</strong>
+                    <span>{listening ? "Parle naturellement, la question sera envoyée automatiquement." : "Pose une question au micro et écoute la réponse."}</span>
+                    {voiceError && <em>{voiceError}</em>}
+                </div>
+                {speakingIndex !== null && (
+                    <button className="nordik-stop-audio" type="button" onClick={stopSpeaking}>
+                        Arrêter l'audio
+                    </button>
+                )}
+            </div>
+
             <div className="nordik-messages" aria-live="polite" aria-label="Conversation avec NordikBot">
                 {hasOnlyWelcome && (
                     <div className="nordik-empty-state">
@@ -185,9 +360,17 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
                             <div className={`nordik-bubble ${msg.role === "user" ? "mine" : ""}`}>
                                 {msg.content}
                                 {msg.role === "bot" && i > 0 && (
-                                    <button className="copy-message-button" type="button" onClick={() => copyMessage(msg.content, i)}>
-                                        {copiedIndex === i ? "Copié" : "Copier"}
-                                    </button>
+                                    <div className="nordik-message-tools">
+                                        <button className="copy-message-button" type="button" onClick={() => copyMessage(msg.content, i)}>
+                                            {copiedIndex === i ? "Copié" : "Copier"}
+                                        </button>
+                                        {speechSynthesisSupported && (
+                                            <button className="speak-message-button" type="button" onClick={() => (speakingIndex === i ? stopSpeaking() : speakText(msg.content, i))}>
+                                                <VoiceIcon name={speakingIndex === i ? "stop" : "speaker"} />
+                                                {speakingIndex === i ? "Stop" : "Écouter"}
+                                            </button>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                             {msg.role === "bot" && msg.sources?.length > 0 && (
@@ -247,13 +430,23 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
 
             <form className="nordik-input-row" onSubmit={handleSend}>
                 <label htmlFor="assistant-input" className="sr-only">Votre question</label>
+                <button
+                    className={`nordik-input-mic ${listening ? "listening" : ""}`}
+                    type="button"
+                    onClick={startVoiceQuestion}
+                    disabled={loading || !speechRecognitionSupported}
+                    aria-label={listening ? "Arrêter l'écoute" : "Dicter une question"}
+                    title={speechRecognitionSupported ? "Dicter une question" : "Reconnaissance vocale non disponible"}
+                >
+                    <VoiceIcon name="microphone" />
+                </button>
                 <textarea
                     ref={textareaRef}
                     id="assistant-input"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Pose ta question à NordikBot..."
+                    placeholder={listening ? "Je t'écoute..." : "Pose ta question à NordikBot..."}
                     disabled={loading}
                     autoComplete="off"
                     rows={1}
@@ -261,5 +454,19 @@ export default function AssistantChat({ starterQuestion = "", suggestions = [] }
                 <button type="submit" disabled={!input.trim() || loading}>Envoyer</button>
             </form>
         </section>
+    );
+}
+
+function VoiceIcon({ name }) {
+    const paths = {
+        microphone: "M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm6-3a6 6 0 0 1-12 0M12 17v4m-4 0h8",
+        speaker: "M4 10v4h4l5 4V6l-5 4H4Zm12-1a4 4 0 0 1 0 6m2-9a8 8 0 0 1 0 12",
+        stop: "M7 7h10v10H7z",
+    };
+
+    return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d={paths[name]} />
+        </svg>
     );
 }

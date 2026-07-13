@@ -2,9 +2,38 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import api from "../services/api";
 import { logout } from "../services/auth";
+import { useAuth } from "../context/AuthContext";
 import RequestItem from "../components/RequestItem";
 import MenteeProfileModal from "../components/MenteeProfileModal";
 import "../styles/dashboard.css";
+
+function getUserFullName(user = {}) {
+    const nameFromParts = [user.first_name, user.last_name]
+        .map((value) => (value || "").trim())
+        .filter(Boolean)
+        .join(" ");
+
+    if (nameFromParts) {
+        return nameFromParts;
+    }
+
+    const fullName = (user.full_name || "").trim();
+    return fullName && !fullName.includes("@") ? fullName : "";
+}
+
+function mergeUserIdentity(primary = {}, fallback = {}) {
+    const fallbackFullName = getUserFullName(fallback);
+    const [fallbackFirstName = "", ...fallbackLastNameParts] = fallbackFullName.split(" ");
+
+    return {
+        ...fallback,
+        ...primary,
+        first_name: primary.first_name || fallback.first_name || fallbackFirstName,
+        last_name: primary.last_name || fallback.last_name || fallbackLastNameParts.join(" "),
+        full_name: getUserFullName(primary) || fallbackFullName,
+        email: primary.email || fallback.email || "",
+    };
+}
 
 const NAV_ITEMS = [
     {
@@ -73,6 +102,7 @@ const ACADEMIC_SHORTCUTS = [
 ];
 
 export default function Dashboard() {
+    const { user: authUser } = useAuth();
     const [dashboard, setDashboard] = useState(null);
     const [mentorRequests, setMentorRequests] = useState([]);
     const [selectedMentee, setSelectedMentee] = useState(null);
@@ -154,7 +184,11 @@ export default function Dashboard() {
 
     if (!dashboard) return null;
 
-    const role = dashboard.profile?.role === "admin" ? "admin" : dashboard.profile?.role || "student";
+    const enrichedDashboard = {
+        ...dashboard,
+        user: mergeUserIdentity(dashboard.user, authUser),
+    };
+    const role = enrichedDashboard.profile?.role === "admin" ? "admin" : enrichedDashboard.profile?.role || "student";
     const isMentor = role === "mentor";
 
     return (
@@ -166,17 +200,17 @@ export default function Dashboard() {
             </button>
             <DashboardSidebar role={role} open={sidebarOpen} onClose={handleSidebarNavigate} onToggle={() => setSidebarOpen((value) => !value)} />
             <main className="dashboard-main">
-                <DashboardTopbar dashboard={dashboard} />
+                <DashboardTopbar dashboard={enrichedDashboard} />
 
                 {isMentor ? (
                     <MentorDashboard
-                        dashboard={dashboard}
+                        dashboard={enrichedDashboard}
                         mentorRequests={mentorRequests}
                         onAction={handleRequestAction}
                         onViewProfile={handleViewProfile}
                     />
                 ) : (
-                    <StudentDashboard dashboard={dashboard} />
+                    <StudentDashboard dashboard={enrichedDashboard} />
                 )}
             </main>
 
@@ -301,8 +335,8 @@ function DashboardTopbar({ dashboard }) {
     const user = dashboard.user || {};
     const profile = dashboard.profile || {};
     const email = user.email || "";
-    const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ").trim();
-    const displayName = fullName || email || "Utilisateur";
+    const fullName = getUserFullName(user);
+    const displayName = fullName || "Mon espace";
     const role = profile.role || user.role || "student";
     const roleLabel = role === "admin" ? "Administrateur" : role === "mentor" ? "Mentor" : "Etudiant international";
     const initial = (displayName[0] || "N").toUpperCase();
@@ -387,7 +421,7 @@ function DashboardTopbar({ dashboard }) {
                         {avatarUrl ? <img src={avatarUrl} alt="" /> : initial}
                     </div>
                     <span className="user-chip-text">
-                        <strong>{fullName || email || "Mon espace"}</strong>
+                        <strong>{displayName}</strong>
                         <small>{roleLabel}</small>
                     </span>
                     <span className="user-chip-chevron"><Icon name="chevron" /></span>
@@ -430,7 +464,7 @@ function DashboardTopbar({ dashboard }) {
     );
 }
 function HeroBanner({ dashboard, subtitle }) {
-    const fullName = [dashboard.user?.first_name, dashboard.user?.last_name].filter(Boolean).join(" ").trim();
+    const fullName = getUserFullName(dashboard.user);
     const displayName = fullName || "cher étudiant";
     const university = dashboard.profile?.university || "Université non renseignée";
     const campus = dashboard.profile?.campus || "Campus non renseigné";

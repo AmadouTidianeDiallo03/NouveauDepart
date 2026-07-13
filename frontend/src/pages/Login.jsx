@@ -5,9 +5,9 @@ import { useAuth } from "../context/AuthContext";
 import "../styles/auth.css";
 
 const FEATURES = [
-    { icon: "guide", title: "Guide complet", desc: "Un parcours clair pour ton installation au Quebec." },
-    { icon: "mentor", title: "Mentors dedies", desc: "Des etudiants experimentes pour t'accompagner." },
-    { icon: "ai", title: "Assistant IA", desc: "NordikBot repond naturellement a tes questions." },
+    { icon: "guide", title: "Guide complet", desc: "Un parcours clair pour ton installation au Québec." },
+    { icon: "mentor", title: "Mentors dédiés", desc: "Des étudiants expérimentés pour t'accompagner." },
+    { icon: "ai", title: "Assistant IA", desc: "NordikBot répond naturellement à tes questions." },
 ];
 
 function AuthIcon({ name }) {
@@ -66,12 +66,12 @@ export default function Login() {
                 <div className="auth-brand-content">
                     <Link to="/" className="auth-logo">
                         <span>ND</span>
-                        NouveauDepart
+                        NouveauDépart
                     </Link>
                     <div className="auth-brand-copy">
-                        <p>Ton guide d'integration au Quebec</p>
-                        <h1>Reprends ton parcours la ou tu l'as laisse.</h1>
-                        <span>Checklist, mentors, budget et NordikBot reunis dans un espace clair.</span>
+                        <p>Ton guide d'intégration au Québec</p>
+                        <h1>Reprends ton parcours là où tu l'as laissé.</h1>
+                        <span>Checklist, mentors, budget et NordikBot réunis dans un espace clair.</span>
                     </div>
                     <div className="auth-feature-list">
                         {FEATURES.map((feature) => (
@@ -90,7 +90,7 @@ export default function Login() {
             <section className="auth-form-panel">
                 <div className="auth-card">
                     <div className="auth-form-heading">
-                        <span>Connexion securisee</span>
+                        <span>Connexion sécurisée</span>
                         <h2>Bon retour !</h2>
                         <p>Connecte-toi pour continuer ton aventure.</p>
                     </div>
@@ -129,8 +129,8 @@ export default function Login() {
                         </label>
 
                         <div className="auth-form-row">
-                            <span>Session etudiante NouveauDepart</span>
-                            <a href="#forgot-password">Mot de passe oublie ?</a>
+                            <span>Session étudiante NouveauDépart</span>
+                            <a href="#forgot-password">Mot de passe oublié ?</a>
                         </div>
 
                         <button className="auth-submit" type="submit" disabled={loading}>

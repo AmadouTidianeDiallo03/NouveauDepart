@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { COUNTRY_OPTIONS as ALL_COUNTRY_OPTIONS } from "../constants/countries";
 import "../styles/mentors.css";
 
 const HELP_TOPICS = [
@@ -15,8 +16,6 @@ const HELP_TOPICS = [
     "Études",
     "Vie sociale",
 ];
-
-const COUNTRY_OPTIONS = ["Côte d’Ivoire", "Sénégal", "Cameroun", "Maroc", "Tunisie", "France", "Haïti", "Algérie", "Canada", "Autre"];
 
 const EMPTY_FILTERS = {
     search: "",
@@ -169,7 +168,7 @@ function MentorFilters({ filters, universities, onChange, onReset }) {
             <input value={filters.city} onChange={(event) => onChange("city", event.target.value)} placeholder="Campus ou ville" />
             <select value={filters.country_origin} onChange={(event) => onChange("country_origin", event.target.value)}>
                 <option value="">Pays d’origine</option>
-                {COUNTRY_OPTIONS.map((country) => <option key={country} value={country}>{country}</option>)}
+                {ALL_COUNTRY_OPTIONS.map((country) => <option key={country} value={country}>{country}</option>)}
             </select>
             <select value={filters.language} onChange={(event) => onChange("language", event.target.value)}>
                 <option value="">Langue</option>

@@ -73,12 +73,37 @@ def stage_tasks_payload(user, stage):
             "id": task.id,
             "title": task.title,
             "description": task.description,
+            "done": task.id in completed,
             "status": "complété" if task.id in completed else "à faire",
             "priority": task.priority,
             "category": task.category,
+            "stage_key": stage.key,
+            "stage_order": stage.order,
         }
         for task in tasks
     ]
+
+
+def stage_progress_payload(tasks):
+    total = len(tasks)
+    completed = sum(1 for task in tasks if task.get("done"))
+    by_category = {}
+
+    for task in tasks:
+        category = task.get("category") or "Parcours"
+        if category not in by_category:
+            by_category[category] = {"category": category, "total": 0, "done": 0}
+        by_category[category]["total"] += 1
+        if task.get("done"):
+            by_category[category]["done"] += 1
+
+    return {
+        "completed_tasks": completed,
+        "done_tasks": completed,
+        "total_tasks": total,
+        "percentage": round((completed / total) * 100) if total else 0,
+        "by_category": list(by_category.values()),
+    }
 
 
 def recommended_guides_payload(stage):
@@ -112,9 +137,12 @@ def stage_dashboard_payload(user):
             "quick_actions": [],
         }
 
+    tasks = stage_tasks_payload(user, stage)
+
     return {
         "current_stage": serialize_stage(stage),
-        "tasks": stage_tasks_payload(user, stage),
+        "tasks": tasks,
+        "progress": stage_progress_payload(tasks),
         "recommended_guides": recommended_guides_payload(stage),
         "quick_actions": STAGE_QUICK_ACTIONS.get(stage.key, []),
     }
